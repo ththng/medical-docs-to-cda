@@ -2,11 +2,8 @@ package it.unisa.medical_docs_to_cda.model;
 
 import java.time.LocalDate;
 
-import org.springframework.boot.actuate.endpoint.annotation.FilteredEndpoint;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "patient")
 public class Patient {

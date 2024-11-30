@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patient List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        td {
+            background-color: #ecf0f1;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover td {
+            background-color: #dfe6e9;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .no-data {
+            color: #bdc3c7;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Patient List</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Date of Birth</th>
+                    <th>Date of Death</th>
+                    <th>SSN</th>
+                    <th>Driver's License</th>
+                    <th>Passport</th>
+                    <th>Maiden Name</th>
+                    <th>Gender</th>
+                    <th>Place of Birth</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>County</th>
+                    <th>ZIP Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the patients -->
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
+                    <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
+                    <td th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">Date of Birth</td>
+                    <td th:text="${#temporals.format(patient.deathDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.deathDate, 'dd/MM/yyyy') : 'N/A'}">Date of Death</td>
+                    <td th:text="${patient.SSN != null ? patient.SSN : 'N/A'}">SSN</td>
+                    <td th:text="${patient.drivers != null ? patient.drivers : 'N/A'}">Driver's License</td>
+                    <td th:text="${patient.passport != null ? patient.passport : 'N/A'}">Passport</td>
+                    <td th:text="${patient.maiden != null ? patient.maiden : 'N/A'}">Maiden Name</td>
+                    <td th:text="${patient.gender != null ? patient.gender : 'N/A'}">Gender</td>
+                    <td th:text="${patient.birthPlace != null ? patient.birthPlace : 'N/A'}">Place of Birth</td>
+                    <td th:text="${patient.address != null ? patient.address : 'N/A'}">Address</td>
+                    <td th:text="${patient.city != null ? patient.city : 'N/A'}">City</td>
+                    <td th:text="${patient.state != null ? patient.state : 'N/A'}">State</td>
+                    <td th:text="${patient.county != null ? patient.county : 'N/A'}">County</td>
+                    <td th:text="${patient.zip != null ? patient.zip : 'N/A'}">ZIP</td>
+               

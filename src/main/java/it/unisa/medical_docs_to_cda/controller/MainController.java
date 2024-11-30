@@ -1,5 +1,7 @@
 package it.unisa.medical_docs_to_cda.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,4 +33,19 @@ public class MainController {
         return "patients";
     }
 
+
+    @GetMapping("/search")
+    public String showSearchForm(Model model) {
+        return "search-patients";
+    }
+
+    @PostMapping("/search")
+    public String searchPatient(@RequestParam String firstName, @RequestParam String lastName, Model model) {
+
+        List<Patient> patients = patientRepo.findByFirstIgnoreCaseAndLastIgnoreCase(firstName, lastName);
+
+        model.addAttribute("patients", patients);
+
+        return "patient-results";
+    }
 }

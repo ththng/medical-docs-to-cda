@@ -1,5 +1,9 @@
 package it.unisa.medical_docs_to_cda.CDALDO;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -89,51 +93,98 @@ public class CDALDOBuilder {
 
         parent.appendChild(element);
     }
-public static Document createBasicDoc() throws ParserConfigurationException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document doc = builder.newDocument();
-    
-    return doc;
-}
-public static void addHeader(Document doc, String oid, String extensionId, String assigningAuthorityName) {
-    if (doc == null) {
-        throw new IllegalArgumentException("Document cannot be null");
+
+
+    public static Document createBasicDoc() throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+        
+        return doc;
+
     }
 
 
-    Element root = doc.createElement("ClinicalDocument");
-    root.setAttribute("xsi:schemaLocation", "urn:hl7-org:v3 CDA.xsd");
-    root.setAttribute("xmlns", "urn:hl7-org:v3");
-    root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
     
-    doc.appendChild(root);
+    public static void addHeader(Document doc, String oid, String extensionId, String assigningAuthorityName, String status,
+                                Date effectiveTimeDate,String confidentialityCodeValue, String setOid, String setExtensionId,
+                                String setAssigningAuthorityName, String versionNumberValue) {
+        if (doc == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+
+        Element root = doc.createElement( "ClinicalDocument");
+        root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation", "urn:hl7-org:v3 CDA.xsd");
+
+        doc.appendChild(root);
+
+        Element realmCode = doc.createElement( "realmCode");
+        realmCode.setAttribute("code", "IT");
+        root.appendChild(realmCode);
+
+        Element typeId = doc.createElement( "typeId");
+        typeId.setAttribute("root", "2.16.840.1.113883.1.3");
+        typeId.setAttribute("extension", "POCD_HD000040");
+        root.appendChild(typeId);
+
+        Element templateId = doc.createElement("templateId");
+        templateId.setAttribute("root", "2.16.840.1.113883.2.9.10.1.5");
+        templateId.setAttribute("extension", "1.2");
+        root.appendChild(templateId);
+
+        Element id = doc.createElement( "id");
+        id.setAttribute("root", oid);
+        id.setAttribute("extension", extensionId);
+        id.setAttribute("assigningAuthorityName", assigningAuthorityName);
+        root.appendChild(id);
+
+        addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera");
+
+        addTitle(doc, root, "LETTERA DI DIMISSIONE OSPEDALIERA");
+
+        Element statusCode = doc.createElementNS("urn:hl7-org:sdtc", "sdtc:statusCode");
+        statusCode.setAttribute("code", status);
+        root.appendChild(statusCode);
+            
+        Element effectiveTime = doc.createElement("effectiveTime");
+        effectiveTime.setAttribute("value", formatEffectiveTime(effectiveTimeDate));
+        root.appendChild(effectiveTime);
+
+        Element confidentialityCode = doc.createElement("confidentialityCode");
+        confidentialityCode.setAttribute("code", confidentialityCodeValue);
+        confidentialityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.25");
+        confidentialityCode.setAttribute("codeSystemName", "HL7 Confidentiality");
+        if(confidentialityCodeValue=="V"){
+            confidentialityCode.setAttribute("displayName", "Very restricted");
+        }else if(confidentialityCodeValue=="N"){
+         confidentialityCode.setAttribute("displayName", "Normal");
+        }
+        root.appendChild(confidentialityCode);
+
+        Element languageCode = doc.createElement("languageCode");
+        languageCode.setAttribute("code", "it-IT");
+        root.appendChild(languageCode);
+
+        Element setId = doc.createElement( "setId");
+        setId.setAttribute("root", setOid);
+        setId.setAttribute("extension", setExtensionId);
+        setId.setAttribute("assigningAuthorityName", setAssigningAuthorityName);
+        root.appendChild(setId);
+
+        Element versionNumber = doc.createElement("versionNumber");
+        versionNumber.setAttribute("value", versionNumberValue);
+        root.appendChild(versionNumber);
 
 
 
-    Element realmCode = doc.createElement("realmCode");
-    realmCode.setAttribute("code", "IT"); // Example attribute, adjust as needed
-    root.appendChild(realmCode);
 
-    Element typeId = doc.createElement("typeId");
-    typeId.setAttribute("root", "2.16.840.1.113883.1.3"); // Example attribute, adjust as needed
-    typeId.setAttribute("extension", "POCD_HD000040"); // Example attribute, adjust as needed
-    root.appendChild(typeId);
+    }
 
-    Element templateId = doc.createElement("templateId");
-    templateId.setAttribute("root", "2.16.840.1.113883.2.9.10.1.5" );
-    templateId.setAttribute("extension", "1.2"); // Example attribute, adjust as needed
-    root.appendChild(templateId);
-
-    Element id = doc.createElement("id");
-    id.setAttribute("root", oid);
-    id.setAttribute("extension", extensionId);
-    id.setAttribute("assigningAuthorityName", assigningAuthorityName);
-    root.appendChild(id);
-
-    addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera");
-    
-    addTitle(doc, root,"LETTERA DI DIMISSIONE OSPEDALIERA");
-}
-
+    private static String formatEffectiveTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String formattedDate = sdf.format(date);
+        return formattedDate;
+    }
 }

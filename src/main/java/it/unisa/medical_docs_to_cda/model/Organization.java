@@ -1,17 +1,23 @@
 package it.unisa.medical_docs_to_cda.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "organization")
 public class Organization {
-    @Id
+    @Field("Id")
     private String id;
+    @Field("NAME")
     private String name;
+    @Field("ADDRESS")
     private String address;
+    @Field("CITY")
     private String city;
+    @Field("STATE")
     private String state;
+    @Field("ZIP")
     private String zip;
+    @Field("PHONE")
     private String phone;
 
     public String getId() {

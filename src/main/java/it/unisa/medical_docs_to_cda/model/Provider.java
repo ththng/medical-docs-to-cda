@@ -1,16 +1,28 @@
 package it.unisa.medical_docs_to_cda.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "provider")
 public class Provider {
-    @Id
+    @Field("Id")
     private String id;
-    private String organization;
+    @Field("ORGANIZATION")
+    private String organizationId;
+    @Field("NAME")
     private String name;
+    @Field("GENDER")
     private String gender;
+    @Field("SPECIALITY")
     private String speciality;
+    @Field("ADDRESS")
+    private String address;
+    @Field("CITY")
+    private String city;
+    @Field("STATE")
+    private String state;
+    @Field("ZIP")
+    private String zip;
     public String getId() {
         return id;
     }
@@ -19,12 +31,12 @@ public class Provider {
         this.id = id;
     }
 
-    public String getOrganization() {
-        return organization;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOrganization(String organization) {
-        this.organization = organization;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getName() {
@@ -83,15 +95,10 @@ public class Provider {
         this.zip = zip;
     }
 
-    private String address;
-    private String city;
-    private String state;
-    private String zip;
-
-    public Provider(String id, String organization, String name, String gender, String speciality, String address,
+    public Provider(String id, String organizationId, String name, String gender, String speciality, String address,
             String city, String state, String zip) {
         this.id = id;
-        this.organization = organization;
+        this.organizationId = organizationId;
         this.name = name;
         this.gender = gender;
         this.speciality = speciality;

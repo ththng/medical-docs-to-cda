@@ -3,23 +3,33 @@ package it.unisa.medical_docs_to_cda.model;
 import java.time.LocalDateTime;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "encounter")
 public class Encounter {
-    @MongoId
+    @Field("Id")
     private String id;
+    @Field("START")
     private LocalDateTime start;
+    @Field("STOP")
     private LocalDateTime stop;
-    private String patient;
-    private String organization;
-    private String provider;
+    @Field("PATIENT")
+    private String patientId;
+    @Field("ORGANIZATION")
+    private String organizationId;
+    @Field("PROVIDER")
+    private String providerId;
+    @Field("ENCOUNTERCLASS")
     private String encounterClass;
+    @Field("CODE")
     private String code;
+    @Field("DESCRIPTION")
     private String description;
+    @Field("REASONDESCRIPTION")
     private String reasonDescription;
+    @Field("REASONCODE")
     private String reasonCode;
-    
+
     public String getId() {
         return id;
     }
@@ -44,28 +54,28 @@ public class Encounter {
         this.stop = stop;
     }
 
-    public String getPatient() {
-        return patient;
+    public String getpatientId() {
+        return patientId;
     }
 
-    public void setPatient(String patient) {
-        this.patient = patient;
+    public void setpatientId(String patientId) {
+        this.patientId = patientId;
     }
 
-    public String getOrganization() {
-        return organization;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOrganization(String organization) {
-        this.organization = organization;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
-    public String getProvider() {
-        return provider;
+    public String getProviderId() {
+        return providerId;
     }
 
-    public void setProvider(String provider) {
-        this.provider = provider;
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 
     public String getEncounterClass() {
@@ -108,15 +118,15 @@ public class Encounter {
         this.reasonCode = reasonCode;
     }
 
-    public Encounter(String id, LocalDateTime start, LocalDateTime stop, String patient, String organization,
-            String provider, String encounterClass, String code, String description, String reasonDescription,
+    public Encounter(String id, LocalDateTime start, LocalDateTime stop, String patientId, String organizationId,
+            String providerId, String encounterClass, String code, String description, String reasonDescription,
             String reasonCode) {
         this.id = id;
         this.start = start;
         this.stop = stop;
-        this.patient = patient;
-        this.organization = organization;
-        this.provider = provider;
+        this.patientId = patientId;
+        this.organizationId = organizationId;
+        this.providerId = providerId;
         this.encounterClass = encounterClass;
         this.code = code;
         this.description = description;

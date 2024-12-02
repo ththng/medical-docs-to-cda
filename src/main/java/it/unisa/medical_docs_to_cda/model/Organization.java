@@ -12,6 +12,8 @@ public class Organization {
     private String city;
     private String state;
     private String zip;
+    private String phone;
+
     public String getId() {
         return id;
     }
@@ -68,7 +70,6 @@ public class Organization {
         this.phone = phone;
     }
 
-    private String phone;
     
     public Organization(String id, String name, String address, String city, String state, String zip, String phone) {
         this.id = id;

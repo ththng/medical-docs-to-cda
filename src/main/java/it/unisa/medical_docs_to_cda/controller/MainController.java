@@ -17,22 +17,19 @@ public class MainController {
     @Autowired
     private PatientRepository patientRepo;
 
-
     @GetMapping("/list")
     public String getList(Model model) {
-        Iterable<Patient> patients = patientRepo.findAll();
+        List<Patient> patients = patientRepo.findAll();
 
         patients.forEach(patient -> {
-            System.out.println(patient); 
+            // Process patient data if needed
         });
-        
 
         model.addAttribute("patients", patients);
 
-        // Ritorna il nome del template
+        // Returns the template's name
         return "patients";
     }
-
 
     @GetMapping("/search")
     public String showSearchForm(Model model) {
@@ -42,10 +39,17 @@ public class MainController {
     @PostMapping("/search")
     public String searchPatient(@RequestParam String firstName, @RequestParam String lastName, Model model) {
 
+        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
+            model.addAttribute("error", "First name and last name must not be empty");
+            return "search-patients";
+        }
+
         List<Patient> patients = patientRepo.findByFirstIgnoreCaseAndLastIgnoreCase(firstName, lastName);
 
         model.addAttribute("patients", patients);
 
         return "patient-results";
     }
+
+    
 }

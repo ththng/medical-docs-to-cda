@@ -62,5 +62,17 @@ public class Observation {
     public void setValue(float value) {
         this.value = value;
     }
+    public Observation(LocalDateTime date, String patient, String encounter, String code, String description,
+            String units, String numeric, float value) {
+        this.date = date;
+        this.patient = patient;
+        this.encounter = encounter;
+        this.code = code;
+        this.description = description;
+        this.units = units;
+        this.numeric = numeric;
+        this.value = value;
+    }
 
+    
 }

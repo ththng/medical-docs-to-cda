@@ -1,11 +1,11 @@
 package it.unisa.medical_docs_to_cda.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "provider")
 public class Provider {
-    @MongoId
+    @Id
     private String id;
     private String organization;
     private String name;

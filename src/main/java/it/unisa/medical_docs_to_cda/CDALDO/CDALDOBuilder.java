@@ -131,7 +131,7 @@ public static void addHeader(Document doc, String oid, String extensionId, Strin
     id.setAttribute("assigningAuthorityName", assigningAuthorityName);
     root.appendChild(id);
 
-    addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera")
+    addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera");
     
     addTitle(doc, root,"LETTERA DI DIMISSIONE OSPEDALIERA");
 }

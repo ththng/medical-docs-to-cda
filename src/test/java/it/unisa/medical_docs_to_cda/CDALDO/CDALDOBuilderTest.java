@@ -45,7 +45,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document doc = builder.newDocument();
-
+    CDALDOId Oid= new CDALDOId("2.16.840.1.113883.2.9.2.99999.4.4", "Test123", "Test Authority");
     String oid = "2.16.840.1.113883.2.9.2.99999.4.4";
     String extensionId = "Test123";
     String assigningAuthorityName = "Test Authority";
@@ -54,7 +54,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     String confidentialityCodeValue = "N";
     String languageCodeValue = "it-IT";
     String versionNumberValue = "1";
-    CDALDOBuilder.addHeader( doc, oid, extensionId, assigningAuthorityName, status,effectiveTimeDate, confidentialityCodeValue, oid,extensionId, assigningAuthorityName, versionNumberValue); 
+    CDALDOBuilder.addHeader( doc, Oid, status,effectiveTimeDate, confidentialityCodeValue, Oid, versionNumberValue); 
     File outputDir = new File("test_output");
     if (!outputDir.exists()) {
         outputDir.mkdirs();

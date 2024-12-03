@@ -106,10 +106,10 @@ public class CDALDOBuilder {
 
 
 
+
     
-    public static void addHeader(Document doc, String oid, String extensionId, String assigningAuthorityName, String status,
-                                Date effectiveTimeDate,String confidentialityCodeValue, String setOid, String setExtensionId,
-                                String setAssigningAuthorityName, String versionNumberValue) {
+    public static void addHeader(Document doc, CDALDOId oid, String status,
+                                Date effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -134,9 +134,9 @@ public class CDALDOBuilder {
         root.appendChild(templateId);
 
         Element id = doc.createElement( "id");
-        id.setAttribute("root", oid);
-        id.setAttribute("extension", extensionId);
-        id.setAttribute("assigningAuthorityName", assigningAuthorityName);
+        id.setAttribute("root", oid.getOid());
+        id.setAttribute("extension", oid.getExtensionId());
+        id.setAttribute("assigningAuthorityName", oid.getAssigningAuthorityName());
         root.appendChild(id);
 
         addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera");
@@ -167,9 +167,9 @@ public class CDALDOBuilder {
         root.appendChild(languageCode);
 
         Element setId = doc.createElement( "setId");
-        setId.setAttribute("root", setOid);
-        setId.setAttribute("extension", setExtensionId);
-        setId.setAttribute("assigningAuthorityName", setAssigningAuthorityName);
+        setId.setAttribute("root", setOid.getOid());
+        setId.setAttribute("extension", setOid.getExtensionId());
+        setId.setAttribute("assigningAuthorityName", setOid.getAssigningAuthorityName());
         root.appendChild(setId);
 
         Element versionNumber = doc.createElement("versionNumber");
@@ -188,3 +188,4 @@ public class CDALDOBuilder {
         return formattedDate;
     }
 }
+

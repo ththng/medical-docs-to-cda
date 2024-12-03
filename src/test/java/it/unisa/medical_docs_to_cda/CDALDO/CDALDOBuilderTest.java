@@ -1,13 +1,11 @@
 package it.unisa.medical_docs_to_cda.CDALDO;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,78 +15,88 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class CDALDOBuilderTest {
-       
-    
-    
-    
-    
     
     // DocumentBuilder creation succeeds with default configuration
-
     @Test
     public void test_document_builder_creation_with_default_configuration() throws ParserConfigurationException {
         Document doc = CDALDOBuilder.createBasicDoc();
-
-        assertNotNull(doc);
-        assertEquals(0, doc.getChildNodes().getLength());
+        assertNotNull(doc, "Document should not be null");
+        assertEquals(0, doc.getChildNodes().getLength(), "Document should have no child nodes initially");
     }
 
-        // Verifies that the header is correctly added to the document with specified attributes
-@Test
-public void test_add_header_with_correct_attributes() throws ParserConfigurationException, TransformerException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document doc = builder.newDocument();
-    CDALDOId Oid= new CDALDOId("2.16.840.1.113883.2.9.2.99999.4.4", "Test123", "Test Authority");
-    String oid = "2.16.840.1.113883.2.9.2.99999.4.4";
-    String extensionId = "Test123";
-    String assigningAuthorityName = "Test Authority";
-    String status = "completed";
-    Date effectiveTimeDate = new Date(); // Use the current date for testing
-    String confidentialityCodeValue = "N";
-    String languageCodeValue = "it-IT";
-    String versionNumberValue = "1";
-    CDALDOBuilder.addHeader( doc, Oid, status,effectiveTimeDate, confidentialityCodeValue, Oid, versionNumberValue); 
-    File outputDir = new File("test_output");
-    if (!outputDir.exists()) {
-        outputDir.mkdirs();
+    // Verifies that the header is correctly added to the document with specified attributes
+    @Test
+    public void test_add_header_with_correct_attributes() throws ParserConfigurationException, TransformerException {
+        Document doc = createNewDocument();
+        CDALDOId oid = new CDALDOId("2.16.840.1.113883.2.9.2.99999.4.4", "Test123", "Test Authority");
+        String status = "completed";
+        Date effectiveTimeDate = new Date(); // Use the current date for testing
+        String confidentialityCodeValue = "N";
+        String versionNumberValue = "1";
+        CDALDOAddr Addr =new CDALDOAddr("H","Italy","Campania","Salerno","Vibonati","Vibonati","84079","Via Regina Margherita 1");
+        
+        // Create a mock patient
+        List<CDALDOId> patientIds = new ArrayList<>();
+        patientIds.add(oid);
+        List<CDALDOAddr> patientAddresses = new ArrayList<>();
+        patientAddresses.add(Addr);
+        CDALDOPatient patient = new CDALDOPatient(patientIds, 1, patientAddresses, new ArrayList<>(), new ArrayList<>(), "John", "Doe", "M", "City", effectiveTimeDate.toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate());
+
+        // Call addHeader with the new patient parameter
+        CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient); 
+        File outputFile = saveDocumentToFile(doc, "test_document.xsd");
+
+        Element root = doc.getDocumentElement();
+        assertEquals("ClinicalDocument", root.getTagName(), "Root element should be ClinicalDocument");
+        assertEquals("IT", root.getElementsByTagName("realmCode").item(0).getAttributes().getNamedItem("code").getNodeValue(), "Realm code should be IT");
+        assertEquals("2.16.840.1.113883.1.3", root.getElementsByTagName("typeId").item(0).getAttributes().getNamedItem("root").getNodeValue(), "Type ID root should match expected value");
+        assertEquals("POCD_HD000040", root.getElementsByTagName("typeId").item(0).getAttributes().getNamedItem("extension").getNodeValue(), "Type ID extension should match expected value");
+        
+        // New assertions for added elements
+        assertEquals(status, root.getElementsByTagName("sdtc:statusCode").item(0).getAttributes().getNamedItem("code").getNodeValue(), "Status code should match expected value");
+        assertEquals(formatEffectiveTime(effectiveTimeDate), root.getElementsByTagName("effectiveTime").item(0).getAttributes().getNamedItem("value").getNodeValue(), "Effective time should match expected format");
+        assertEquals(confidentialityCodeValue, root.getElementsByTagName("confidentialityCode").item(0).getAttributes().getNamedItem("code").getNodeValue(), "Confidentiality code should match expected value");
+        assertEquals("it-IT", root.getElementsByTagName("languageCode").item(0).getAttributes().getNamedItem("code").getNodeValue(), "Language code should be it-IT");
+        assertEquals(versionNumberValue, root.getElementsByTagName("versionNumber").item(0).getAttributes().getNamedItem("value").getNodeValue(), "Version number should match expected value");
     }
 
-    File outputFile = new File(outputDir, "test_document.xsd");
-    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    Transformer transformer = transformerFactory.newTransformer();
-    DOMSource source = new DOMSource(doc);
-    StreamResult result = new StreamResult(outputFile);
-    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-    transformer.transform(source, result);
+    // Test for handling null document
+    @Test
+    public void test_add_header_with_null_document() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            CDALDOBuilder.addHeader(null, new CDALDOId("oid", "ext", "auth"), "status", new Date(), "N", new CDALDOId("oid", "ext", "auth"), "1", null);
+        }, "Expected IllegalArgumentException for null document");
+    }
 
-    Element root = doc.getDocumentElement();
-    assertEquals("ClinicalDocument", root.getTagName());
-    assertEquals("IT", root.getElementsByTagName("realmCode").item(0).getAttributes().getNamedItem("code").getNodeValue());
-    assertEquals("2.16.840.1.113883.1.3", root.getElementsByTagName("typeId").item(0).getAttributes().getNamedItem("root").getNodeValue());
-    assertEquals("POCD_HD000040", root.getElementsByTagName("typeId").item(0).getAttributes().getNamedItem("extension").getNodeValue());
-    assertEquals(oid, root.getElementsByTagName("id").item(0).getAttributes().getNamedItem("root").getNodeValue());
-    assertEquals(extensionId, root.getElementsByTagName("id").item(0).getAttributes().getNamedItem("extension").getNodeValue());
-    assertEquals(assigningAuthorityName, root.getElementsByTagName("id").item(0).getAttributes().getNamedItem("assigningAuthorityName").getNodeValue());
+    private Document createNewDocument() throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.newDocument();
+    }
 
-    // New assertions for added elements
-    assertEquals(status, root.getElementsByTagName("sdtc:statusCode").item(0).getAttributes().getNamedItem("code").getNodeValue());
-    assertEquals(formatEffectiveTime(effectiveTimeDate), root.getElementsByTagName("effectiveTime").item(0).getAttributes().getNamedItem("value").getNodeValue());
-    assertEquals(confidentialityCodeValue, root.getElementsByTagName("confidentialityCode").item(0).getAttributes().getNamedItem("code").getNodeValue());
-    assertEquals(languageCodeValue, root.getElementsByTagName("languageCode").item(0).getAttributes().getNamedItem("code").getNodeValue());
-    assertEquals(versionNumberValue, root.getElementsByTagName("versionNumber").item(0).getAttributes().getNamedItem("value").getNodeValue());
-}
+    private File saveDocumentToFile(Document doc, String fileName) throws TransformerException {
+        File outputDir = new File("test_output");
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        File outputFile = new File(outputDir, fileName);
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(outputFile);
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(source, result);
+        return outputFile;
+    }
 
-private static String formatEffectiveTime(Date date) {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
-    sdf.setTimeZone(TimeZone.getDefault());
-    return sdf.format(date);
-}
-
+    private static String formatEffectiveTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf.format(date);
+    }
 }

@@ -2,6 +2,7 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -109,7 +110,8 @@ public class CDALDOBuilder {
 
     
     public static void addHeader(Document doc, CDALDOId oid, String status,
-                                Date effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue) {
+                                Date effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
+                                CDALDOPatient patient) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -175,6 +177,56 @@ public class CDALDOBuilder {
         Element versionNumber = doc.createElement("versionNumber");
         versionNumber.setAttribute("value", versionNumberValue);
         root.appendChild(versionNumber);
+
+        Element recordTarget = doc.createElement("recordTarget");
+        root.appendChild(recordTarget);
+
+        Element patientRole = doc.createElement("patientRole");
+
+        recordTarget.appendChild(patientRole);
+        
+        List<CDALDOId> patientId= patient.getIds();
+        if (!patientId.isEmpty()) {
+            for (CDALDOId paId : patientId) {
+                Element patId = doc.createElement("id");
+                patId.setAttribute("root", paId.getOid());
+                patId.setAttribute("extension", paId.getExtensionId());
+                patId.setAttribute("assigningAuthorityName", paId.getAssigningAuthorityName());
+                patientRole.appendChild(patId);
+            }
+                }
+        List<CDALDOAddr> patientAddrs = patient.getAddresses();
+        if (!patientAddrs.isEmpty()) {
+            for (CDALDOAddr addr : patientAddrs) {
+                Element addrElement = doc.createElement("addr");
+                addrElement.setAttribute("use", addr.getUse());
+                patientRole.appendChild(addrElement);
+                Element country = doc.createElement("country");
+                country.setTextContent(addr.getCountry());
+                addrElement.appendChild(country);
+                Element state = doc.createElement("state");
+                state.setTextContent(addr.getState());
+                addrElement.appendChild(state);
+                Element county = doc.createElement("county");
+                county.setTextContent(addr.getCounty());
+                addrElement.appendChild(county);
+                Element city = doc.createElement("city");
+                city.setTextContent(addr.getCity());
+                addrElement.appendChild(city);
+                Element censusTract = doc.createElement("censusTract");
+                censusTract.setTextContent(addr.getCensusTract());
+                addrElement.appendChild(censusTract);
+                Element postalCode = doc.createElement("postalCode");
+                postalCode.setTextContent(addr.getPostalCode());
+                addrElement.appendChild(postalCode);
+                Element street = doc.createElement("street");
+                street.setTextContent(addr.getStreet());
+                addrElement.appendChild(street);
+            }
+}   
+
+
+        
 
 
 

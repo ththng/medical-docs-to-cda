@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Patient List</title>
+    <title>Patients List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,10 +27,11 @@
             background-color: white;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         th {
@@ -62,10 +64,59 @@
             color: #bdc3c7;
             font-style: italic;
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .pagination a:hover {
+            background-color: #dfe6e9;
+        }
+
+        .pagination a.disabled,
+        .pagination span.disabled {
+            color: #bdc3c7;
+            pointer-events: none;
+        }
+
+        .pagination .current-page {
+            font-weight: bold;
+            color: #2c3e50;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Patient List</h1>
+    <h1>Patients List</h1>
+    <div class="search-container" style="text-align: center; margin-bottom: 20px;">
+        <form th:action="@{'/patients/results'}" method="get" style="display: inline-block;">
+            <select id="searchType" name="type" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
+                <option value="name">Search by Name</option>
+                <option value="SSN">Search by SSN</option>
+                <option value="passport">Search by Passport</option>
+                <option value="drivers">Search by Driver's License</option>
+            </select>
+            <input type="text" id="searchQuery" name="query" placeholder="Enter your search..." 
+                   style="padding: 8px; width: 250px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px;">
+            <button type="submit" style="padding: 8px 15px; background-color: #2c3e50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Search
+            </button>
+        </form>
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -80,11 +131,6 @@
                     <th>Maiden Name</th>
                     <th>Gender</th>
                     <th>Place of Birth</th>
-                    <th>Address</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>County</th>
-                    <th>ZIP Code</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,17 +138,39 @@
                 <tr th:each="patient : ${patients}">
                     <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
                     <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
-                    <td th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">Date of Birth</td>
-                    <td th:text="${#temporals.format(patient.deathDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.deathDate, 'dd/MM/yyyy') : 'N/A'}">Date of Death</td>
+                    <td
+                        th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">
+                        Date of Birth</td>
+                    <td
+                        th:text="${#temporals.format(patient.deathDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.deathDate, 'dd/MM/yyyy') : 'N/A'}">
+                        Date of Death</td>
                     <td th:text="${patient.SSN != null ? patient.SSN : 'N/A'}">SSN</td>
                     <td th:text="${patient.drivers != null ? patient.drivers : 'N/A'}">Driver's License</td>
                     <td th:text="${patient.passport != null ? patient.passport : 'N/A'}">Passport</td>
                     <td th:text="${patient.maiden != null ? patient.maiden : 'N/A'}">Maiden Name</td>
                     <td th:text="${patient.gender != null ? patient.gender : 'N/A'}">Gender</td>
                     <td th:text="${patient.birthPlace != null ? patient.birthPlace : 'N/A'}">Place of Birth</td>
-                    <td th:text="${patient.address != null ? patient.address : 'N/A'}">Address</td>
-                    <td th:text="${patient.city != null ? patient.city : 'N/A'}">City</td>
-                    <td th:text="${patient.state != null ? patient.state : 'N/A'}">State</td>
-                    <td th:text="${patient.county != null ? patient.county : 'N/A'}">County</td>
-                    <td th:text="${patient.zip != null ? patient.zip : 'N/A'}">ZIP</td>
-               
+                </tr>
+                <tr th:if="${patients.isEmpty()}">
+                    <td colspan="15" class="no-data">No patients found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <!-- Previous button -->
+        <a th:if="${currentPage > 0}" th:href="@{'/patients/list'(page=${currentPage - 1})}" class="previous">Previous</a>
+        <span th:if="${currentPage == 0}" class="disabled">Previous</span>
+
+        <!-- Current page -->
+        <span th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}" class="current-page"></span>
+
+        <!-- Next button -->
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{'/patients/list'(page=${currentPage + 1})}" class="next">Next</a>
+        <span th:if="${currentPage == totalPages - 1}" class="disabled">Next</span>
+    </div>
+
+</body>
+
+</html>

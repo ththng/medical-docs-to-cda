@@ -11,17 +11,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import it.unisa.medical_docs_to_cda.patient.Patient;
-import it.unisa.medical_docs_to_cda.repository.PatientRepository;
-
 @SpringBootApplication
 @EnableMongoRepositories
-public class MedicalDocumentCdaProcessorApplication implements CommandLineRunner {
-
-	@Autowired
-	PatientRepository patientItemRepo;
-	
-	List<Patient> itemList = new ArrayList<Patient>();
+public class MedicalDocumentCdaProcessorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MedicalDocumentCdaProcessorApplication.class, args);
 	}

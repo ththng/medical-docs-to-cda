@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 @Document(collection = "patient")
 public class Patient {
     @Field("Id")
@@ -55,86 +60,6 @@ public class Patient {
         this.state = state;
         this.county = county;
         this.zip = zip;
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-
-    public LocalDate getDeathDate() {
-        return deathDate;
-    }
-
-
-    public String getSSN() {
-        return SSN;
-    }
-
-
-    public String getDrivers() {
-        return drivers;
-    }
-
-
-    public String getPassport() {
-        return passport;
-    }
-
-
-    public String getFirst() {
-        return first;
-    }
-
-
-    public String getLast() {
-        return last;
-    }
-
-
-    public String getMaiden() {
-        return maiden;
-    }
-
-
-    public String getGender() {
-        return gender;
-    }
-
-
-    public String getBirthPlace() {
-        return birthPlace;
-    }
-
-
-    public String getAddress() {
-        return address;
-    }
-
-
-    public String getCity() {
-        return city;
-    }
-
-
-    public String getState() {
-        return state;
-    }
-
-
-    public String getCounty() {
-        return county;
-    }
-
-
-    public String getZip() {
-        return zip;
     }
 
 

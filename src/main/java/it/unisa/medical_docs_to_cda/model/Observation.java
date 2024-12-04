@@ -5,6 +5,11 @@ import java.time.LocalDateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 @Document(collection = "observation")
 public class Observation {
     @Field("DATE")
@@ -23,54 +28,7 @@ public class Observation {
     private String numeric;
     @Field("VALUE")
     private String value;
-    public LocalDateTime getDate() {
-        return date;
-    }
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-    public String getPatientId() {
-        return patientId;
-    }
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-    public String getEncounterId() {
-        return encounterId;
-    }
-    public void setEncounterId(String encounterId) {
-        this.encounterId = encounterId;
-    }
-    public String getCode() {
-        return code;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public String getUnits() {
-        return units;
-    }
-    public void setUnits(String units) {
-        this.units = units;
-    }
-    public String getNumeric() {
-        return numeric;
-    }
-    public void setNumeric(String numeric) {
-        this.numeric = numeric;
-    }
-    public String getValue() {
-        return value;
-    }
-    public void setValue(String value) {
-        this.value = value;
-    }
+    
     public Observation(LocalDateTime date, String patientId, String encounterId, String code, String description,
             String units, String numeric, String value) {
         this.date = date;

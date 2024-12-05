@@ -231,4 +231,7 @@ public class CDALDOAuthor {
                 ", prefix='" + prefix + '\'' +
                 '}';
     }
+    public boolean hasRegionalId() {
+    return regionalId != null;
+}
 }

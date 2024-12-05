@@ -7,7 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20241204000000+0100"/>
+    <effectiveTime value="20241205132729+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -30,26 +30,41 @@
                     <given>John</given>
                 </name>
                 <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
-                <birthTime value="20241204000000+0100"/>
+                <birthTime value="20241205000000+0100"/>
                 <birthplace>City</birthplace>
-                <guardian>
-                    <name>
-                        <family>Doe</family>
-                        <given>John</given>
-                    </name>
-                    <birthTime value="20241204000000+0100"/>
-                    <birthplace>City</birthplace>
-                    <addr use="H">
-                        <country>Italy</country>
-                        <state>Campania</state>
-                        <county>Salerno</county>
-                        <city>Vibonati</city>
-                        <censusTract>Vibonati</censusTract>
-                        <postalCode>84079</postalCode>
-                        <street>Via Regina Margherita 1</street>
-                    </addr>
-                </guardian>
             </patient>
         </patientRole>
     </recordTarget>
+    <author>
+        <time value="20241205132729"/>
+        <assignedAuthor>
+            <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            <telecom use="H" value="tel:+1-123-456-7890"/>
+            <telecom use="H" value="mailto:prova@prova.it"/>
+            <telecom use="H" value="mailto:prova@pec.it"/>
+            <assignedPerson>
+                <name>
+                    <family>Doe</family>
+                    <given>John</given>
+                    <prefix>doc</prefix>
+                </name>
+            </assignedPerson>
+            <representedOrganization>
+                <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            </representedOrganization>
+        </assignedAuthor>
+    </author>
+    <dataEnterer typeCode="ENT">
+        <time value="20241205132729"/>
+        <assignedEntity>
+            <assignedPerson>
+                <name>
+                    <given>John</given>
+                    <family>Doe</family>
+                </name>
+            </assignedPerson>
+            <id assignedAuthorityName="MEF" extension="Test123" root="2.16.840.1.113883.2.9.4.3.2"/>
+        </assignedEntity>
+    </dataEnterer>
 </ClinicalDocument>

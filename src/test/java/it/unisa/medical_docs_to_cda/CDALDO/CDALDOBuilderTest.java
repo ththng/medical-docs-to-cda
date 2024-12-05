@@ -2,8 +2,10 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +37,7 @@ public class CDALDOBuilderTest {
         Document doc = createNewDocument();
         CDALDOId oid = new CDALDOId("2.16.840.1.113883.2.9.2.99999.4.4", "Test123", "Test Authority");
         String status = "completed";
-        Date effectiveTimeDate = new Date(); // Use the current date for testing
+        LocalDate effectiveTimeDate = LocalDate.now(); // Use the current date for testing
         String confidentialityCodeValue = "N";
         String versionNumberValue = "1";
         CDALDOAddr Addr =new CDALDOAddr("H","Italy","Campania","Salerno","Vibonati","Vibonati","84079","Via Regina Margherita 1");
@@ -45,10 +47,10 @@ public class CDALDOBuilderTest {
         patientIds.add(oid);
         List<CDALDOAddr> patientAddresses = new ArrayList<>();
         patientAddresses.add(Addr);
-        CDALDOPatient patient = new CDALDOPatient(patientIds, 1, patientAddresses, new ArrayList<>(), new ArrayList<>(), "John", "Doe", "M", "City", effectiveTimeDate.toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDate());
+        CDALDOPatient patient = new CDALDOPatient(patientIds, 1, patientAddresses, new ArrayList<>(), new ArrayList<>(), "John", "Doe", "M", "City", LocalDate.now());
 
         // Call addHeader with the new patient parameter
-        CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient); 
+        CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient,patient); 
         File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
         Element root = doc.getDocumentElement();
@@ -69,7 +71,7 @@ public class CDALDOBuilderTest {
     @Test
     public void test_add_header_with_null_document() {
         assertThrows(IllegalArgumentException.class, () -> {
-            CDALDOBuilder.addHeader(null, new CDALDOId("oid", "ext", "auth"), "status", new Date(), "N", new CDALDOId("oid", "ext", "auth"), "1", null);
+            CDALDOBuilder.addHeader(null, new CDALDOId("oid", "ext", "auth"), "status", LocalDate.now(), "N", new CDALDOId("oid", "ext", "auth"), "1", null,null);
         }, "Expected IllegalArgumentException for null document");
     }
 
@@ -94,9 +96,8 @@ public class CDALDOBuilderTest {
         return outputFile;
     }
 
-    private static String formatEffectiveTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
-        sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(date);
-    }
+    private static String formatEffectiveTime(LocalDate date) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ");
+    return date.atStartOfDay(ZoneId.systemDefault()).format(formatter);
+}
 }

@@ -1,6 +1,9 @@
 package it.unisa.medical_docs_to_cda.CDALDO;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -110,8 +113,8 @@ public class CDALDOBuilder {
 
     
     public static void addHeader(Document doc, CDALDOId oid, String status,
-                                Date effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
-                                CDALDOPatient patient) {
+                                LocalDate effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
+                                CDALDOPatient patient, CDALDOPatient guardian, CDALDOAuthor author ) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -223,21 +226,124 @@ public class CDALDOBuilder {
                 street.setTextContent(addr.getStreet());
                 addrElement.appendChild(street);
             }
-}   
-
-
+        }   
+        List<String> telecomValues = patient.getTelecoms();
+        List<String> telecomUses = patient.getTelecomUses();
+        if (!telecomValues.isEmpty() && !telecomUses.isEmpty()) {
+            for (int i = 0; i < telecomValues.size(); i++) {
+                Element telecomElement = doc.createElement("telecom");
+                telecomElement.setAttribute("use", telecomUses.get(i));
+                telecomElement.setAttribute("value", telecomValues.get(i));
+                patientRole.appendChild(telecomElement);
+            }
+        }   
+      
         
+        Element patientElement = doc.createElement("patient");
+        patientRole.appendChild(patientElement);
+
+        Element nameElement = doc.createElement("name");
+        patientElement.appendChild(nameElement);
+
+        Element familyElement = doc.createElement("family");
+        familyElement.setTextContent(patient.getLastName());
+        nameElement.appendChild(familyElement);
+
+        Element givenElement = doc.createElement("given");
+        givenElement.setTextContent(patient.getFirstName());
+        nameElement.appendChild(givenElement);
+
+        Element administrativeGenderCodeElement = doc.createElement("administrativeGenderCode");
+        if(patient.getGender().equals("F")){
+            administrativeGenderCodeElement.setAttribute("code", patient.getGender());
+            administrativeGenderCodeElement.setAttribute("codeSystem", "2.16.840.1.113883.5.1");
+            administrativeGenderCodeElement.setAttribute("codeSystemName", "HL7 AdministrativeGender");
+            administrativeGenderCodeElement.setAttribute("displayName", "FEMMINA");
+        }else if(patient.getGender().equals("M")){
+            administrativeGenderCodeElement.setAttribute("code", patient.getGender());
+            administrativeGenderCodeElement.setAttribute("codeSystem", "2.16.840.1.113883.5.1");
+            administrativeGenderCodeElement.setAttribute("codeSystemName", "HL7 AdministrativeGender");
+            administrativeGenderCodeElement.setAttribute("displayName", "MASCHIO");
+        }
+            patientElement.appendChild(administrativeGenderCodeElement);
+
+        Element birthTimeElement = doc.createElement("birthTime");
+        birthTimeElement.setAttribute("value", formatEffectiveTime(patient.getBirthDate()));
+        patientElement.appendChild(birthTimeElement);
+
+        Element birthplaceElement = doc.createElement("birthplace");
+        birthplaceElement.setTextContent(patient.getBirthPlace());
+        patientElement.appendChild(birthplaceElement);
+       // guradian
+        if(guardian != null){
+        Element guardianPerson = doc.createElement("guardian");
+        patientElement.appendChild(guardianPerson);
+
+        Element guardianName = doc.createElement("name");
+        guardianPerson.appendChild(guardianName);
+
+        Element guardianFamily = doc.createElement("family");
+        guardianFamily.setTextContent(guardian.getLastName());
+        guardianName.appendChild(guardianFamily);
+
+        Element guardianGiven = doc.createElement("given");
+        guardianGiven.setTextContent(guardian.getFirstName());
+        guardianName.appendChild(guardianGiven);
 
 
+        Element guardianBirthTime = doc.createElement("birthTime");
+        guardianBirthTime.setAttribute("value", formatEffectiveTime(guardian.getBirthDate()));
+        guardianPerson.appendChild(guardianBirthTime);
 
+        Element guardianBirthplace = doc.createElement("birthplace");
+        guardianBirthplace.setTextContent(guardian.getBirthPlace());
+        guardianPerson.appendChild(guardianBirthplace);
 
+        List<CDALDOAddr> guardianAddrs = guardian.getAddresses();
+        if (!guardianAddrs.isEmpty()) {
+            for (CDALDOAddr addr : guardianAddrs) {
+                Element addrElement = doc.createElement("addr");
+                addrElement.setAttribute("use", addr.getUse());
+                guardianPerson.appendChild(addrElement);
+                Element country = doc.createElement("country");
+                country.setTextContent(addr.getCountry());
+                addrElement.appendChild(country);
+                Element state = doc.createElement("state");
+                state.setTextContent(addr.getState());
+                addrElement.appendChild(state);
+                Element county = doc.createElement("county");
+                county.setTextContent(addr.getCounty());
+                addrElement.appendChild(county);
+                Element city = doc.createElement("city");
+                city.setTextContent(addr.getCity());
+                addrElement.appendChild(city);
+                Element censusTract = doc.createElement("censusTract");
+                censusTract.setTextContent(addr.getCensusTract());
+                addrElement.appendChild(censusTract);
+                Element postalCode = doc.createElement("postalCode");
+                postalCode.setTextContent(addr.getPostalCode());
+                addrElement.appendChild(postalCode);
+                Element street = doc.createElement("street");
+                street.setTextContent(addr.getStreet());
+                addrElement.appendChild(street);
+            }
+        }   
+        List<String> telecomGuardianValues = guardian.getTelecoms();
+        List<String> telecomGuardianUses = guardian.getTelecomUses();
+        if (!telecomGuardianValues.isEmpty() && !telecomUses.isEmpty()) {
+            for (int i = 0; i < telecomValues.size(); i++) {
+                Element telecomGuardianElement = doc.createElement("telecom");
+                telecomGuardianElement.setAttribute("use", telecomGuardianUses.get(i));
+                telecomGuardianElement.setAttribute("value", telecomGuardianValues.get(i));
+                guardianPerson.appendChild(telecomGuardianElement);
+            }
+        }  
     }
+}
 
-    private static String formatEffectiveTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
-        sdf.setTimeZone(TimeZone.getDefault());
-        String formattedDate = sdf.format(date);
-        return formattedDate;
-    }
+   private static String formatEffectiveTime(LocalDate date) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ");
+    return date.atStartOfDay(ZoneId.systemDefault()).format(formatter);
+}
 }
 

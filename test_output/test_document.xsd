@@ -7,7 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20241206121825+0100"/>
+    <effectiveTime value="20241206220549+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -40,7 +40,14 @@
                             <item>
                                 <content ID="DIAG-2">Ipertiroidismo</content>
                             </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
                         </list>
+                        <paragraph>Paziente in cattivo compenso emodinamico.</paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
                     </text>
                 </section>
             </component>

@@ -3,6 +3,7 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -231,9 +232,11 @@ public class CDALDOBuilder {
     }
 
     public static Element createSection(Document doc, Element structuredBody, String typeCode,
-            String sectionClassCode, String sectionMoodCode,
-            String code, String codeSystem, String codeSystemName,
-            String displayName, String titleText, String[] items) {
+        String sectionClassCode, String sectionMoodCode,
+        String code, String codeSystem, String codeSystemName,
+        String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
+
+        int count = 0;
         // Section component
         Element component = doc.createElement("component");
         component.setAttribute("typeCode", typeCode);
@@ -258,22 +261,64 @@ public class CDALDOBuilder {
         // Section text
         Element text = doc.createElement("text");
         section.appendChild(text);
-        Element list = doc.createElement("list");
-        text.appendChild(list);
-        for (int i = 0; i < items.length; i++) {
-            Element listItem = doc.createElement("item");
-            Element content = doc.createElement("content");
-            content.setAttribute("ID", "DIAG-" + (i + 1)); // Dynamic ID
-            content.setTextContent(items[i]);
-
-            listItem.appendChild(content);
-            list.appendChild(listItem);
+        for(CDALDONarrativeBlock block: narrativeBlocks){
+            String textType = block.getNarrativeType();
+            Object textContent = block.getContent();
+            switch(textType) {
+                case "paragraph":
+                    if(textContent instanceof String){
+                        Element paragraph = doc.createElement("paragraph");
+                        text.appendChild(paragraph);
+                        paragraph.setTextContent((String) textContent);
+                        }
+                    else{
+                        throw new IllegalArgumentException("Content for 'paragraph' narrative type must be a String object.");
+                    }
+                    break;
+                case "list":
+                    if(textContent instanceof String[]){
+                        Element list = doc.createElement("list");
+                        text.appendChild(list);
+                        count = 0;
+                        for (String item: (String[]) textContent) {
+                            Element listItem = doc.createElement("item");
+                            Element content = doc.createElement("content");
+                            content.setAttribute("ID", "DIAG-" + (count + 1)); // Dynamic ID
+                            count ++;
+                            content.setTextContent(item);
+            
+                            listItem.appendChild(content);
+                            list.appendChild(listItem);
+                        }
+                    }
+                    else{
+                        throw new IllegalArgumentException("Content for 'list' narrative type must be a String array.");
+                    }
+                    break;
+                case "formatted_text":
+                    if(textContent instanceof Map){
+                        @SuppressWarnings("unchecked")
+                        Map<String, String> formattedData = ((Map <String, String>) textContent);
+                        for (Map.Entry<String, String> entry: formattedData.entrySet()) {
+                            Element content = doc.createElement("content");
+                            content.setAttribute("styleCode", entry.getKey()); // styleCode is now the type of format to use on the data
+                            content.setTextContent(entry.getValue());
+                            text.appendChild(content);            
+                        }
+                    }
+                    else{
+                        throw new IllegalArgumentException("Content for 'formatted_text' narrative type must be a Map");
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported narrative type" + textType);
+            } 
         }
-
+        
         return component;
     }
 
-    public static void addBody(Document doc, String[] ricoveryReasonsItems) {
+    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -291,7 +336,7 @@ public class CDALDOBuilder {
         Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
                 "46241-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Diagnosi di Accettazione",
-                "Motivo del ricovero", ricoveryReasonsItems);
+                "Motivo del ricovero", narrativeBlocks);
         structuredBody.appendChild(section1);
 
     }

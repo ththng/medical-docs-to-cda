@@ -4,7 +4,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,8 +52,20 @@ public class CDALDOBuilderTest {
 
         // Call addHeader with the new patient parameter
         CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient); 
-        String[] items1 = {"Disturbo di panico","Ipertiroidismo"};
-        CDALDOBuilder.addBody(doc, items1);
+
+        // Call to addBody method
+        List<CDALDONarrativeBlock> narrativeBlocks = new ArrayList<>();
+        String[] recoveryReasonsItems = {"Disturbo di panico","Ipertiroidismo","Depressione"};
+        narrativeBlocks.add(new CDALDONarrativeBlock("list", recoveryReasonsItems));
+        narrativeBlocks.add(new CDALDONarrativeBlock("paragraph", "Paziente in cattivo compenso emodinamico."));
+
+        Map<String, String> formattedContent = new LinkedHashMap<>(); // Use HashMap<>() if the sequence of the elements is not important
+        formattedContent.put("Bold", "This is bold text.");
+        formattedContent.put("Italics", "This is italicized text.");
+        formattedContent.put("Underline", "This is underlined text.");
+        narrativeBlocks.add(new CDALDONarrativeBlock("formatted_text", formattedContent));
+
+        CDALDOBuilder.addBody(doc, narrativeBlocks);
         File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
         Element root = doc.getDocumentElement();
@@ -100,14 +115,6 @@ public class CDALDOBuilderTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssZ");
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(date);
-    }
-
-    @Test
-    public void test_add_body_with_correct_attributes() throws ParserConfigurationException, TransformerException {
-        Document doc = createNewDocument();
-        String[] items1 = {"Disturbo di panico","Ipertiroidismo"};
-        CDALDOBuilder.addBody(doc, items1);
-        
     }
     
 }

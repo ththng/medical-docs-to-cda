@@ -225,12 +225,6 @@ public class CDALDOBuilder {
             }
 }   
 
-
-        
-
-
-
-
     }
 
     private static String formatEffectiveTime(Date date) {
@@ -239,5 +233,70 @@ public class CDALDOBuilder {
         String formattedDate = sdf.format(date);
         return formattedDate;
     }
+
+    public static Element createSection(Document doc, Element structuredBody, String typeCode, 
+                                    String sectionClassCode, String sectionMoodCode, 
+                                    String code, String codeSystem, String codeSystemName, 
+                                    String displayName, String titleText, String[] items) {
+        // Section component
+        Element component = doc.createElement("component");
+        component.setAttribute("typeCode", typeCode);
+
+        structuredBody.appendChild(component);
+
+        // Section element
+        Element section = doc.createElement("section");
+        section.setAttribute("classCode", sectionClassCode);
+        section.setAttribute("moodCode", sectionMoodCode);
+        // Append the section to the component
+        component.appendChild(section);
+
+        // Section code
+        addCode(doc, section, code, codeSystem, codeSystemName, displayName);
+
+        // Section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        section.appendChild(title);
+
+        // Section text
+        Element text = doc.createElement("text");
+        Element list = doc.createElement("list");
+        for (int i = 0; i < items.length; i++) {
+            Element listItem = doc.createElement("item");
+            Element content = doc.createElement("content");
+            content.setAttribute("ID", "DIAG-" + (i + 1)); // Dynamic ID
+            content.setTextContent(items[i]); 
+
+        listItem.appendChild(content);
+        list.appendChild(listItem);
+        }
+        text.appendChild(list);
+        section.appendChild(text);
+
+    return component;
 }
 
+    public static void addBody(Document doc){
+
+        if (doc == null){
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+        
+        Element component = doc.createElement( "component");
+        doc.getElementById("ClinicalDocument").appendChild(component);
+
+        Element structuredBody = doc.createElement( "structuredBody");
+        structuredBody.setAttribute("classCode", "DOCBODY");
+        structuredBody.setAttribute("moodCode", "EVN");
+        doc.getElementById("ClinicalDocument").appendChild(structuredBody);
+
+        String[] items1 = {"Disturbo di panico", "Ipertiroidismo"};
+        Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN", 
+                                     "46241-6", "2.16.840.1.113883.6.1", 
+                                     "LOINC", "Diagnosi di Accettazione", 
+                                     "Motivo del ricovero", items1);
+        structuredBody.appendChild(section1);
+        
+    }
+}

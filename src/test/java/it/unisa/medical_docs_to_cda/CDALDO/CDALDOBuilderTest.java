@@ -99,4 +99,11 @@ public class CDALDOBuilderTest {
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(date);
     }
+
+    @Test
+    void test_add_body_with_correct_attributes() {
+        
+        
+    }
+    
 }

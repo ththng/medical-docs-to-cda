@@ -13,7 +13,8 @@ import org.w3c.dom.*;
 
 public class CDALDOBuilder {
 
-    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName, String displayName) {
+    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+            String displayName) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -64,7 +65,8 @@ public class CDALDOBuilder {
         parent.appendChild(textElement);
     }
 
-    public static void addElement(Document doc, Element parent, String elementName, String textContent, String[] attributes, String[] values) {
+    public static void addElement(Document doc, Element parent, String elementName, String textContent,
+            String[] attributes, String[] values) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -95,37 +97,31 @@ public class CDALDOBuilder {
         parent.appendChild(element);
     }
 
-
     public static Document createBasicDoc() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
-        
-        return doc;
 
+        return doc;
     }
 
-
-
-
-    
     public static void addHeader(Document doc, CDALDOId oid, String status,
-                                Date effectiveTimeDate,String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
-                                CDALDOPatient patient) {
+            Date effectiveTimeDate, String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
+            CDALDOPatient patient) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
 
-        Element root = doc.createElement( "ClinicalDocument");
+        Element root = doc.createElement("ClinicalDocument");
         root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation", "urn:hl7-org:v3 CDA.xsd");
 
         doc.appendChild(root);
 
-        Element realmCode = doc.createElement( "realmCode");
+        Element realmCode = doc.createElement("realmCode");
         realmCode.setAttribute("code", "IT");
         root.appendChild(realmCode);
 
-        Element typeId = doc.createElement( "typeId");
+        Element typeId = doc.createElement("typeId");
         typeId.setAttribute("root", "2.16.840.1.113883.1.3");
         typeId.setAttribute("extension", "POCD_HD000040");
         root.appendChild(typeId);
@@ -135,7 +131,7 @@ public class CDALDOBuilder {
         templateId.setAttribute("extension", "1.2");
         root.appendChild(templateId);
 
-        Element id = doc.createElement( "id");
+        Element id = doc.createElement("id");
         id.setAttribute("root", oid.getOid());
         id.setAttribute("extension", oid.getExtensionId());
         id.setAttribute("assigningAuthorityName", oid.getAssigningAuthorityName());
@@ -148,7 +144,7 @@ public class CDALDOBuilder {
         Element statusCode = doc.createElementNS("urn:hl7-org:sdtc", "sdtc:statusCode");
         statusCode.setAttribute("code", status);
         root.appendChild(statusCode);
-            
+
         Element effectiveTime = doc.createElement("effectiveTime");
         effectiveTime.setAttribute("value", formatEffectiveTime(effectiveTimeDate));
         root.appendChild(effectiveTime);
@@ -157,10 +153,10 @@ public class CDALDOBuilder {
         confidentialityCode.setAttribute("code", confidentialityCodeValue);
         confidentialityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.25");
         confidentialityCode.setAttribute("codeSystemName", "HL7 Confidentiality");
-        if(confidentialityCodeValue=="V"){
+        if (confidentialityCodeValue == "V") {
             confidentialityCode.setAttribute("displayName", "Very restricted");
-        }else if(confidentialityCodeValue=="N"){
-         confidentialityCode.setAttribute("displayName", "Normal");
+        } else if (confidentialityCodeValue == "N") {
+            confidentialityCode.setAttribute("displayName", "Normal");
         }
         root.appendChild(confidentialityCode);
 
@@ -168,7 +164,7 @@ public class CDALDOBuilder {
         languageCode.setAttribute("code", "it-IT");
         root.appendChild(languageCode);
 
-        Element setId = doc.createElement( "setId");
+        Element setId = doc.createElement("setId");
         setId.setAttribute("root", setOid.getOid());
         setId.setAttribute("extension", setOid.getExtensionId());
         setId.setAttribute("assigningAuthorityName", setOid.getAssigningAuthorityName());
@@ -184,8 +180,8 @@ public class CDALDOBuilder {
         Element patientRole = doc.createElement("patientRole");
 
         recordTarget.appendChild(patientRole);
-        
-        List<CDALDOId> patientId= patient.getIds();
+
+        List<CDALDOId> patientId = patient.getIds();
         if (!patientId.isEmpty()) {
             for (CDALDOId paId : patientId) {
                 Element patId = doc.createElement("id");
@@ -194,7 +190,7 @@ public class CDALDOBuilder {
                 patId.setAttribute("assigningAuthorityName", paId.getAssigningAuthorityName());
                 patientRole.appendChild(patId);
             }
-                }
+        }
         List<CDALDOAddr> patientAddrs = patient.getAddresses();
         if (!patientAddrs.isEmpty()) {
             for (CDALDOAddr addr : patientAddrs) {
@@ -223,7 +219,7 @@ public class CDALDOBuilder {
                 street.setTextContent(addr.getStreet());
                 addrElement.appendChild(street);
             }
-}   
+        }
 
     }
 
@@ -234,10 +230,10 @@ public class CDALDOBuilder {
         return formattedDate;
     }
 
-    public static Element createSection(Document doc, Element structuredBody, String typeCode, 
-                                    String sectionClassCode, String sectionMoodCode, 
-                                    String code, String codeSystem, String codeSystemName, 
-                                    String displayName, String titleText, String[] items) {
+    public static Element createSection(Document doc, Element structuredBody, String typeCode,
+            String sectionClassCode, String sectionMoodCode,
+            String code, String codeSystem, String codeSystemName,
+            String displayName, String titleText, String[] items) {
         // Section component
         Element component = doc.createElement("component");
         component.setAttribute("typeCode", typeCode);
@@ -268,35 +264,35 @@ public class CDALDOBuilder {
             Element listItem = doc.createElement("item");
             Element content = doc.createElement("content");
             content.setAttribute("ID", "DIAG-" + (i + 1)); // Dynamic ID
-            content.setTextContent(items[i]); 
+            content.setTextContent(items[i]);
 
             listItem.appendChild(content);
             list.appendChild(listItem);
         }
 
-    return component;
-}
+        return component;
+    }
 
-    public static void addBody(Document doc, String[] ricoveryReasonsItems){
+    public static void addBody(Document doc, String[] ricoveryReasonsItems) {
 
-        if (doc == null){
+        if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
-        
-        Element component = doc.createElement( "component");
+
+        Element component = doc.createElement("component");
         doc.getElementsByTagName("ClinicalDocument").item(0).appendChild(component);
 
-        Element structuredBody = doc.createElement( "structuredBody");
+        Element structuredBody = doc.createElement("structuredBody");
         structuredBody.setAttribute("classCode", "DOCBODY");
         structuredBody.setAttribute("moodCode", "EVN");
 
         component.appendChild(structuredBody);
 
-        Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN", 
-                                     "46241-6", "2.16.840.1.113883.6.1", 
-                                     "LOINC", "Diagnosi di Accettazione", 
-                                     "Motivo del ricovero", ricoveryReasonsItems);
+        Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
+                "46241-6", "2.16.840.1.113883.6.1",
+                "LOINC", "Diagnosi di Accettazione",
+                "Motivo del ricovero", ricoveryReasonsItems);
         structuredBody.appendChild(section1);
-        
+
     }
 }

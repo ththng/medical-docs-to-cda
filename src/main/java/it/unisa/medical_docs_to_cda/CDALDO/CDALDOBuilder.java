@@ -261,41 +261,41 @@ public class CDALDOBuilder {
 
         // Section text
         Element text = doc.createElement("text");
+        section.appendChild(text);
         Element list = doc.createElement("list");
+        text.appendChild(list);
         for (int i = 0; i < items.length; i++) {
             Element listItem = doc.createElement("item");
             Element content = doc.createElement("content");
             content.setAttribute("ID", "DIAG-" + (i + 1)); // Dynamic ID
             content.setTextContent(items[i]); 
 
-        listItem.appendChild(content);
-        list.appendChild(listItem);
+            listItem.appendChild(content);
+            list.appendChild(listItem);
         }
-        text.appendChild(list);
-        section.appendChild(text);
 
     return component;
 }
 
-    public static void addBody(Document doc){
+    public static void addBody(Document doc, String[] ricoveryReasonsItems){
 
         if (doc == null){
             throw new IllegalArgumentException("Document cannot be null");
         }
         
         Element component = doc.createElement( "component");
-        doc.getElementById("ClinicalDocument").appendChild(component);
+        doc.getElementsByTagName("ClinicalDocument").item(0).appendChild(component);
 
         Element structuredBody = doc.createElement( "structuredBody");
         structuredBody.setAttribute("classCode", "DOCBODY");
         structuredBody.setAttribute("moodCode", "EVN");
-        doc.getElementById("ClinicalDocument").appendChild(structuredBody);
 
-        String[] items1 = {"Disturbo di panico", "Ipertiroidismo"};
+        component.appendChild(structuredBody);
+
         Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN", 
                                      "46241-6", "2.16.840.1.113883.6.1", 
                                      "LOINC", "Diagnosi di Accettazione", 
-                                     "Motivo del ricovero", items1);
+                                     "Motivo del ricovero", ricoveryReasonsItems);
         structuredBody.appendChild(section1);
         
     }

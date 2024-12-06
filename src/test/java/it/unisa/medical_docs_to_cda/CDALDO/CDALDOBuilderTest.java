@@ -49,6 +49,8 @@ public class CDALDOBuilderTest {
 
         // Call addHeader with the new patient parameter
         CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient); 
+        String[] items1 = {"Disturbo di panico","Ipertiroidismo"};
+        CDALDOBuilder.addBody(doc, items1);
         File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
         Element root = doc.getDocumentElement();
@@ -101,8 +103,10 @@ public class CDALDOBuilderTest {
     }
 
     @Test
-    void test_add_body_with_correct_attributes() {
-        
+    public void test_add_body_with_correct_attributes() throws ParserConfigurationException, TransformerException {
+        Document doc = createNewDocument();
+        String[] items1 = {"Disturbo di panico","Ipertiroidismo"};
+        CDALDOBuilder.addBody(doc, items1);
         
     }
     

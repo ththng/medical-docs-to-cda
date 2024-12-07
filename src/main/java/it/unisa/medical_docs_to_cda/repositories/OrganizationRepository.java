@@ -7,5 +7,5 @@ import it.unisa.medical_docs_to_cda.model.Organization;
 
 @Repository
 public interface OrganizationRepository extends MongoRepository<Organization, String>{
-
+    
 }

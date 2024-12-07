@@ -5,6 +5,13 @@ import java.time.LocalDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 @Document(collection = "condition")
 public class Condition {
     @Field("START")
@@ -19,42 +26,7 @@ public class Condition {
     private String code;
     @Field("DESCRIPTION")
     private String description;
-    public LocalDate getStart() {
-        return start;
-    }
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
-    public LocalDate getStop() {
-        return stop;
-    }
-    public void setStop(LocalDate stop) {
-        this.stop = stop;
-    }
-    public String getPatientId() {
-        return patientId;
-    }
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-    public String getEncounterId() {
-        return encounterId;
-    }
-    public void setEncounterId(String encounterId) {
-        this.encounterId = encounterId;
-    }
-    public String getCode() {
-        return code;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    
 
     public Condition(LocalDate start, LocalDate stop, String patientId, String encounterId, String code,
             String description) {

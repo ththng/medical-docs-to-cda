@@ -13,6 +13,7 @@ import it.unisa.medical_docs_to_cda.model.Patient;
 public interface PatientRepository extends MongoRepository<Patient, String> {
 
     List<Patient> findByFirstIgnoreCaseAndLastIgnoreCase(String first, String last);
+    @SuppressWarnings("null")
     Page<Patient> findAll(Pageable pageable);
     List<Patient> findByFirstContainingIgnoreCaseAndLastContainingIgnoreCase(String first, String last);
     List<Patient> findBySSN(String SSN);

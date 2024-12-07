@@ -22,6 +22,7 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: white;
+            cursor: pointer;
         }
         th, td {
             padding: 12px 15px;
@@ -54,11 +55,26 @@
             text-decoration: underline;
         }
     </style>
+    <script>
+        function redirectToReport(patientId) {
+            window.location.href = `/patients/${patientId}/report`;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = document.querySelectorAll("tr[data-patient-id]");
+            rows.forEach(row => {
+                row.addEventListener("click", () => {
+                    const patientId = row.getAttribute("data-patient-id");
+                    redirectToReport(patientId);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Search Results</h1>
 
-    <div th:if="${patients.size() > 0}">
+    <div th:if="${patients != null}">
         <table>
             <thead>
                 <tr>
@@ -70,7 +86,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="patient : ${patients}">
+                <tr th:each="patient : ${patients}" 
+                    th:attr="data-patient-id=${patient.id}">
                     <td th:text="${patient.first}">First Name</td>
                     <td th:text="${patient.last}">Last Name</td>
                     <td th:text="${patient.SSN}">SSN</td>
@@ -81,7 +98,7 @@
         </table>
     </div>
 
-    <div class="no-results" th:if="${patients.size() == 0}">
+    <div class="no-results" th:if="${patients == null or patients.isEmpty()}">
         <p>No patients found matching your search criteria.</p>
     </div>
 

@@ -121,23 +121,21 @@
         <table>
             <thead>
                 <tr>
-                    <th>First Name</th>
                     <th>Last Name</th>
+                    <th>First Name</th>
                     <th>Date of Birth</th>
                     <th>Date of Death</th>
                     <th>SSN</th>
                     <th>Driver's License</th>
                     <th>Passport</th>
-                    <th>Maiden Name</th>
-                    <th>Gender</th>
                     <th>Place of Birth</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Loop through the patients -->
-                <tr th:each="patient : ${patients}">
-                    <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
+                <tr th:each="patient : ${patients}" data-id="${patient.id}" class="clickable-row" style="cursor: pointer;">
                     <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
+                    <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
                     <td
                         th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">
                         Date of Birth</td>
@@ -147,8 +145,6 @@
                     <td th:text="${patient.SSN != null ? patient.SSN : 'N/A'}">SSN</td>
                     <td th:text="${patient.drivers != null ? patient.drivers : 'N/A'}">Driver's License</td>
                     <td th:text="${patient.passport != null ? patient.passport : 'N/A'}">Passport</td>
-                    <td th:text="${patient.maiden != null ? patient.maiden : 'N/A'}">Maiden Name</td>
-                    <td th:text="${patient.gender != null ? patient.gender : 'N/A'}">Gender</td>
                     <td th:text="${patient.birthPlace != null ? patient.birthPlace : 'N/A'}">Place of Birth</td>
                 </tr>
                 <tr th:if="${patients.isEmpty()}">
@@ -172,5 +168,17 @@
     </div>
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const patientId = this.getAttribute('data-id');
+                window.location.href = '/patients/results/' + patientId;
+            });
+        });
+    });
+</script>
+
 
 </html>

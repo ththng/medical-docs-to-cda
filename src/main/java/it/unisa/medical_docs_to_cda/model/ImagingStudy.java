@@ -5,6 +5,13 @@ import java.time.LocalDateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 @Document(collection = "imagingstudy")
 public class ImagingStudy {
     @Field("ID")
@@ -27,66 +34,7 @@ public class ImagingStudy {
     private String sopCode;
     @Field("SOP_DESCRIPTION")
     private String sopDescription;
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public LocalDateTime getDate() {
-        return date;
-    }
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-    public String getPatientId() {
-        return patientId;
-    }
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-    public String getEncounterId() {
-        return encounterId;
-    }
-    public void setEncounterId(String encounterId) {
-        this.encounterId = encounterId;
-    }
-    public String getBodySiteCode() {
-        return bodySiteCode;
-    }
-    public void setBodySiteCode(String bodySiteCode) {
-        this.bodySiteCode = bodySiteCode;
-    }
-    public String getBodySiteDescription() {
-        return bodySiteDescription;
-    }
-    public void setBodySiteDescription(String bodySiteDescription) {
-        this.bodySiteDescription = bodySiteDescription;
-    }
-    public String getModalityCode() {
-        return modalityCode;
-    }
-    public void setModalityCode(String modalityCode) {
-        this.modalityCode = modalityCode;
-    }
-    public String getModalityDescription() {
-        return modalityDescription;
-    }
-    public void setModalityDescription(String modalityDescription) {
-        this.modalityDescription = modalityDescription;
-    }
-    public String getSopCode() {
-        return sopCode;
-    }
-    public void setSopCode(String sopCode) {
-        this.sopCode = sopCode;
-    }
-    public String getSopDescription() {
-        return sopDescription;
-    }
-    public void setSopDescription(String sopDescription) {
-        this.sopDescription = sopDescription;
-    }
+   
     public ImagingStudy(String id, LocalDateTime date, String patientId, String encounterId, String bodySiteCode,
             String bodySiteDescription, String modalityCode, String modalityDescription, String sopCode,
             String sopDescription) {

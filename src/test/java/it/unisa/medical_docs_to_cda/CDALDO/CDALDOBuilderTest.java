@@ -57,7 +57,7 @@ public class CDALDOBuilderTest {
         List<CDALDONarrativeBlock> narrativeBlocks = new ArrayList<>();
         String[] recoveryReasonsItems = {"Disturbo di panico","Ipertiroidismo","Depressione"};
         narrativeBlocks.add(new CDALDONarrativeBlock("list", recoveryReasonsItems));
-        narrativeBlocks.add(new CDALDONarrativeBlock("paragraph", "Paziente in cattivo compenso emodinamico."));
+        narrativeBlocks.add(new CDALDONarrativeBlock("paragraph", "Paziente in cattivo compenso emodinamico.\n Sto molto male aiuto \n non riesco a cantare bene."));
 
         Map<String, String> formattedContent = new LinkedHashMap<>(); // Use HashMap<>() if the sequence of the elements is not important
         formattedContent.put("Bold", "This is bold text.");

@@ -258,7 +258,7 @@ public class CDALDOBuilder {
         title.setTextContent(titleText);
         section.appendChild(title);
 
-        // Section text
+        // Section text  
         Element text = doc.createElement("text");
         section.appendChild(text);
         for(CDALDONarrativeBlock block: narrativeBlocks){
@@ -266,15 +266,27 @@ public class CDALDOBuilder {
             Object textContent = block.getContent();
             switch(textType) {
                 case "paragraph":
-                    if(textContent instanceof String){
+                    if (textContent instanceof String) {
                         Element paragraph = doc.createElement("paragraph");
                         text.appendChild(paragraph);
-                        paragraph.setTextContent((String) textContent);
+
+                        // Split the text according to the \n escape sequence
+                        String[] fragments = ((String) textContent).split("\\n");
+
+                        for (int i = 0; i < fragments.length; i++) {
+                            paragraph.appendChild(doc.createTextNode(fragments[i]));
+
+                            // Add <br> tag until the last split element
+                            if (i < fragments.length - 1) {
+                                Element br = doc.createElement("br");
+                                paragraph.appendChild(br);
+                            }
                         }
-                    else{
+                    } else {
                         throw new IllegalArgumentException("Content for 'paragraph' narrative type must be a String object.");
                     }
                     break;
+
                 case "list":
                     if(textContent instanceof String[]){
                         Element list = doc.createElement("list");
@@ -295,6 +307,7 @@ public class CDALDOBuilder {
                         throw new IllegalArgumentException("Content for 'list' narrative type must be a String array.");
                     }
                     break;
+
                 case "formatted_text":
                     if(textContent instanceof Map){
                         @SuppressWarnings("unchecked")
@@ -318,7 +331,7 @@ public class CDALDOBuilder {
         return component;
     }
 
-    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) {
+    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) { 
 
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");

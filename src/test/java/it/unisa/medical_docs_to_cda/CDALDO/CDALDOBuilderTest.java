@@ -90,6 +90,13 @@ public class CDALDOBuilderTest {
         }, "Expected IllegalArgumentException for null document");
     }
 
+    @Test
+    public void test_add_body_with_null_document() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            CDALDOBuilder.addBody(null, null);
+        }, "Expected IllegalArgumentException for null document");
+    }
+
     private Document createNewDocument() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

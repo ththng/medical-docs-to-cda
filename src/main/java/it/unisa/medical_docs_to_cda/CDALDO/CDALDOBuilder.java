@@ -236,7 +236,6 @@ public class CDALDOBuilder {
         String code, String codeSystem, String codeSystemName,
         String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
-        int count = 0;
         // Section component
         Element component = doc.createElement("component");
         component.setAttribute("typeCode", typeCode);
@@ -259,8 +258,15 @@ public class CDALDOBuilder {
         section.appendChild(title);
 
         // Section text  
+        createText(doc, section, narrativeBlocks);
+
+        return component;
+    }
+
+    public static void createText(Document doc, Element section, List<CDALDONarrativeBlock> narrativeBlocks) {
         Element text = doc.createElement("text");
         section.appendChild(text);
+        int count = 0;
         for(CDALDONarrativeBlock block: narrativeBlocks){
             String textType = block.getNarrativeType();
             Object textContent = block.getContent();
@@ -327,8 +333,21 @@ public class CDALDOBuilder {
                     throw new IllegalArgumentException("Unsupported narrative type" + textType);
             } 
         }
-        
-        return component;
+    }
+
+    public static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
+            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
+
+    }
+
+    public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
+    String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
+
+    }
+
+    public static void createPharmacologicalTherapySection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
+    String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
+
     }
 
     public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) { 

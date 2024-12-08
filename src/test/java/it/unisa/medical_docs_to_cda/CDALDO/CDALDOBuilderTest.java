@@ -4,14 +4,10 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -91,6 +87,13 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     assertEquals("it-IT", root.getElementsByTagName("languageCode").item(0).getAttributes().getNamedItem("code").getNodeValue(), "Language code should be it-IT");
     assertEquals(versionNumberValue, root.getElementsByTagName("versionNumber").item(0).getAttributes().getNamedItem("value").getNodeValue(), "Version number should match expected value");
 }
+
+    @Test
+    public void test_add_body_with_null_document() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            CDALDOBuilder.addBody(null, null);
+        }, "Expected IllegalArgumentException for null document");
+    }
 
 private Document createNewDocument() throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

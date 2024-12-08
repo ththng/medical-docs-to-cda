@@ -16,9 +16,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 
 public class CDALDOBuilder {
-  public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(ZoneId.systemDefault());
-  public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ").withZone(ZoneId.systemDefault());
-
+    public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+            .withZone(ZoneId.systemDefault());
+    public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ")
+            .withZone(ZoneId.systemDefault());
 
     public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
             String displayName) {
@@ -112,15 +113,15 @@ public class CDALDOBuilder {
         return doc;
     }
 
-
-
-public static void addHeader(Document doc, CDALDOId oid, String status,
-                             LocalDateTime effectiveTimeDate, String confidentialityCodeValue, CDALDOId setOid, String versionNumberValue,
-                             CDALDOPatient patient, CDALDOPatient guardian, CDALDOAuthor author, LocalDateTime authorTime, CDALDOId rapresentedOrganization, CDALDOAuthor compiler, LocalDateTime compilerTime) {
+    public static void addHeader(Document doc, CDALDOId oid, String status,
+            LocalDateTime effectiveTimeDate, String confidentialityCodeValue, CDALDOId setOid,
+            String versionNumberValue,
+            CDALDOPatient patient, CDALDOPatient guardian, CDALDOAuthor author, LocalDateTime authorTime,
+            CDALDOId rapresentedOrganization, CDALDOAuthor compiler, LocalDateTime compilerTime) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
-        Element root = doc.createElement( "ClinicalDocument");
+        Element root = doc.createElement("ClinicalDocument");
         root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation", "urn:hl7-org:v3 CDA.xsd");
 
         doc.appendChild(root);
@@ -199,9 +200,9 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
                 patientRole.appendChild(patId);
             }
         }
-        
+
         createAddressElements(doc, patientRole, patient.getAddresses());
-        
+
         List<String> telecomValues = patient.getTelecoms();
         List<String> telecomUses = patient.getTelecomUses();
         if (!telecomValues.isEmpty() && !telecomUses.isEmpty()) {
@@ -211,8 +212,8 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
                 telecomElement.setAttribute("value", telecomValues.get(i));
                 patientRole.appendChild(telecomElement);
             }
-        }   
-      
+        }
+
         Element patientElement = doc.createElement("patient");
         patientRole.appendChild(patientElement);
 
@@ -228,12 +229,12 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         nameElement.appendChild(givenElement);
 
         Element administrativeGenderCodeElement = doc.createElement("administrativeGenderCode");
-        if(patient.getGender().equals("F")){
+        if (patient.getGender().equals("F")) {
             administrativeGenderCodeElement.setAttribute("code", patient.getGender());
             administrativeGenderCodeElement.setAttribute("codeSystem", "2.16.840.1.113883.5.1");
             administrativeGenderCodeElement.setAttribute("codeSystemName", "HL7 AdministrativeGender");
             administrativeGenderCodeElement.setAttribute("displayName", "FEMMINA");
-        }else if(patient.getGender().equals("M")){
+        } else if (patient.getGender().equals("M")) {
             administrativeGenderCodeElement.setAttribute("code", patient.getGender());
             administrativeGenderCodeElement.setAttribute("codeSystem", "2.16.840.1.113883.5.1");
             administrativeGenderCodeElement.setAttribute("codeSystemName", "HL7 AdministrativeGender");
@@ -248,9 +249,9 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         Element birthplaceElement = doc.createElement("birthplace");
         birthplaceElement.setTextContent(patient.getBirthPlace());
         patientElement.appendChild(birthplaceElement);
-        
+
         // guardian
-        if(guardian != null){
+        if (guardian != null) {
             Element guardianPerson = doc.createElement("guardian");
             patientElement.appendChild(guardianPerson);
 
@@ -267,91 +268,92 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
 
             Element guardianBirthTime = doc.createElement("birthTime");
             guardianBirthTime.setAttribute("value", formatEffectiveTime(guardian.getBirthDate()));
-                        guardianPerson.appendChild(guardianBirthTime);
-            
-                        Element guardianBirthplace = doc.createElement("birthplace");
-                        guardianBirthplace.setTextContent(guardian.getBirthPlace());
-                        guardianPerson.appendChild(guardianBirthplace);
-            
-                        createAddressElements(doc, guardianPerson, guardian.getAddresses());
-            
-                        List<String> telecomGuardianValues = guardian.getTelecoms();
-                        List<String> telecomGuardianUses = guardian.getTelecomUses();
-                        if (!telecomGuardianValues.isEmpty() && !telecomGuardianUses.isEmpty()) {
-                            for (int i = 0; i < telecomGuardianValues.size(); i++) {
-                                Element telecomGuardianElement = doc.createElement("telecom");
-                                telecomGuardianElement.setAttribute("use", telecomGuardianUses.get(i));
-                                telecomGuardianElement.setAttribute("value", telecomGuardianValues.get(i));
-                                guardianPerson.appendChild(telecomGuardianElement);
-                            }
-                        }  
-                    }
-                    
-                    if (author != null) {
-                        Element authorElement = doc.createElement("author");
-                        root.appendChild(authorElement);
-            
-                        Element timeElement = doc.createElement("time");
-                        timeElement.setAttribute("value",authorTime.format(formatter));
-                        authorElement.appendChild(timeElement);
-            
-                        Element assignedAuthorElement = doc.createElement("assignedAuthor");
-                        authorElement.appendChild(assignedAuthorElement);
-            
-                        Element idAuthorElement = doc.createElement("id");
-                        idAuthorElement.setAttribute("root", author.getId().getOid());
-                        idAuthorElement.setAttribute("extension", author.getId().getExtensionId());
-                        idAuthorElement.setAttribute("assigningAuthorityName", author.getId().getAssigningAuthorityName());
-                        assignedAuthorElement.appendChild(idAuthorElement);
-                        if(author.hasRegionalId()){
-                            Element regionalIdAuthorElement = doc.createElement("id");
-                            regionalIdAuthorElement.setAttribute("root", author.getRegionalId().getOid());
-                            regionalIdAuthorElement.setAttribute("extension", author.getRegionalId().getExtensionId());
-                            regionalIdAuthorElement.setAttribute("assigningAuthorityName", author.getRegionalId().getAssigningAuthorityName());
-                            assignedAuthorElement.appendChild(regionalIdAuthorElement);
-                        }
-                        List<String> telecomAuthorValues = author.getTelecoms();
-                        List<String> telecomAuthorUses = author.getTelecomUses();
-                        if (!telecomAuthorValues.isEmpty() && !telecomAuthorUses.isEmpty()) {
-                            for (int i = 0; i < telecomAuthorValues.size(); i++) {
-                                Element telecomElement = doc.createElement("telecom");
-                                telecomElement.setAttribute("use", telecomAuthorUses.get(i));
-                                telecomElement.setAttribute("value", telecomAuthorValues.get(i));
-                                assignedAuthorElement.appendChild(telecomElement);
-                            }
-                        }
-            
-                        Element assignedPersonElement = doc.createElement("assignedPerson");
-                        assignedAuthorElement.appendChild(assignedPersonElement);
-                        if(author.getFirstName()!=null){
-                            Element nameAuthorElement = doc.createElement("name");
-                            assignedPersonElement.appendChild(nameAuthorElement);
-            
-                            Element familyAuthorElement = doc.createElement("family");
-                            familyAuthorElement.setTextContent(author.getLastName());
-                            nameAuthorElement.appendChild(familyAuthorElement);
-            
-                            Element givenAuthorElement = doc.createElement("given");
-                            givenAuthorElement.setTextContent(author.getFirstName());
-                            nameAuthorElement.appendChild(givenAuthorElement);
-            
-                            Element prefixElement = doc.createElement("prefix");
-                            prefixElement.setTextContent(author.getPrefix());
-                            nameAuthorElement.appendChild(prefixElement);
-                        }
-                        if(rapresentedOrganization!=null){
-                            Element authorRepresentedOrganizationElement = doc.createElement("representedOrganization");
-                            Element rapresenteId = createIdElement(doc, rapresentedOrganization.getOid(), rapresentedOrganization.getExtensionId(),rapresentedOrganization.getAssigningAuthorityName());
-                            assignedAuthorElement.appendChild(authorRepresentedOrganizationElement);
-                            authorRepresentedOrganizationElement.appendChild(rapresenteId);
-                        }
-            
-                    }
-                    addDataEnterer(doc, root,compiler,compilerTime);
-                }
-            
+            guardianPerson.appendChild(guardianBirthTime);
 
-                private static void createAddressElements(Document doc, Element parent, List<CDALDOAddr> addresses) {
+            Element guardianBirthplace = doc.createElement("birthplace");
+            guardianBirthplace.setTextContent(guardian.getBirthPlace());
+            guardianPerson.appendChild(guardianBirthplace);
+
+            createAddressElements(doc, guardianPerson, guardian.getAddresses());
+
+            List<String> telecomGuardianValues = guardian.getTelecoms();
+            List<String> telecomGuardianUses = guardian.getTelecomUses();
+            if (!telecomGuardianValues.isEmpty() && !telecomGuardianUses.isEmpty()) {
+                for (int i = 0; i < telecomGuardianValues.size(); i++) {
+                    Element telecomGuardianElement = doc.createElement("telecom");
+                    telecomGuardianElement.setAttribute("use", telecomGuardianUses.get(i));
+                    telecomGuardianElement.setAttribute("value", telecomGuardianValues.get(i));
+                    guardianPerson.appendChild(telecomGuardianElement);
+                }
+            }
+        }
+
+        if (author != null) {
+            Element authorElement = doc.createElement("author");
+            root.appendChild(authorElement);
+
+            Element timeElement = doc.createElement("time");
+            timeElement.setAttribute("value", authorTime.format(formatter));
+            authorElement.appendChild(timeElement);
+
+            Element assignedAuthorElement = doc.createElement("assignedAuthor");
+            authorElement.appendChild(assignedAuthorElement);
+
+            Element idAuthorElement = doc.createElement("id");
+            idAuthorElement.setAttribute("root", author.getId().getOid());
+            idAuthorElement.setAttribute("extension", author.getId().getExtensionId());
+            idAuthorElement.setAttribute("assigningAuthorityName", author.getId().getAssigningAuthorityName());
+            assignedAuthorElement.appendChild(idAuthorElement);
+            if (author.hasRegionalId()) {
+                Element regionalIdAuthorElement = doc.createElement("id");
+                regionalIdAuthorElement.setAttribute("root", author.getRegionalId().getOid());
+                regionalIdAuthorElement.setAttribute("extension", author.getRegionalId().getExtensionId());
+                regionalIdAuthorElement.setAttribute("assigningAuthorityName",
+                        author.getRegionalId().getAssigningAuthorityName());
+                assignedAuthorElement.appendChild(regionalIdAuthorElement);
+            }
+            List<String> telecomAuthorValues = author.getTelecoms();
+            List<String> telecomAuthorUses = author.getTelecomUses();
+            if (!telecomAuthorValues.isEmpty() && !telecomAuthorUses.isEmpty()) {
+                for (int i = 0; i < telecomAuthorValues.size(); i++) {
+                    Element telecomElement = doc.createElement("telecom");
+                    telecomElement.setAttribute("use", telecomAuthorUses.get(i));
+                    telecomElement.setAttribute("value", telecomAuthorValues.get(i));
+                    assignedAuthorElement.appendChild(telecomElement);
+                }
+            }
+
+            Element assignedPersonElement = doc.createElement("assignedPerson");
+            assignedAuthorElement.appendChild(assignedPersonElement);
+            if (author.getFirstName() != null) {
+                Element nameAuthorElement = doc.createElement("name");
+                assignedPersonElement.appendChild(nameAuthorElement);
+
+                Element familyAuthorElement = doc.createElement("family");
+                familyAuthorElement.setTextContent(author.getLastName());
+                nameAuthorElement.appendChild(familyAuthorElement);
+
+                Element givenAuthorElement = doc.createElement("given");
+                givenAuthorElement.setTextContent(author.getFirstName());
+                nameAuthorElement.appendChild(givenAuthorElement);
+
+                Element prefixElement = doc.createElement("prefix");
+                prefixElement.setTextContent(author.getPrefix());
+                nameAuthorElement.appendChild(prefixElement);
+            }
+            if (rapresentedOrganization != null) {
+                Element authorRepresentedOrganizationElement = doc.createElement("representedOrganization");
+                Element rapresenteId = createIdElement(doc, rapresentedOrganization.getOid(),
+                        rapresentedOrganization.getExtensionId(), rapresentedOrganization.getAssigningAuthorityName());
+                assignedAuthorElement.appendChild(authorRepresentedOrganizationElement);
+                authorRepresentedOrganizationElement.appendChild(rapresenteId);
+            }
+
+        }
+        addDataEnterer(doc, root, compiler, compilerTime);
+    }
+
+    private static void createAddressElements(Document doc, Element parent, List<CDALDOAddr> addresses) {
         for (CDALDOAddr addr : addresses) {
             Element addrElement = doc.createElement("addr");
             addrElement.setAttribute("use", addr.getUse());
@@ -378,17 +380,16 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
             street.setTextContent(addr.getStreet());
             addrElement.appendChild(street);
 
-
         }
-        
+
     }
-    private static void addDataEnterer(Document doc, Element root,CDALDOAuthor author,LocalDateTime compilerTime) {
-            Element dataEnterer = doc.createElement("dataEnterer");
-            dataEnterer.setAttribute("typeCode", "ENT");
-    
-            Element time = doc.createElement("time");
-            time.setAttribute("value", compilerTime.format(formatter));
-        
+
+    private static void addDataEnterer(Document doc, Element root, CDALDOAuthor author, LocalDateTime compilerTime) {
+        Element dataEnterer = doc.createElement("dataEnterer");
+        dataEnterer.setAttribute("typeCode", "ENT");
+
+        Element time = doc.createElement("time");
+        time.setAttribute("value", compilerTime.format(formatter));
 
         Element assignedEntity = doc.createElement("assignedEntity");
 
@@ -396,34 +397,26 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         id.setAttribute("root", "2.16.840.1.113883.2.9.4.3.2");
         id.setAttribute("extension", author.getId().getExtensionId());
         id.setAttribute("assignedAuthorityName", "MEF");
-        
 
         Element assignedPerson = doc.createElement("assignedPerson");
         Element name = doc.createElement("name");
 
         Element family = doc.createElement("family");
         family.setTextContent(author.getLastName());
-        
 
         Element given = doc.createElement("given");
         given.setTextContent(author.getFirstName());
-        
-
-       
-       
-        
 
         root.appendChild(dataEnterer);
         dataEnterer.appendChild(time);
         dataEnterer.appendChild(assignedEntity);
-        assignedEntity.appendChild(assignedPerson); 
+        assignedEntity.appendChild(assignedPerson);
         assignedPerson.appendChild(name);
         name.appendChild(given);
         name.appendChild(family);
         assignedEntity.appendChild(id);
-        
-    }
 
+    }
 
     private static Element createIdElement(Document doc, String root, String extension, String assigningAuthorityName) {
         Element idElement = doc.createElement("id");
@@ -432,6 +425,7 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         idElement.setAttribute("assigningAuthorityName", assigningAuthorityName);
         return idElement;
     }
+
     private static String formatEffectiveTime(LocalDateTime effectiveTimeDate) {
         return effectiveTimeDate.atZone(ZoneId.systemDefault()).format(effectiveTimeFormatter);
     }
@@ -441,9 +435,9 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
     }
 
     public static Element createSection(Document doc, Element structuredBody, String typeCode,
-        String sectionClassCode, String sectionMoodCode,
-        String code, String codeSystem, String codeSystemName,
-        String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
+            String sectionClassCode, String sectionMoodCode,
+            String code, String codeSystem, String codeSystemName,
+            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         int count = 0;
         // Section component
@@ -467,13 +461,13 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         title.setTextContent(titleText);
         section.appendChild(title);
 
-        // Section text  
+        // Section text
         Element text = doc.createElement("text");
         section.appendChild(text);
-        for(CDALDONarrativeBlock block: narrativeBlocks){
+        for (CDALDONarrativeBlock block : narrativeBlocks) {
             String textType = block.getNarrativeType();
             Object textContent = block.getContent();
-            switch(textType) {
+            switch (textType) {
                 case "paragraph":
                     if (textContent instanceof String) {
                         Element paragraph = doc.createElement("paragraph");
@@ -492,55 +486,55 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
                             }
                         }
                     } else {
-                        throw new IllegalArgumentException("Content for 'paragraph' narrative type must be a String object.");
+                        throw new IllegalArgumentException(
+                                "Content for 'paragraph' narrative type must be a String object.");
                     }
                     break;
 
                 case "list":
-                    if(textContent instanceof String[]){
+                    if (textContent instanceof String[]) {
                         Element list = doc.createElement("list");
                         text.appendChild(list);
                         count = 0;
-                        for (String item: (String[]) textContent) {
+                        for (String item : (String[]) textContent) {
                             Element listItem = doc.createElement("item");
                             Element content = doc.createElement("content");
                             content.setAttribute("ID", "DIAG-" + (count + 1)); // Dynamic ID
-                            count ++;
+                            count++;
                             content.setTextContent(item);
-            
+
                             listItem.appendChild(content);
                             list.appendChild(listItem);
                         }
-                    }
-                    else{
+                    } else {
                         throw new IllegalArgumentException("Content for 'list' narrative type must be a String array.");
                     }
                     break;
 
                 case "formatted_text":
-                    if(textContent instanceof Map){
+                    if (textContent instanceof Map) {
                         @SuppressWarnings("unchecked")
-                        Map<String, String> formattedData = ((Map <String, String>) textContent);
-                        for (Map.Entry<String, String> entry: formattedData.entrySet()) {
+                        Map<String, String> formattedData = ((Map<String, String>) textContent);
+                        for (Map.Entry<String, String> entry : formattedData.entrySet()) {
                             Element content = doc.createElement("content");
-                            content.setAttribute("styleCode", entry.getKey()); // styleCode is now the type of format to use on the data
+                            content.setAttribute("styleCode", entry.getKey()); // styleCode is now the type of format to
+                                                                               // use on the data
                             content.setTextContent(entry.getValue());
-                            text.appendChild(content);            
+                            text.appendChild(content);
                         }
-                    }
-                    else{
+                    } else {
                         throw new IllegalArgumentException("Content for 'formatted_text' narrative type must be a Map");
                     }
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported narrative type" + textType);
-            } 
+            }
         }
-        
+
         return component;
     }
 
-    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) { 
+    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -560,6 +554,14 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
                 "LOINC", "Diagnosi di Accettazione",
                 "Motivo del ricovero", narrativeBlocks);
         structuredBody.appendChild(section1);
+
+        //Sezione consulenza
+        Element section6 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
+                "34104-0", "2.16.840.1.113883.6.1", "LOINC", "Hospital Consult note",
+                "Consulenza", narrativeBlocks);
+        structuredBody.appendChild(section6);
+
+        
 
     }
 }

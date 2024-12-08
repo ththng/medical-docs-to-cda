@@ -6,7 +6,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import java.util.List;
-
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,7 +20,8 @@ public class CDALDOBuilder {
   public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ").withZone(ZoneId.systemDefault());
 
 
-    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName, String displayName) {
+    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+            String displayName) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -70,7 +72,8 @@ public class CDALDOBuilder {
         parent.appendChild(textElement);
     }
 
-    public static void addElement(Document doc, Element parent, String elementName, String textContent, String[] attributes, String[] values) {
+    public static void addElement(Document doc, Element parent, String elementName, String textContent,
+            String[] attributes, String[] values) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -101,14 +104,12 @@ public class CDALDOBuilder {
         parent.appendChild(element);
     }
 
-
     public static Document createBasicDoc() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
-        
-        return doc;
 
+        return doc;
     }
 
 
@@ -124,11 +125,11 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
 
         doc.appendChild(root);
 
-        Element realmCode = doc.createElement( "realmCode");
+        Element realmCode = doc.createElement("realmCode");
         realmCode.setAttribute("code", "IT");
         root.appendChild(realmCode);
 
-        Element typeId = doc.createElement( "typeId");
+        Element typeId = doc.createElement("typeId");
         typeId.setAttribute("root", "2.16.840.1.113883.1.3");
         typeId.setAttribute("extension", "POCD_HD000040");
         root.appendChild(typeId);
@@ -138,7 +139,7 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         templateId.setAttribute("extension", "1.2");
         root.appendChild(templateId);
 
-        Element id = doc.createElement( "id");
+        Element id = doc.createElement("id");
         id.setAttribute("root", oid.getOid());
         id.setAttribute("extension", oid.getExtensionId());
         id.setAttribute("assigningAuthorityName", oid.getAssigningAuthorityName());
@@ -151,7 +152,7 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         Element statusCode = doc.createElementNS("urn:hl7-org:sdtc", "sdtc:statusCode");
         statusCode.setAttribute("code", status);
         root.appendChild(statusCode);
-            
+
         Element effectiveTime = doc.createElement("effectiveTime");
         effectiveTime.setAttribute("value", formatEffectiveTime(effectiveTimeDate));
         root.appendChild(effectiveTime);
@@ -160,10 +161,10 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         confidentialityCode.setAttribute("code", confidentialityCodeValue);
         confidentialityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.25");
         confidentialityCode.setAttribute("codeSystemName", "HL7 Confidentiality");
-        if(confidentialityCodeValue=="V"){
+        if (confidentialityCodeValue == "V") {
             confidentialityCode.setAttribute("displayName", "Very restricted");
-        }else if(confidentialityCodeValue=="N"){
-         confidentialityCode.setAttribute("displayName", "Normal");
+        } else if (confidentialityCodeValue == "N") {
+            confidentialityCode.setAttribute("displayName", "Normal");
         }
         root.appendChild(confidentialityCode);
 
@@ -171,7 +172,7 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         languageCode.setAttribute("code", "it-IT");
         root.appendChild(languageCode);
 
-        Element setId = doc.createElement( "setId");
+        Element setId = doc.createElement("setId");
         setId.setAttribute("root", setOid.getOid());
         setId.setAttribute("extension", setOid.getExtensionId());
         setId.setAttribute("assigningAuthorityName", setOid.getAssigningAuthorityName());
@@ -187,8 +188,8 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         Element patientRole = doc.createElement("patientRole");
 
         recordTarget.appendChild(patientRole);
-        
-        List<CDALDOId> patientId= patient.getIds();
+
+        List<CDALDOId> patientId = patient.getIds();
         if (!patientId.isEmpty()) {
             for (CDALDOId paId : patientId) {
                 Element patId = doc.createElement("id");
@@ -439,5 +440,126 @@ public static void addHeader(Document doc, CDALDOId oid, String status,
         return birthDate.atStartOfDay(ZoneId.systemDefault()).format(effectiveTimeFormatter);
     }
 
-}
+    public static Element createSection(Document doc, Element structuredBody, String typeCode,
+        String sectionClassCode, String sectionMoodCode,
+        String code, String codeSystem, String codeSystemName,
+        String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
+        int count = 0;
+        // Section component
+        Element component = doc.createElement("component");
+        component.setAttribute("typeCode", typeCode);
+
+        structuredBody.appendChild(component);
+
+        // Section element
+        Element section = doc.createElement("section");
+        section.setAttribute("classCode", sectionClassCode);
+        section.setAttribute("moodCode", sectionMoodCode);
+        // Append the section to the component
+        component.appendChild(section);
+
+        // Section code
+        addCode(doc, section, code, codeSystem, codeSystemName, displayName);
+
+        // Section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        section.appendChild(title);
+
+        // Section text  
+        Element text = doc.createElement("text");
+        section.appendChild(text);
+        for(CDALDONarrativeBlock block: narrativeBlocks){
+            String textType = block.getNarrativeType();
+            Object textContent = block.getContent();
+            switch(textType) {
+                case "paragraph":
+                    if (textContent instanceof String) {
+                        Element paragraph = doc.createElement("paragraph");
+                        text.appendChild(paragraph);
+
+                        // Split the text according to the \n escape sequence
+                        String[] fragments = ((String) textContent).split("\\n");
+
+                        for (int i = 0; i < fragments.length; i++) {
+                            paragraph.appendChild(doc.createTextNode(fragments[i]));
+
+                            // Add <br> tag until the last split element
+                            if (i < fragments.length - 1) {
+                                Element br = doc.createElement("br");
+                                paragraph.appendChild(br);
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Content for 'paragraph' narrative type must be a String object.");
+                    }
+                    break;
+
+                case "list":
+                    if(textContent instanceof String[]){
+                        Element list = doc.createElement("list");
+                        text.appendChild(list);
+                        count = 0;
+                        for (String item: (String[]) textContent) {
+                            Element listItem = doc.createElement("item");
+                            Element content = doc.createElement("content");
+                            content.setAttribute("ID", "DIAG-" + (count + 1)); // Dynamic ID
+                            count ++;
+                            content.setTextContent(item);
+            
+                            listItem.appendChild(content);
+                            list.appendChild(listItem);
+                        }
+                    }
+                    else{
+                        throw new IllegalArgumentException("Content for 'list' narrative type must be a String array.");
+                    }
+                    break;
+
+                case "formatted_text":
+                    if(textContent instanceof Map){
+                        @SuppressWarnings("unchecked")
+                        Map<String, String> formattedData = ((Map <String, String>) textContent);
+                        for (Map.Entry<String, String> entry: formattedData.entrySet()) {
+                            Element content = doc.createElement("content");
+                            content.setAttribute("styleCode", entry.getKey()); // styleCode is now the type of format to use on the data
+                            content.setTextContent(entry.getValue());
+                            text.appendChild(content);            
+                        }
+                    }
+                    else{
+                        throw new IllegalArgumentException("Content for 'formatted_text' narrative type must be a Map");
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported narrative type" + textType);
+            } 
+        }
+        
+        return component;
+    }
+
+    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) { 
+
+        if (doc == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+
+        Element component = doc.createElement("component");
+        doc.getElementsByTagName("ClinicalDocument").item(0).appendChild(component);
+
+        Element structuredBody = doc.createElement("structuredBody");
+        structuredBody.setAttribute("classCode", "DOCBODY");
+        structuredBody.setAttribute("moodCode", "EVN");
+
+        component.appendChild(structuredBody);
+
+        Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
+                "46241-6", "2.16.840.1.113883.6.1",
+                "LOINC", "Diagnosi di Accettazione",
+                "Motivo del ricovero", narrativeBlocks);
+        structuredBody.appendChild(section1);
+
+    }
+}

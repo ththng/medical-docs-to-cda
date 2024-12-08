@@ -6,7 +6,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,6 +63,20 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     CDALDOPatient patient = new CDALDOPatient(patientIds, 1, patientAddresses, new ArrayList<>(), new ArrayList<>(), "John", "Doe", "M", "City", LocalDate.now());
 
   CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient, null, author, LocalDateTime.now(), oid, author, LocalDateTime.now());
+
+        // Call to addBody method
+        List<CDALDONarrativeBlock> narrativeBlocks = new ArrayList<>();
+        String[] recoveryReasonsItems = {"Disturbo di panico","Ipertiroidismo","Depressione"};
+        narrativeBlocks.add(new CDALDONarrativeBlock("list", recoveryReasonsItems));
+        narrativeBlocks.add(new CDALDONarrativeBlock("paragraph", "Paziente in cattivo compenso emodinamico.\n Sto molto male aiuto \n non riesco a cantare bene."));
+
+        Map<String, String> formattedContent = new LinkedHashMap<>(); // Use HashMap<>() if the sequence of the elements is not important
+        formattedContent.put("Bold", "This is bold text.");
+        formattedContent.put("Italics", "This is italicized text.");
+        formattedContent.put("Underline", "This is underlined text.");
+        narrativeBlocks.add(new CDALDONarrativeBlock("formatted_text", formattedContent));
+
+        CDALDOBuilder.addBody(doc, narrativeBlocks);
     File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
     Element root = doc.getDocumentElement();

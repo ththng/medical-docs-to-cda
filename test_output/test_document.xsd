@@ -67,4 +67,37 @@
             <id assignedAuthorityName="MEF" extension="Test123" root="2.16.840.1.113883.2.9.4.3.2"/>
         </assignedEntity>
     </dataEnterer>
+    <component>
+        <structuredBody classCode="DOCBODY" moodCode="EVN">
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosi di Accettazione"/>
+                    <title>Motivo del ricovero</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+        </structuredBody>
+    </component>
 </ClinicalDocument>

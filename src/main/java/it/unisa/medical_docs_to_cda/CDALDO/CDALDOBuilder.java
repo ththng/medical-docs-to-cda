@@ -260,6 +260,16 @@ public class CDALDOBuilder {
         // Section text  
         createText(doc, section, narrativeBlocks);
 
+        // Additional creations
+        createAnamnesiSection(doc, section, "11329-0", "2.16.840.1.113883.6.1", "LOINC", "Anamnesi Generale",
+                "Anamnesi", narrativeBlocks);
+
+        createObjectiveExaminationSection(doc, section, "29545-1", "2.16.840.1.113883.6.1", "LOINC", "Esame Obiettivo",
+                "Esame Obiettivo", narrativeBlocks);
+
+        createPharmacologicalTherapySection(doc, section, "“42346-7", "2.16.840.1.113883.6.1", "LOINC", "Terapia Farmacologica all’ingresso",
+                "Terapia Farmacologica all’ingresso", narrativeBlocks);
+
         return component;
     }
 
@@ -338,16 +348,58 @@ public class CDALDOBuilder {
     public static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
+        Element anamnesiSection = doc.createElement("anamnesiSection");
+        // Append the anamnesi section to the parent
+        section.appendChild(anamnesiSection);
+
+        // Anamnesi section code
+        addCode(doc, anamnesiSection, code, codeSystem, codeSystemName, displayName);
+
+        // Anamnesi section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        anamnesiSection.appendChild(title);
+
+        // Anamnesi section text  
+        createText(doc, anamnesiSection, narrativeBlocks);
     }
 
     public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
     String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
 
+        Element objectiveExaminationSection = doc.createElement("objectiveExaminationSection");
+        // Append the anamnesi section to the parent
+        section.appendChild(objectiveExaminationSection);
+
+        // Anamnesi section code
+        addCode(doc, objectiveExaminationSection, code, codeSystem, codeSystemName, displayName);
+
+        // Anamnesi section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        objectiveExaminationSection.appendChild(title);
+
+        // Anamnesi section text  
+        createText(doc, objectiveExaminationSection, narrativeBlocks);
     }
 
     public static void createPharmacologicalTherapySection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
     String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
 
+        Element pharmacologicalTherapySection = doc.createElement("pharmacologicalTherapySection");
+        // Append the anamnesi section to the parent
+        section.appendChild(pharmacologicalTherapySection);
+
+        // Anamnesi section code
+        addCode(doc, pharmacologicalTherapySection, code, codeSystem, codeSystemName, displayName);
+
+        // Anamnesi section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        pharmacologicalTherapySection.appendChild(title);
+
+        // Anamnesi section text  
+        createText(doc, pharmacologicalTherapySection, narrativeBlocks);
     }
 
     public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) { 
@@ -371,5 +423,10 @@ public class CDALDOBuilder {
                 "Motivo del ricovero", narrativeBlocks);
         structuredBody.appendChild(section1);
 
+        /* Element section2 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
+                "47039-3", "2.16.840.1.113883.6.1",
+                "LOINC", "Ricovero Ospedaliero, anamnesi ed esame obiettivo",
+                "Inquadramento Clinico Iniziale", narrativeBlocks);
+        structuredBody.appendChild(section2); */
     }
 }

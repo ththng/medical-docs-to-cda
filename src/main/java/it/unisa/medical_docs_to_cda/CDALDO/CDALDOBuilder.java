@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -460,7 +459,7 @@ public class CDALDOBuilder {
         title.setTextContent(titleText);
         section.appendChild(title);
 
-        // Section text  
+        // Section text
         createText(doc, section, narrativeBlocks);
 
         return component;
@@ -470,7 +469,7 @@ public class CDALDOBuilder {
         Element text = doc.createElement("text");
         section.appendChild(text);
         int count = 0;
-        for(CDALDONarrativeBlock block: narrativeBlocks){
+        for (CDALDONarrativeBlock block : narrativeBlocks) {
             String textType = block.getNarrativeType();
             Object textContent = block.getContent();
             switch (textType) {
@@ -538,18 +537,21 @@ public class CDALDOBuilder {
         }
     }
 
-    public static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
+    public static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem,
+            String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
     }
 
-    public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
-    String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
+    public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem,
+            String codeSystemName,
+            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
     }
 
-    public static void createPharmacologicalTherapySection(Document doc, Element section, String code, String codeSystem, String codeSystemName,
-    String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks){
+    public static void createPharmacologicalTherapySection(Document doc, Element section, String code,
+            String codeSystem, String codeSystemName,
+            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
     }
 
@@ -574,13 +576,12 @@ public class CDALDOBuilder {
                 "Motivo del ricovero", narrativeBlocks);
         structuredBody.appendChild(section1);
 
-        //Sezione consulenza
+        // Sezione consulenza
         Element section6 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
-                "34104-0", "2.16.840.1.113883.6.1", "LOINC", "Hospital Consult note",
+                "34104-0", "2.16.840.1.113883.6.1", "LOINC",
+                "Hospital Consult note",
                 "Consulenza", narrativeBlocks);
         structuredBody.appendChild(section6);
-
-        
 
     }
 }

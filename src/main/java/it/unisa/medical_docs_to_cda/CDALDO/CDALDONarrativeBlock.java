@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 public class CDALDONarrativeBlock {
 
+        private String section;
         private String narrativeType;
         private Object content;
 
@@ -14,4 +15,12 @@ public class CDALDONarrativeBlock {
             this.narrativeType = narrativeType;
             this.content = content;
         }
+
+        public CDALDONarrativeBlock(String section, String narrativeType, Object content) {
+            this.section = section;
+            this.narrativeType = narrativeType;
+            this.content = content;
+        }
+
+        
 }

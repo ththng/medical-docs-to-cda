@@ -72,7 +72,31 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
         formattedContent.put("Underline", "This is underlined text.");
         narrativeBlocks.add(new CDALDONarrativeBlock("formatted_text", formattedContent));
 
-        CDALDOBuilder.addBody(doc, narrativeBlocks);
+        String[] intervents = {"Appendicectomia nel giugno 2009","Cordotomia percutanea nel febbraio 1999"};
+        List<CDALDONarrativeBlock> blocks = List.of(
+        new CDALDONarrativeBlock("paragraph", "Proveniente da PS.\n" + //
+                        "Paziente Diabetico NID, Ipertensione Arteriosa familiare.EO Edemi\n" + //
+                        "declivi, murmure vescicolare normotrasmesso."),
+        new CDALDONarrativeBlock("anamnesi", "paragraph", "Elenco degli interventi, data e commenti:"),
+        new CDALDONarrativeBlock("anamnesi", "list", intervents),
+        new CDALDONarrativeBlock("esameObiettivo", "paragraph", "Condizioni generali: paziente vigile, orientato e collaborante. Apparato cardiocircolatorio: azione cardiaca ritmica normofrequente, toni puri e pause libere.\n" + //
+                        "Soffi vascolari: assenti.\n" + //
+                        "Polsi periferici: palpabili nelle comuni sedi di repere \n" + //
+                        "Apparato respiratorio: Murmure vescicolare presente su tutto l’ambito, non rumori patologici aggiunti\n" + //
+                        "Addome: trattabile alla palpazione superficiale e profonda non dolente nédolorabile; \n" + // 
+                        "Murphy: negativo. Blumberg: negativo. Giordano: negativo\n" + //
+                        "Fegato: nei limiti \n" + // 
+                        "Milza: nei limiti\n" + //
+                        "Turgore giugulare: assenteEdemi: assenti."),
+        new CDALDONarrativeBlock("terapiaFarmacologica", "paragraph", "Losaprex 50 mg 1 cpr ore 8\n" + //
+                        "1985 Cardicor 5 mg 1 cpr ore 8\n" + //
+                        "Lasix 25 mg 2 cpr ore 8\n " + //
+                        "Peptazol 40 mg 1 cpr ore 8\n" + //
+                        "Arixtra 2.5 mg 1 fl s.c. ore 8\n" + //
+                        "Coumadin sec INR (range terapeutico 2-3)")
+    );
+
+        CDALDOBuilder.addBody(doc, narrativeBlocks, blocks);
     File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
     Element root = doc.getDocumentElement();
@@ -91,7 +115,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     @Test
     public void test_add_body_with_null_document() {
         assertThrows(IllegalArgumentException.class, () -> {
-            CDALDOBuilder.addBody(null, null);
+            CDALDOBuilder.addBody(null, null, null);
         }, "Expected IllegalArgumentException for null document");
     }
 

@@ -98,6 +98,80 @@
                     </text>
                 </section>
             </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="47039-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Ricovero Ospedaliero, anamnesi ed esame obiettivo"/>
+                    <title>Inquadramento Clinico Iniziale</title>
+                    <text>
+                        <paragraph>
+                            Proveniente da PS.
+                            <br/>
+                            Paziente Diabetico NID, Ipertensione Arteriosa familiare.EO Edemi
+                            <br/>
+                            declivi, murmure vescicolare normotrasmesso.
+                        </paragraph>
+                    </text>
+                    <anamnesiSection>
+                        <code code="11329-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Anamnesi Generale"/>
+                        <title>Anamnesi</title>
+                        <text>
+                            <paragraph>Elenco degli interventi, data e commenti:</paragraph>
+                            <list>
+                                <item>
+                                    <content ID="DIAG-1">Appendicectomia nel giugno 2009</content>
+                                </item>
+                                <item>
+                                    <content ID="DIAG-2">Cordotomia percutanea nel febbraio 1999</content>
+                                </item>
+                            </list>
+                        </text>
+                    </anamnesiSection>
+                    <objectiveExaminationSection>
+                        <code code="29545-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Esame Obiettivo"/>
+                        <title>Esame Obiettivo</title>
+                        <text>
+                            <paragraph>
+                                Condizioni generali: paziente vigile, orientato e collaborante. Apparato cardiocircolatorio: azione cardiaca ritmica normofrequente, toni puri e pause libere.
+                                <br/>
+                                Soffi vascolari: assenti.
+                                <br/>
+                                Polsi periferici: palpabili nelle comuni sedi di repere 
+                                <br/>
+                                Apparato respiratorio: Murmure vescicolare presente su tutto l’ambito, non rumori patologici aggiunti
+                                <br/>
+                                Addome: trattabile alla palpazione superficiale e profonda non dolente nédolorabile; 
+                                <br/>
+                                Murphy: negativo. Blumberg: negativo. Giordano: negativo
+                                <br/>
+                                Fegato: nei limiti 
+                                <br/>
+                                Milza: nei limiti
+                                <br/>
+                                Turgore giugulare: assenteEdemi: assenti.
+                            </paragraph>
+                        </text>
+                    </objectiveExaminationSection>
+                    <pharmacologicalTherapySection>
+                        <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Terapia Farmacologica all’ingresso"/>
+                        <title>Terapia Farmacologica all’ingresso</title>
+                        <text>
+                            <paragraph>
+                                Losaprex 50 mg 1 cpr ore 8
+                                <br/>
+                                1985 Cardicor 5 mg 1 cpr ore 8
+                                <br/>
+                                Lasix 25 mg 2 cpr ore 8
+                                <br/>
+                                 Peptazol 40 mg 1 cpr ore 8
+                                <br/>
+                                Arixtra 2.5 mg 1 fl s.c. ore 8
+                                <br/>
+                                Coumadin sec INR (range terapeutico 2-3)
+                            </paragraph>
+                        </text>
+                    </pharmacologicalTherapySection>
+                </section>
+            </component>
         </structuredBody>
     </component>
 </ClinicalDocument>

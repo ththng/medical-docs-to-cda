@@ -3,10 +3,12 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -433,10 +435,25 @@ public class CDALDOBuilder {
         return birthDate.atStartOfDay(ZoneId.systemDefault()).format(effectiveTimeFormatter);
     }
 
-    public static Element createSection(Document doc, Element structuredBody, String typeCode,
-            String sectionClassCode, String sectionMoodCode,
-            String code, String codeSystem, String codeSystemName,
-            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
+    // Used for extracting different type of narrative elements associated to different sections or subsections of a section
+    public static List<CDALDONarrativeBlock> filterNarrativeBlocksBySection(List<CDALDONarrativeBlock> narrativeBlocks, String section) {
+        if (narrativeBlocks == null) {
+            return Collections.emptyList();
+        }
+        return narrativeBlocks.stream()
+                .filter(block -> 
+                    section == null 
+                        ? block.getSection() == null || block.getSection().isEmpty() 
+                        : section.equals(block.getSection())
+                )
+                .collect(Collectors.toList());
+    }
+    
+
+    public static Element createSection(Document doc, Element structuredBody, String sectionNumber, String typeCode,
+        String sectionClassCode, String sectionMoodCode,
+        String code, String codeSystem, String codeSystemName,
+        String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         // Section component
         Element component = doc.createElement("component");
@@ -459,8 +476,27 @@ public class CDALDOBuilder {
         title.setTextContent(titleText);
         section.appendChild(title);
 
-        // Section text
-        createText(doc, section, narrativeBlocks);
+        // Section text  
+        List<CDALDONarrativeBlock> mainBlocks = filterNarrativeBlocksBySection(narrativeBlocks, null);
+        createText(doc, section, mainBlocks);
+
+        // Additional creations
+        if ("2".equals(sectionNumber)) {
+            // "anamnesi" section narrative blocks extraction
+            List<CDALDONarrativeBlock> anamnesiBlocks = filterNarrativeBlocksBySection(narrativeBlocks, "anamnesi");
+            createAnamnesiSection(doc, section, "11329-0", "2.16.840.1.113883.6.1", "LOINC", "Anamnesi Generale",
+                    "Anamnesi", anamnesiBlocks);
+    
+            // "esameObiettivo" section narrative blocks extraction
+            List<CDALDONarrativeBlock> objectiveExaminationBlocks = filterNarrativeBlocksBySection(narrativeBlocks, "esameObiettivo");
+            createObjectiveExaminationSection(doc, section, "29545-1", "2.16.840.1.113883.6.1", "LOINC", "Esame Obiettivo",
+                    "Esame Obiettivo", objectiveExaminationBlocks);
+    
+            // "terapiaFarmacologica" section narrative blocks extraction
+            List<CDALDONarrativeBlock> pharmacologicalTherapyBlocks = filterNarrativeBlocksBySection(narrativeBlocks, "terapiaFarmacologica");
+            createPharmacologicalTherapySection(doc, section, "42346-7", "2.16.840.1.113883.6.1", "LOINC", "Terapia Farmacologica all’ingresso",
+                    "Terapia Farmacologica all’ingresso", pharmacologicalTherapyBlocks);
+        }
 
         return component;
     }
@@ -541,21 +577,63 @@ public class CDALDOBuilder {
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
+        Element anamnesiSection = doc.createElement("anamnesiSection");
+        // Append the anamnesi section to the parent
+        section.appendChild(anamnesiSection);
+
+        // Anamnesi section code
+        addCode(doc, anamnesiSection, code, codeSystem, codeSystemName, displayName);
+
+        // Anamnesi section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        anamnesiSection.appendChild(title);
+
+        // Anamnesi section text  
+        createText(doc, anamnesiSection, narrativeBlocks);
     }
 
     public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem,
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
+        Element objectiveExaminationSection = doc.createElement("objectiveExaminationSection");
+        // Append the objective Examination section to the parent
+        section.appendChild(objectiveExaminationSection);
+
+        // objective Examination section code 
+        addCode(doc, objectiveExaminationSection, code, codeSystem, codeSystemName, displayName);
+
+        // objective Examination section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        objectiveExaminationSection.appendChild(title);
+
+        // objective Examination section text  
+        createText(doc, objectiveExaminationSection, narrativeBlocks);
     }
 
     public static void createPharmacologicalTherapySection(Document doc, Element section, String code,
             String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
+        Element pharmacologicalTherapySection = doc.createElement("pharmacologicalTherapySection");
+        // Append the pharmacological Therapy section to the parent
+        section.appendChild(pharmacologicalTherapySection);
+
+        // pharmacological Therapy section code
+        addCode(doc, pharmacologicalTherapySection, code, codeSystem, codeSystemName, displayName);
+
+        // pharmacological Therapy section title
+        Element title = doc.createElement("title");
+        title.setTextContent(titleText);
+        pharmacologicalTherapySection.appendChild(title);
+
+        // pharmacological Therapy section text  
+        createText(doc, pharmacologicalTherapySection, narrativeBlocks);
     }
 
-    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocks) {
+    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocksSection1, List<CDALDONarrativeBlock> narrativeBlocksSection2) { 
 
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -570,12 +648,17 @@ public class CDALDOBuilder {
 
         component.appendChild(structuredBody);
 
-        Element section1 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
+        Element section1 = createSection(doc, structuredBody, "1", "COMP", "DOCSECT", "EVN",
                 "46241-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Diagnosi di Accettazione",
-                "Motivo del ricovero", narrativeBlocks);
+                "Motivo del ricovero", narrativeBlocksSection1);
         structuredBody.appendChild(section1);
 
+        Element section2 = createSection(doc, structuredBody, "2", "COMP", "DOCSECT", "EVN",
+                "47039-3", "2.16.840.1.113883.6.1",
+                "LOINC", "Ricovero Ospedaliero, anamnesi ed esame obiettivo",
+                "Inquadramento Clinico Iniziale", narrativeBlocksSection2);
+        structuredBody.appendChild(section2);
         // Sezione consulenza
         Element section6 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
                 "34104-0", "2.16.840.1.113883.6.1", "LOINC",

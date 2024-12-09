@@ -36,6 +36,27 @@ public class CDALDOBuilder {
         parent.appendChild(codeElement);
     }
 
+    public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+            String displayName) {
+        if (doc == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent element cannot be null");
+        }
+        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
+            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+        }
+
+        Element valueElement = doc.createElement("value");
+        valueElement.setAttribute("xsi-type", "CD");
+        valueElement.setAttribute("code", code);
+        valueElement.setAttribute("codeSystem", codeSystem);
+        valueElement.setAttribute("codeSystemName", codeSystemName);
+        valueElement.setAttribute("displayName", displayName);
+        parent.appendChild(valueElement);
+    }
+
     public static void addTitle(Document doc, Element parent, String title) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -247,7 +268,22 @@ public class CDALDOBuilder {
                 .collect(Collectors.toList());
     }
     
+    public static void createEntry(Document doc, Element section){
 
+        Element entry = doc.createElement("entry");
+        section.appendChild(entry);
+        
+        Element observation = doc.createElement("observation");
+        observation.setAttribute("classCode", "OBS");
+        observation.setAttribute("moodCode", "ENV");
+        entry.appendChild(observation);
+
+        addCode(doc, observation, "8646-2", "2.16.840.1.113883.6.1", "LOINC", "Diagnosi di Accettazione Ospedaliera");   
+
+        addValue(doc, observation, "[CODICE_DIAGNOSI_ICD9]", "2.16.840.1.113883.6.103", "ICD9CM", "[DESCRIZIONE_DIAGNOSI]");
+
+
+    }
     public static Element createSection(Document doc, Element structuredBody, String sectionNumber, String typeCode,
         String sectionClassCode, String sectionMoodCode,
         String code, String codeSystem, String codeSystemName,
@@ -270,9 +306,11 @@ public class CDALDOBuilder {
         addCode(doc, section, code, codeSystem, codeSystemName, displayName);
 
         // Section title
+        if (titleText != null){
         Element title = doc.createElement("title");
         title.setTextContent(titleText);
         section.appendChild(title);
+        }
 
         // Section text  
         List<CDALDONarrativeBlock> mainBlocks = filterNarrativeBlocksBySection(narrativeBlocks, null);
@@ -296,6 +334,8 @@ public class CDALDOBuilder {
                     "Terapia Farmacologica all’ingresso", pharmacologicalTherapyBlocks);
         }
 
+        // Entry section
+        createEntry(doc, section);
         return component;
     }
 
@@ -446,7 +486,7 @@ public class CDALDOBuilder {
         Element section1 = createSection(doc, structuredBody, "1", "COMP", "DOCSECT", "EVN",
                 "46241-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Diagnosi di Accettazione",
-                "Motivo del ricovero", narrativeBlocksSection1);
+                null, narrativeBlocksSection1);
         structuredBody.appendChild(section1);
 
         Element section2 = createSection(doc, structuredBody, "2", "COMP", "DOCSECT", "EVN",

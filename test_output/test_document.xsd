@@ -7,7 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20241208145655+0100"/>
+    <effectiveTime value="20241209162326+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -31,7 +31,6 @@
             <component typeCode="COMP">
                 <section classCode="DOCSECT" moodCode="EVN">
                     <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosi di Accettazione"/>
-                    <title>Motivo del ricovero</title>
                     <text>
                         <list>
                             <item>
@@ -55,6 +54,12 @@
                         <content styleCode="Italics">This is italicized text.</content>
                         <content styleCode="Underline">This is underlined text.</content>
                     </text>
+                    <entry>
+                        <observation classCode="OBS" moodCode="ENV">
+                            <code code="8646-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosi di Accettazione Ospedaliera"/>
+                            <value code="[CODICE_DIAGNOSI_ICD9]" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD9CM" displayName="[DESCRIZIONE_DIAGNOSI]" xsi-type="CD"/>
+                        </observation>
+                    </entry>
                 </section>
             </component>
             <component typeCode="COMP">
@@ -129,6 +134,12 @@
                             </paragraph>
                         </text>
                     </pharmacologicalTherapySection>
+                    <entry>
+                        <observation classCode="OBS" moodCode="ENV">
+                            <code code="8646-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosi di Accettazione Ospedaliera"/>
+                            <value code="[CODICE_DIAGNOSI_ICD9]" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD9CM" displayName="[DESCRIZIONE_DIAGNOSI]" xsi-type="CD"/>
+                        </observation>
+                    </entry>
                 </section>
             </component>
         </structuredBody>

@@ -7,10 +7,10 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20241212120501+0100"/>
+    <effectiveTime value="20241211163224+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
-    <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+    <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
     <versionNumber value="1"/>
     <recordTarget>
         <patientRole>
@@ -28,15 +28,18 @@
                 <name>
                     <family>Doe</family>
                     <given>John</given>
+                    <family>Doe</family>
+                    <given>John</given>
+                    <prefix>doc</prefix>
                 </name>
                 <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
-                <birthTime value="20241212000000+0100"/>
+                <birthTime value="20241211000000+0100"/>
                 <birthplace>City</birthplace>
             </patient>
         </patientRole>
     </recordTarget>
     <author>
-        <time value="20241212120501"/>
+        <time value="20241211163224"/>
         <assignedAuthor>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -50,10 +53,13 @@
                     <prefix>doc</prefix>
                 </name>
             </assignedPerson>
+            <representedOrganization>
+                <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            </representedOrganization>
         </assignedAuthor>
     </author>
     <dataEnterer typeCode="ENT">
-        <time value="20241212120501"/>
+        <time value="20241211163224"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -89,20 +95,13 @@
         </intendedRecipient>
     </informationRecipient>
     <legalAuthenticator>
-        <time value="20241212120501"/>
+        <time value="20241211163224"/>
         <signatureCode code="S"/>
         <assignedEntity>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
-            <telecom use="H" value="tel:+1-123-456-7890"/>
-            <telecom use="H" value="mailto:prova@prova.it"/>
-            <telecom use="H" value="mailto:prova@pec.it"/>
             <assignedPerson>
-                <name>
-                    <family>Doe</family>
-                    <given>John</given>
-                    <prefix>doc</prefix>
-                </name>
+                <name/>
             </assignedPerson>
         </assignedEntity>
     </legalAuthenticator>
@@ -140,8 +139,8 @@
         <encompassingEncounter>
             <id assigningAuthorityName="nomeAzienda" extension="numero nosologico" root="2.16.840.1.113883.2.9.2.ramo dell'azienda.4.6"/>
             <effectiveTime>
-                <low value="20241212120501+0100"/>
-                <high value="20241212120501+0100"/>
+                <low value="20241211163224+0100"/>
+                <high value="20241211163224+0100"/>
             </effectiveTime>
         </encompassingEncounter>
     </componentOf>

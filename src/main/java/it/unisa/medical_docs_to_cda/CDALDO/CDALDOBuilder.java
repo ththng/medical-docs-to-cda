@@ -4,13 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.*;
 
 public class CDALDOBuilder {
@@ -18,100 +15,97 @@ public class CDALDOBuilder {
             .withZone(ZoneId.systemDefault());
     public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ")
             .withZone(ZoneId.systemDefault());
-
-    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-            String displayName) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent element cannot be null");
-        }
-        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
-            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
-        }
-
-        Element codeElement = doc.createElement("code");
-        codeElement.setAttribute("code", code);
-        codeElement.setAttribute("codeSystem", codeSystem);
-        codeElement.setAttribute("codeSystemName", codeSystemName);
-        codeElement.setAttribute("displayName", displayName);
-        parent.appendChild(codeElement);
-    }
-
-    public static void addTitle(Document doc, Element parent, String title) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent element cannot be null");
-        }
-        if (title == null) {
-            throw new IllegalArgumentException("Title cannot be null");
-        }
-
-        Element titleElement = doc.createElement("title");
-        titleElement.setTextContent(title);
-        parent.appendChild(titleElement);
-    }
-
-    public static void addText(Document doc, Element parent, String text) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent element cannot be null");
-        }
-        if (text == null) {
-            throw new IllegalArgumentException("Text cannot be null");
-        }
-
-        Element textElement = doc.createElement("text");
-        textElement.setTextContent(text);
-        parent.appendChild(textElement);
-    }
-
-    public static void addElement(Document doc, Element parent, String elementName, String textContent,
-            String[] attributes, String[] values) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent element cannot be null");
-        }
-        if (elementName == null || elementName.isEmpty()) {
-            throw new IllegalArgumentException("Element name cannot be null or empty");
-        }
-        if (attributes != null && values != null && attributes.length != values.length) {
-            throw new IllegalArgumentException("Attributes and values arrays must have the same length");
-        }
-
-        Element element = doc.createElement(elementName);
-
-        if (textContent != null) {
-            element.setTextContent(textContent);
-        }
-
-        if (attributes != null && values != null) {
-            for (int i = 0; i < attributes.length; i++) {
-                if (attributes[i] != null && values[i] != null) {
-                    element.setAttribute(attributes[i], values[i]);
+            public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName, String displayName) {
+                if (doc == null) {
+                    throw new IllegalArgumentException("Document cannot be null");
                 }
+                if (parent == null) {
+                    throw new IllegalArgumentException("Parent element cannot be null");
+                }
+                if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
+                    throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+                }
+        
+                Element codeElement = doc.createElement("code");
+                codeElement.setAttribute("code", code);
+                codeElement.setAttribute("codeSystem", codeSystem);
+                codeElement.setAttribute("codeSystemName", codeSystemName);
+                codeElement.setAttribute("displayName", displayName);
+                parent.appendChild(codeElement);
             }
-        }
-
-        parent.appendChild(element);
-    }
-
-    public static Document createBasicDoc() throws ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.newDocument();
-
-        return doc;
-
-    }
-
+        
+            public static void addTitle(Document doc, Element parent, String title) {
+                if (doc == null) {
+                    throw new IllegalArgumentException("Document cannot be null");
+                }
+                if (parent == null) {
+                    throw new IllegalArgumentException("Parent element cannot be null");
+                }
+                if (title == null) {
+                    throw new IllegalArgumentException("Title cannot be null");
+                }
+        
+                Element titleElement = doc.createElement("title");
+                titleElement.setTextContent(title);
+                parent.appendChild(titleElement);
+            }
+        
+            public static void addText(Document doc, Element parent, String text) {
+                if (doc == null) {
+                    throw new IllegalArgumentException("Document cannot be null");
+                }
+                if (parent == null) {
+                    throw new IllegalArgumentException("Parent element cannot be null");
+                }
+                if (text == null) {
+                    throw new IllegalArgumentException("Text cannot be null");
+                }
+        
+                Element textElement = doc.createElement("text");
+                textElement.setTextContent(text);
+                parent.appendChild(textElement);
+            }
+        
+            public static void addElement(Document doc, Element parent, String elementName, String textContent, String[] attributes, String[] values) {
+                if (doc == null) {
+                    throw new IllegalArgumentException("Document cannot be null");
+                }
+                if (parent == null) {
+                    throw new IllegalArgumentException("Parent element cannot be null");
+                }
+                if (elementName == null || elementName.isEmpty()) {
+                    throw new IllegalArgumentException("Element name cannot be null or empty");
+                }
+                if (attributes != null && values != null && attributes.length != values.length) {
+                    throw new IllegalArgumentException("Attributes and values arrays must have the same length");
+                }
+        
+                Element element = doc.createElement(elementName);
+        
+                if (textContent != null) {
+                    element.setTextContent(textContent);
+                }
+        
+                if (attributes != null && values != null) {
+                    for (int i = 0; i < attributes.length; i++) {
+                        if (attributes[i] != null && values[i] != null) {
+                            element.setAttribute(attributes[i], values[i]);
+                        }
+                    }
+                }
+        
+                parent.appendChild(element);
+            }
+        
+        
+            public static Document createBasicDoc() throws ParserConfigurationException {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.newDocument();
+                
+                return doc;
+        
+            }
     public static void addHeader(Document doc, CDALDOId oid, String status,
             LocalDateTime effectiveTimeDate, String confidentialityCodeValue, CDALDOId setOid,
             String versionNumberValue,
@@ -122,39 +116,25 @@ public class CDALDOBuilder {
             CDALDOAuthor legalAuthenticator, List<CDALDOAuthor> participants, String fulfillmentId,
             String ramoAziendale, String numeroNosologico, String nomeAzienda,LocalDateTime lowTime,
             LocalDateTime highTime, List<String> repartoIds, List<String> repartoNames,List<String> ministerialCodes,
-             List<String> facilityNames, List<String> facilityTelecoms
-            ) {
+             List<String> facilityNames, List<String> facilityTelecoms) {
+        
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
+        
         Element root = doc.createElement("ClinicalDocument");
         root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation",
                 "urn:hl7-org:v3 CDA.xsd");
-
         doc.appendChild(root);
 
-        Element realmCode = doc.createElement("realmCode");
-        realmCode.setAttribute("code", "IT");
-        root.appendChild(realmCode);
-
-        Element typeId = doc.createElement("typeId");
-        typeId.setAttribute("root", "2.16.840.1.113883.1.3");
-        typeId.setAttribute("extension", "POCD_HD000040");
-        root.appendChild(typeId);
-
-        Element templateId = doc.createElement("templateId");
-        templateId.setAttribute("root", "2.16.840.1.113883.2.9.10.1.5");
-        templateId.setAttribute("extension", "1.2");
-        root.appendChild(templateId);
-
-        Element id = doc.createElement("id");
-        id.setAttribute("root", oid.getOid());
-        id.setAttribute("extension", oid.getExtensionId());
-        id.setAttribute("assigningAuthorityName", oid.getAssigningAuthorityName());
+        createRealmCode(doc, root);
+        createTypeId(doc, root);
+        createTemplateId(doc, root);
+        
+        Element id = createIdElement(doc, oid.getOid(), oid.getExtensionId(), oid.getAssigningAuthorityName());
         root.appendChild(id);
 
         addCode(doc, root, "34105-7", "2.16.840.1.113883.6.1", "LOINC", "Lettera di dimissione ospedaliera");
-
         addTitle(doc, root, "LETTERA DI DIMISSIONE OSPEDALIERA");
 
         Element statusCode = doc.createElementNS("urn:hl7-org:sdtc", "sdtc:statusCode");
@@ -169,9 +149,9 @@ public class CDALDOBuilder {
         confidentialityCode.setAttribute("code", confidentialityCodeValue);
         confidentialityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.25");
         confidentialityCode.setAttribute("codeSystemName", "HL7 Confidentiality");
-        if (confidentialityCodeValue == "V") {
+        if (confidentialityCodeValue.equals("V")) {
             confidentialityCode.setAttribute("displayName", "Very restricted");
-        } else if (confidentialityCodeValue == "N") {
+        } else if (confidentialityCodeValue.equals("N")) {
             confidentialityCode.setAttribute("displayName", "Normal");
         }
         root.appendChild(confidentialityCode);
@@ -180,10 +160,7 @@ public class CDALDOBuilder {
         languageCode.setAttribute("code", "it-IT");
         root.appendChild(languageCode);
 
-        Element setId = doc.createElement("setId");
-        setId.setAttribute("root", setOid.getOid());
-        setId.setAttribute("extension", setOid.getExtensionId());
-        setId.setAttribute("assigningAuthorityName", setOid.getAssigningAuthorityName());
+        Element setId = createIdElement(doc, setOid.getOid(), setOid.getExtensionId(), setOid.getAssigningAuthorityName());
         root.appendChild(setId);
 
         Element versionNumber = doc.createElement("versionNumber");
@@ -192,7 +169,63 @@ public class CDALDOBuilder {
 
         Element recordTarget = doc.createElement("recordTarget");
         root.appendChild(recordTarget);
+        
+        addPatientRole(doc, recordTarget, patient);
+        
+        if (guardian != null) {
+            addGuardian(doc, recordTarget, guardian);
+        }
 
+        if (author != null) {
+            addAuthor(doc, root, author, authorTime);
+        }
+        if(compiler!=null){
+            addDataEnterer(doc, root, compiler, compilerTime);
+        }
+        if(custodianId != null){
+
+        addCustodian(doc, root, custodianId, custodianOrgazationName, custodianOrganizationAddress, custodianPhoneNumber);
+        }
+        if (informationRecipientId != null && informationRecipientName != null) {
+            addInformationRecipient(doc, root, informationRecipientId, informationRecipientName);
+        }
+
+        if (legalAuthenticator != null) {
+            addLegalAuthenticator(doc, root, legalAuthTime, legalAuthenticator);
+        }
+
+        if (!participants.isEmpty()) {
+            addParticipants(doc, root, participants);
+        }
+
+        if (fulfillmentId != null) {
+            addInFulfillmentOf(doc, root, fulfillmentId);
+        }
+
+        addComponentOf(doc, root, ramoAziendale, numeroNosologico, nomeAzienda, lowTime, highTime, repartoIds, repartoNames, ministerialCodes, facilityNames, facilityTelecoms);
+    }
+
+    private static void createRealmCode(Document doc, Element root) {
+        Element realmCode = doc.createElement("realmCode");
+        realmCode.setAttribute("code", "IT");
+        root.appendChild(realmCode);
+    }
+
+    private static void createTypeId(Document doc, Element root) {
+        Element typeId = doc.createElement("typeId");
+        typeId.setAttribute("root", "2.16.840.1.113883.1.3");
+        typeId.setAttribute("extension", "POCD_HD000040");
+        root.appendChild(typeId);
+    }
+
+    private static void createTemplateId(Document doc, Element root) {
+        Element templateId = doc.createElement("templateId");
+        templateId.setAttribute("root", "2.16.840.1.113883.2.9.10.1.5");
+        templateId.setAttribute("extension", "1.2");
+        root.appendChild(templateId);
+    }
+
+    private static void addPatientRole(Document doc, Element recordTarget, CDALDOPatient patient) {
         Element patientRole = doc.createElement("patientRole");
 
         recordTarget.appendChild(patientRole);
@@ -257,108 +290,96 @@ public class CDALDOBuilder {
         birthplaceElement.setTextContent(patient.getBirthPlace());
         patientElement.appendChild(birthplaceElement);
 
-        // guardian
-        if (guardian != null) {
-            Element guardianPerson = doc.createElement("guardian");
-            patientElement.appendChild(guardianPerson);
+    }
 
-            Element guardianName = doc.createElement("name");
-            guardianPerson.appendChild(guardianName);
+    private static void addGuardian(Document doc, Element parent, CDALDOPatient guardian) {
+        Element guardianPerson = doc.createElement("guardian");
+        parent.appendChild(guardianPerson);
 
-            Element guardianFamily = doc.createElement("family");
-            guardianFamily.setTextContent(guardian.getLastName());
-            guardianName.appendChild(guardianFamily);
+        Element guardianName = doc.createElement("name");
+        guardianPerson.appendChild(guardianName);
 
-            Element guardianGiven = doc.createElement("given");
-            guardianGiven.setTextContent(guardian.getFirstName());
-            guardianName.appendChild(guardianGiven);
+        Element guardianFamily = doc.createElement("family");
+        guardianFamily.setTextContent(guardian.getLastName());
+        guardianName.appendChild(guardianFamily);
 
-            Element guardianBirthTime = doc.createElement("birthTime");
-            guardianBirthTime.setAttribute("value", formatEffectiveTime(guardian.getBirthDate()));
-            guardianPerson.appendChild(guardianBirthTime);
+        Element guardianGiven = doc.createElement("given");
+        guardianGiven.setTextContent(guardian.getFirstName());
+        guardianName.appendChild(guardianGiven);
 
-            Element guardianBirthplace = doc.createElement("birthplace");
-            guardianBirthplace.setTextContent(guardian.getBirthPlace());
-            guardianPerson.appendChild(guardianBirthplace);
+        Element guardianBirthTime = doc.createElement("birthTime");
+        guardianBirthTime.setAttribute("value", formatEffectiveTime(guardian.getBirthDate()));
+        guardianPerson.appendChild(guardianBirthTime);
 
-            createAddressElements(doc, guardianPerson, guardian.getAddresses());
+        Element guardianBirthplace = doc.createElement("birthplace");
+        guardianBirthplace.setTextContent(guardian.getBirthPlace());
+        guardianPerson.appendChild(guardianBirthplace);
 
-            List<String> telecomGuardianValues = guardian.getTelecoms();
-            List<String> telecomGuardianUses = guardian.getTelecomUses();
-            if (!telecomGuardianValues.isEmpty() && !telecomGuardianUses.isEmpty()) {
-                for (int i = 0; i < telecomGuardianValues.size(); i++) {
-                    Element telecomGuardianElement = doc.createElement("telecom");
-                    telecomGuardianElement.setAttribute("use", telecomGuardianUses.get(i));
-                    telecomGuardianElement.setAttribute("value", telecomGuardianValues.get(i));
-                    guardianPerson.appendChild(telecomGuardianElement);
-                }
+        createAddressElements(doc, guardianPerson, guardian.getAddresses());
+
+        List<String> telecomGuardianValues = guardian.getTelecoms();
+        List<String> telecomGuardianUses = guardian.getTelecomUses();
+        if (!telecomGuardianValues.isEmpty() && !telecomGuardianUses.isEmpty()) {
+            for (int i = 0; i < telecomGuardianValues.size(); i++) {
+                Element telecomGuardianElement = doc.createElement("telecom");
+                telecomGuardianElement.setAttribute("use", telecomGuardianUses.get(i));
+                telecomGuardianElement.setAttribute("value", telecomGuardianValues.get(i));
+                guardianPerson.appendChild(telecomGuardianElement);
+            }
+        }
+    }
+
+    private static void addAuthor(Document doc, Element root, CDALDOAuthor author, LocalDateTime authorTime) {
+        Element authorElement = doc.createElement("author");
+        root.appendChild(authorElement);
+
+        Element timeElement = doc.createElement("time");
+        timeElement.setAttribute("value", authorTime.format(formatter));
+        authorElement.appendChild(timeElement);
+
+        Element assignedAuthorElement = doc.createElement("assignedAuthor");
+        authorElement.appendChild(assignedAuthorElement);
+
+        Element idAuthorElement = createIdElement(doc, author.getId().getOid(), author.getId().getExtensionId(), author.getId().getAssigningAuthorityName());
+        assignedAuthorElement.appendChild(idAuthorElement);
+
+        if (author.hasRegionalId()) {
+            Element regionalIdAuthorElement = createIdElement(doc, author.getRegionalId().getOid(), author.getRegionalId().getExtensionId(), author.getRegionalId().getAssigningAuthorityName());
+            assignedAuthorElement.appendChild(regionalIdAuthorElement);
+        }
+
+        List<String> telecomAuthorValues = author.getTelecoms();
+        List<String> telecomAuthorUses = author.getTelecomUses();
+        if (!telecomAuthorValues.isEmpty() && !telecomAuthorUses.isEmpty()) {
+            for (int i = 0; i < telecomAuthorValues.size(); i++) {
+                Element telecomElement = doc.createElement("telecom");
+                telecomElement.setAttribute("use", telecomAuthorUses.get(i));
+                telecomElement.setAttribute("value", telecomAuthorValues.get(i));
+                assignedAuthorElement.appendChild(telecomElement);
             }
         }
 
-        if (author != null) {
-            Element authorElement = doc.createElement("author");
-            root.appendChild(authorElement);
+        Element assignedPersonElement = doc.createElement("assignedPerson");
+        assignedAuthorElement.appendChild(assignedPersonElement);
+        if (author.getFirstName() != null) {
+            Element nameAuthorElement = doc.createElement("name");
+            assignedPersonElement.appendChild(nameAuthorElement);
 
-            Element timeElement = doc.createElement("time");
-            timeElement.setAttribute("value", authorTime.format(formatter));
-            authorElement.appendChild(timeElement);
+            Element familyAuthorElement = doc.createElement("family");
+            familyAuthorElement.setTextContent(author.getLastName());
+            nameAuthorElement.appendChild(familyAuthorElement);
 
-            Element assignedAuthorElement = doc.createElement("assignedAuthor");
-            authorElement.appendChild(assignedAuthorElement);
+            Element givenAuthorElement = doc.createElement("given");
+            givenAuthorElement.setTextContent(author.getFirstName());
+            nameAuthorElement.appendChild(givenAuthorElement);
 
-            Element idAuthorElement = doc.createElement("id");
-            idAuthorElement.setAttribute("root", author.getId().getOid());
-            idAuthorElement.setAttribute("extension", author.getId().getExtensionId());
-            idAuthorElement.setAttribute("assigningAuthorityName", author.getId().getAssigningAuthorityName());
-            assignedAuthorElement.appendChild(idAuthorElement);
-            if (author.hasRegionalId()) {
-                Element regionalIdAuthorElement = doc.createElement("id");
-                regionalIdAuthorElement.setAttribute("root", author.getRegionalId().getOid());
-                regionalIdAuthorElement.setAttribute("extension", author.getRegionalId().getExtensionId());
-                regionalIdAuthorElement.setAttribute("assigningAuthorityName",
-                        author.getRegionalId().getAssigningAuthorityName());
-                assignedAuthorElement.appendChild(regionalIdAuthorElement);
-            }
-            List<String> telecomAuthorValues = author.getTelecoms();
-            List<String> telecomAuthorUses = author.getTelecomUses();
-            if (!telecomAuthorValues.isEmpty() && !telecomAuthorUses.isEmpty()) {
-                for (int i = 0; i < telecomAuthorValues.size(); i++) {
-                    Element telecomElement = doc.createElement("telecom");
-                    telecomElement.setAttribute("use", telecomAuthorUses.get(i));
-                    telecomElement.setAttribute("value", telecomAuthorValues.get(i));
-                    assignedAuthorElement.appendChild(telecomElement);
-                }
-            }
-
-            Element assignedPersonElement = doc.createElement("assignedPerson");
-            assignedAuthorElement.appendChild(assignedPersonElement);
-            if (author.getFirstName() != null) {
-                Element nameAuthorElement = doc.createElement("name");
-                assignedPersonElement.appendChild(nameAuthorElement);
-
-                Element familyAuthorElement = doc.createElement("family");
-                familyAuthorElement.setTextContent(author.getLastName());
-                nameAuthorElement.appendChild(familyAuthorElement);
-
-                Element givenAuthorElement = doc.createElement("given");
-                givenAuthorElement.setTextContent(author.getFirstName());
-                nameAuthorElement.appendChild(givenAuthorElement);
-
-                Element prefixElement = doc.createElement("prefix");
-                prefixElement.setTextContent(author.getPrefix());
-                nameAuthorElement.appendChild(prefixElement);
-            }
-            if (rapresentedOrganization != null) {
-                Element authorRepresentedOrganizationElement = doc.createElement("representedOrganization");
-                Element rapresenteId = createIdElement(doc, rapresentedOrganization.getOid(),
-                        rapresentedOrganization.getExtensionId(), rapresentedOrganization.getAssigningAuthorityName());
-                assignedAuthorElement.appendChild(authorRepresentedOrganizationElement);
-                authorRepresentedOrganizationElement.appendChild(rapresenteId);
-            }
-
+            Element prefixElement = doc.createElement("prefix");
+            prefixElement.setTextContent(author.getPrefix());
+            nameAuthorElement.appendChild(prefixElement);
         }
-        addDataEnterer(doc, root, compiler, compilerTime);
+    }
 
+    private static void addCustodian(Document doc, Element root, CDALDOId custodianId, String custodianOrgazationName, CDALDOAddr custodianOrganizationAddress, String custodianPhoneNumber) {
         Element custodian = doc.createElement("custodian");
         root.appendChild(custodian);
 
@@ -368,10 +389,7 @@ public class CDALDOBuilder {
         Element representedCustodianOrganization = doc.createElement("representedCustodianOrganization");
         assignedCustodian.appendChild(representedCustodianOrganization);
 
-        Element custodianElement = doc.createElement("id");
-        custodianElement.setAttribute("root", custodianId.getOid());
-        custodianElement.setAttribute("extension", custodianId.getExtensionId());
-        custodianElement.setAttribute("assigningAuthorityName", custodianId.getAssigningAuthorityName());
+        Element custodianElement = createIdElement(doc, custodianId.getOid(), custodianId.getExtensionId(), custodianId.getAssigningAuthorityName());
         representedCustodianOrganization.appendChild(custodianElement);
 
         Element custodianName = doc.createElement("name");
@@ -386,93 +404,146 @@ public class CDALDOBuilder {
         }
 
         createAddressElements(doc, representedCustodianOrganization, List.of(custodianOrganizationAddress));
-        if (informationRecipientId != null && informationRecipientName != null) {
-            Element informationRecipient = doc.createElement("informationRecipient");
-            root.appendChild(informationRecipient);
-
-            Element intendedRecipient = doc.createElement("intendedRecipient");
-            informationRecipient.appendChild(intendedRecipient);
-
-            Element idElement = doc.createElement("id");
-            idElement.setAttribute("root", informationRecipientId.getOid());
-            idElement.setAttribute("extension", informationRecipientId.getExtensionId());
-            idElement.setAttribute("assigningAuthorityName", informationRecipientId.getAssigningAuthorityName());
-            intendedRecipient.appendChild(idElement);
-
-            Element recipientName = doc.createElement("name");
-            recipientName.setTextContent(informationRecipientName);
-            intendedRecipient.appendChild(recipientName);
-        }
-        if (legalAuthenticator != null) {
-            Element legalAuthenticatorElement = doc.createElement("legalAuthenticator");
-            root.appendChild(legalAuthenticatorElement);
-    
-            Element timeElement = doc.createElement("time");
-            timeElement.setAttribute("value", legalAuthTime.format(formatter));
-            legalAuthenticatorElement.appendChild(timeElement);
-    
-            Element signatureCode = doc.createElement("signatureCode");
-            signatureCode.setAttribute("code", "S");
-            legalAuthenticatorElement.appendChild(signatureCode);
-    
-            Element assignedEntity = doc.createElement("assignedEntity");
-            legalAuthenticatorElement.appendChild(assignedEntity);
-    
-            Element idElement = createIdElement(doc, legalAuthenticator.getId().getOid(),
-                    legalAuthenticator.getId().getExtensionId(), legalAuthenticator.getId().getAssigningAuthorityName());
-            assignedEntity.appendChild(idElement);
-    
-            if (legalAuthenticator.hasRegionalId()) {
-                Element regionalIdElement = createIdElement(doc, legalAuthenticator.getRegionalId().getOid(),
-                        legalAuthenticator.getRegionalId().getExtensionId(), legalAuthenticator.getRegionalId().getAssigningAuthorityName());
-                assignedEntity.appendChild(regionalIdElement);
-            }
-    
-            List<String> legalTelecomValues = legalAuthenticator.getTelecoms();
-            List<String> legalTelecomUses = legalAuthenticator.getTelecomUses();
-            if (!legalTelecomValues.isEmpty() && !legalTelecomUses.isEmpty()) {
-                for (int i = 0; i < telecomValues.size(); i++) {
-                    Element legalTelecomElement = doc.createElement("telecom");
-                    legalTelecomElement.setAttribute("use", legalTelecomUses.get(i));
-                    legalTelecomElement.setAttribute("value", legalTelecomValues.get(i));
-                    assignedEntity.appendChild(legalTelecomElement);
-                }
-            }
-    
-            Element assignedPerson = doc.createElement("assignedPerson");
-            assignedEntity.appendChild(assignedPerson);
-    
-            Element legalNameElement = doc.createElement("name");
-            assignedPerson.appendChild(legalNameElement);
-    
-            Element legalFamilyElement = doc.createElement("family");
-            legalFamilyElement.setTextContent(legalAuthenticator.getLastName());
-            nameElement.appendChild(legalFamilyElement);
-    
-            Element legalGivenElement = doc.createElement("given");
-            legalGivenElement.setTextContent(legalAuthenticator.getFirstName());
-            nameElement.appendChild(legalGivenElement);
-    
-            Element legalPrefixElement = doc.createElement("prefix");
-            legalPrefixElement.setTextContent(legalAuthenticator.getPrefix());
-            nameElement.appendChild(legalPrefixElement);
-        }
-    
-        //
-        if(!participants.isEmpty()){
-            addParticipants(doc, root, participants);
-        }
-    
- 
-        if(fulfillmentId != null){
-            addInFulfillmentOf(doc, root, fulfillmentId);
-        }
-
-        addComponentOf(doc, root, ramoAziendale, numeroNosologico, nomeAzienda, lowTime, highTime, repartoIds, repartoNames, ministerialCodes, facilityNames, facilityTelecoms);
-
-    
     }
 
+    private static void addInformationRecipient(Document doc, Element root, CDALDOId informationRecipientId, String informationRecipientName) {
+        Element informationRecipient = doc.createElement("informationRecipient");
+        root.appendChild(informationRecipient);
+
+        Element intendedRecipient = doc.createElement("intendedRecipient");
+        informationRecipient.appendChild(intendedRecipient);
+
+        Element idElement = createIdElement(doc, informationRecipientId.getOid(), informationRecipientId.getExtensionId(), informationRecipientId.getAssigningAuthorityName());
+        intendedRecipient.appendChild(idElement);
+
+        Element recipientName = doc.createElement("name");
+        recipientName.setTextContent(informationRecipientName);
+        intendedRecipient.appendChild(recipientName);
+    }
+
+    private static void addLegalAuthenticator(Document doc, Element root, LocalDateTime legalAuthTime, CDALDOAuthor legalAuthenticator) {
+        Element legalAuthenticatorElement = doc.createElement("legalAuthenticator");
+        root.appendChild(legalAuthenticatorElement);
+
+        Element timeElement = doc.createElement("time");
+        timeElement.setAttribute("value", legalAuthTime.format(formatter));
+        legalAuthenticatorElement.appendChild(timeElement);
+
+        Element signatureCode = doc.createElement("signatureCode");
+        signatureCode.setAttribute("code", "S");
+        legalAuthenticatorElement.appendChild(signatureCode);
+
+        Element assignedEntity = doc.createElement("assignedEntity");
+        legalAuthenticatorElement.appendChild(assignedEntity);
+
+        Element idElement = createIdElement(doc, legalAuthenticator.getId().getOid(), legalAuthenticator.getId().getExtensionId(), legalAuthenticator.getId().getAssigningAuthorityName());
+        assignedEntity.appendChild(idElement);
+
+        if (legalAuthenticator.hasRegionalId()) {
+            Element regionalIdElement = createIdElement(doc, legalAuthenticator.getRegionalId().getOid(), legalAuthenticator.getRegionalId().getExtensionId(), legalAuthenticator.getRegionalId().getAssigningAuthorityName());
+            assignedEntity.appendChild(regionalIdElement);
+        }
+
+        List<String> legalTelecomValues = legalAuthenticator.getTelecoms();
+        List<String> legalTelecomUses = legalAuthenticator.getTelecomUses();
+        if (!legalTelecomValues.isEmpty() && !legalTelecomUses.isEmpty()) {
+            for (int i = 0; i < legalTelecomValues.size(); i++) {
+                Element legalTelecomElement = doc.createElement("telecom");
+                legalTelecomElement.setAttribute("use", legalTelecomUses.get(i));
+                legalTelecomElement.setAttribute("value", legalTelecomValues.get(i));
+                assignedEntity.appendChild(legalTelecomElement);
+            }
+        }
+
+        Element assignedPerson = doc.createElement("assignedPerson");
+        assignedEntity.appendChild(assignedPerson);
+
+        Element legalNameElement = doc.createElement("name");
+        assignedPerson.appendChild(legalNameElement);
+
+        Element legalFamilyElement = doc.createElement("family");
+        legalFamilyElement.setTextContent(legalAuthenticator.getLastName());
+        legalNameElement.appendChild(legalFamilyElement);
+
+        Element legalGivenElement = doc.createElement("given");
+        legalGivenElement.setTextContent(legalAuthenticator.getFirstName());
+        legalNameElement.appendChild(legalGivenElement);
+
+        Element legalPrefixElement = doc.createElement("prefix");
+        legalPrefixElement.setTextContent(legalAuthenticator.getPrefix());
+        legalNameElement.appendChild(legalPrefixElement);
+    }
+
+    private static void addParticipants(Document doc, Element root, List<CDALDOAuthor> participants) {
+        for (CDALDOAuthor participant : participants) {
+            Element participantElement = doc.createElement("participant");
+            participantElement.setAttribute("typeCode", "REF");
+            root.appendChild(participantElement);
+
+            Element associatedEntity = doc.createElement("associatedEntity");
+            associatedEntity.setAttribute("classCode", "PROV");
+            participantElement.appendChild(associatedEntity);
+
+            Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.2", participant.getId().getExtensionId(), "MEF");
+            associatedEntity.appendChild(idElement);
+
+            Element associatedPerson = doc.createElement("associatedPerson");
+            associatedEntity.appendChild(associatedPerson);
+
+            Element nameElement = doc.createElement("name");
+            associatedPerson.appendChild(nameElement);
+
+            Element givenElement = doc.createElement("given");
+            givenElement.setTextContent(participant.getFirstName());
+            nameElement.appendChild(givenElement);
+
+            Element familyElement = doc.createElement("family");
+            familyElement.setTextContent(participant.getLastName());
+            nameElement.appendChild(familyElement);
+
+            Element prefixElement = doc.createElement("prefix");
+            prefixElement.setTextContent(participant.getPrefix());
+            nameElement.appendChild(prefixElement);
+        }
+    }
+
+    private static void addInFulfillmentOf(Document doc, Element root, String fulfillmentId) {
+        Element inFulfillmentOf = doc.createElement("inFulfillmentOf");
+        root.appendChild(inFulfillmentOf);
+
+        Element order = doc.createElement("order");
+        order.setAttribute("classCode", "ACT");
+        order.setAttribute("moodCode", "RQO");
+        inFulfillmentOf.appendChild(order);
+
+        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.9", fulfillmentId, "Ministero delle Finanze");
+        order.appendChild(idElement);
+
+        Element priorityCode = doc.createElement("priorityCode");
+        priorityCode.setAttribute("code", "R");
+        priorityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.7");
+        priorityCode.setAttribute("codeSystemName", "HL7 ActPriority");
+        priorityCode.setAttribute("displayName", "Normale");
+        order.appendChild(priorityCode);
+    }
+
+    private static Element createIdElement(Document doc, String root, String extension, String assigningAuthorityName) {
+        Element idElement = doc.createElement("id");
+        idElement.setAttribute("root", root);
+        idElement.setAttribute("extension", extension);
+        if (assigningAuthorityName != null) {
+            idElement.setAttribute("assigningAuthorityName", assigningAuthorityName);
+        }
+        return idElement;
+    }
+
+    private static String formatEffectiveTime(LocalDateTime effectiveTimeDate) {
+        return effectiveTimeDate.atZone(ZoneId.systemDefault()).format(effectiveTimeFormatter);
+    }
+
+    private static String formatEffectiveTime(LocalDate birthDate) {
+        return birthDate.atStartOfDay(ZoneId.systemDefault()).format(effectiveTimeFormatter);
+    }
 
 
     public static void addComponentOf(Document doc, Element root, String ramoAziendale, String numeroNosologico, String nomeAzienda,LocalDateTime lowTime,LocalDateTime highTime, List<String> repartoIds, List<String> repartoNames,List<String> ministerialCodes, List<String> facilityNames, List<String> facilityTelecoms) {
@@ -589,83 +660,6 @@ public class CDALDOBuilder {
         highElement.setAttribute("value", formatEffectiveTime(highTime));
         effectiveTime.appendChild(highElement);
     }
-
-    public static void addInFulfillmentOf(Document doc, Element root, String orderIdExtension) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (root == null) {
-            throw new IllegalArgumentException("Root element cannot be null");
-        }
-        if (orderIdExtension == null || orderIdExtension.isEmpty()) {
-            throw new IllegalArgumentException("Order ID extension cannot be null or empty");
-        }
-    
-        Element inFulfillmentOf = doc.createElement("inFulfillmentOf");
-        root.appendChild(inFulfillmentOf);
-    
-        Element order = doc.createElement("order");
-        order.setAttribute("classCode", "ACT");
-        order.setAttribute("moodCode", "RQO");
-        inFulfillmentOf.appendChild(order);
-    
-        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.9", orderIdExtension, "Ministero delle Finanze");
-        order.appendChild(idElement);
-    
-        Element priorityCode = doc.createElement("priorityCode");
-        priorityCode.setAttribute("code", "R");
-        priorityCode.setAttribute("codeSystem", "2.16.840.1.113883.5.7");
-        priorityCode.setAttribute("codeSystemName", "HL7 ActPriority");
-        priorityCode.setAttribute("displayName", "Normale");
-        order.appendChild(priorityCode);
-    
-    }
-
-
- public static void addParticipants(Document doc, Element root, List<CDALDOAuthor> participants) {
-        if (doc == null) {
-            throw new IllegalArgumentException("Document cannot be null");
-        }
-        if (root == null) {
-            throw new IllegalArgumentException("Root element cannot be null");
-        }
-        if (participants == null || participants.isEmpty()) {
-            throw new IllegalArgumentException("Participants list cannot be null or empty");
-        }
-    
-        for (CDALDOAuthor participant : participants) {
-            Element participantElement = doc.createElement("participant");
-            participantElement.setAttribute("typeCode", "REF");
-            root.appendChild(participantElement);
-    
-            Element associatedEntity = doc.createElement("associatedEntity");
-            associatedEntity.setAttribute("classCode", "PROV");
-            participantElement.appendChild(associatedEntity);
-    
-            Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.2",
-                    participant.getId().getExtensionId(), "MEF");
-            associatedEntity.appendChild(idElement);
-    
-            Element associatedPerson = doc.createElement("associatedPerson");
-            associatedEntity.appendChild(associatedPerson);
-    
-            Element nameElement = doc.createElement("name");
-            associatedPerson.appendChild(nameElement);
-    
-            Element givenElement = doc.createElement("given");
-            givenElement.setTextContent(participant.getFirstName());
-            nameElement.appendChild(givenElement);
-    
-            Element familyElement = doc.createElement("family");
-            familyElement.setTextContent(participant.getLastName());
-            nameElement.appendChild(familyElement);
-    
-            Element prefixElement = doc.createElement("prefix");
-            prefixElement.setTextContent(participant.getPrefix());
-            nameElement.appendChild(prefixElement);
-        }
-    }
-
     private static void createAddressElements(Document doc, Element parent, List<CDALDOAddr> addresses) {
         for (CDALDOAddr addr : addresses) {
             Element addrElement = doc.createElement("addr");
@@ -730,23 +724,6 @@ public class CDALDOBuilder {
         name.appendChild(family);
         assignedEntity.appendChild(id);
 
-    }
-
-    private static Element createIdElement(Document doc, String root, String extension, String assigningAuthorityName) {
-        Element idElement = doc.createElement("id");
-        idElement.setAttribute("root", root);
-        idElement.setAttribute("extension", extension);
-        if(assigningAuthorityName!=null){
-        idElement.setAttribute("assigningAuthorityName", assigningAuthorityName);}
-        return idElement;
-    }
-
-    private static String formatEffectiveTime(LocalDateTime effectiveTimeDate) {
-        return effectiveTimeDate.atZone(ZoneId.systemDefault()).format(effectiveTimeFormatter);
-    }
-
-    private static String formatEffectiveTime(LocalDate birthDate) {
-        return birthDate.atStartOfDay(ZoneId.systemDefault()).format(effectiveTimeFormatter);
     }
 
 }

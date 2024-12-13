@@ -3,7 +3,6 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.time.format.DateTimeFormatter;
 

@@ -3,12 +3,13 @@ package it.unisa.medical_docs_to_cda.CDALDO;
 import org.w3c.dom.*;
 
 
-public class CDALDOEntryObservation extends CDALDOEntry {
+public class CDALDOEntryObservation implements CDALDOEntry {
 
     @Override
     public void createEntry(Document doc, Element section, String code, String codeSystem, String codeSystemName, String displayName) {
-        // TODO Auto-generated method stub
-        super.createEntry(doc, section, code, codeSystem, codeSystemName, displayName);
+        Element entry = doc.createElement("entry");
+        section.appendChild(entry);
+        
     }
 
     

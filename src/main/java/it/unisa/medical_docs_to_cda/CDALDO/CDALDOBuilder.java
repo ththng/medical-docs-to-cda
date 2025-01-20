@@ -482,7 +482,7 @@ public class CDALDOBuilder {
         createText(doc, section, mainBlocks);
 
         // Section entries
-       
+       // List<CDALDOEntry> entries
 
 
         // Additional creations
@@ -643,7 +643,7 @@ public class CDALDOBuilder {
     }
 
     public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-            String displayName) {
+            String displayName, String xsiType) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -655,7 +655,7 @@ public class CDALDOBuilder {
         }
 
         Element valueElement = doc.createElement("value");
-        valueElement.setAttribute("xsi-type", "CD");
+        valueElement.setAttribute("xsi-type", xsiType);
         valueElement.setAttribute("code", code);
         valueElement.setAttribute("codeSystem", codeSystem);
         valueElement.setAttribute("codeSystemName", codeSystemName);
@@ -663,7 +663,7 @@ public class CDALDOBuilder {
         parent.appendChild(valueElement);
     }
 
-    public static void createEntry(Document doc, Element section, String displayName) {
+   /* public static void createEntry(Document doc, Element section, String displayName) {
 
         Element entry = doc.createElement("entry");
         section.appendChild(entry);
@@ -676,9 +676,9 @@ public class CDALDOBuilder {
         addCode(doc, observation, "8646-2", "2.16.840.1.113883.6.1", "LOINC", displayName);
 
         addValue(doc, observation, "[CODICE_DIAGNOSI_ICD9]", "2.16.840.1.113883.6.103", "ICD9CM",
-                "[DESCRIZIONE_DIAGNOSI]");
+                "[DESCRIZIONE_DIAGNOSI]", "CD");
 
-    }
+    }*/
 
     public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocksSection1,
             List<CDALDONarrativeBlock> narrativeBlocksSection2) {

@@ -125,6 +125,8 @@ public class CDALDOBuilder {
         Element root = doc.createElement("ClinicalDocument");
         root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation",
                 "urn:hl7-org:v3 CDA.xsd");
+        root.setAttribute( "xmlns",
+                "urn:hl7-org:v3");
         doc.appendChild(root);
 
         createRealmCode(doc, root);

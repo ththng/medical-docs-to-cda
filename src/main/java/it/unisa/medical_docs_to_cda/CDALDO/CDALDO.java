@@ -108,6 +108,12 @@ public void setPatient(CDALDOPatient patient) {
     if (patient.getIds() == null || patient.getIds().isEmpty()) {
         throw new IllegalArgumentException("patient IDs can't be empty");
     }
+    if (patient.getAddresses().isEmpty()) {
+        throw new IllegalArgumentException("patient addresses can't be empty");
+    }
+    if(patient.getTelecomUses().isEmpty()){
+        throw new IllegalArgumentException("patient telecom uses can't be empty");
+    }
     boolean patientCF=false; 
     boolean patientEni=false;
     boolean patientAna= false;
@@ -211,7 +217,7 @@ public void setLegalAuthenticator(CDALDOAuthor legalAuthenticator) {
     if (legalAuthenticator.getFirstName() == null || legalAuthenticator.getLastName() == null) {
         throw new IllegalArgumentException("legalAuthenticator data is incomplete");
     }
-    if (legalAuthenticator.getId().getOid() != "2.16.840.1.113883.2.9.4.3.2") {
+    if (legalAuthenticator.getId().getOid() == "2.16.840.1.113883.2.9.4.3.2") {
         throw new IllegalArgumentException("legalAuthenticator id needs to be a CF");
     }
     this.legalAuthenticator = legalAuthenticator;
@@ -279,6 +285,25 @@ public void setParticipant(CDALDOAuthor participant) {
 public CDALDO() {
     // empty constructor
 }
+public void setInformationRecipient(CDALDOId informationRecipientId, String informationRecipientName) {
+    if (informationRecipientId == null) {
+        throw new NullPointerException("informationRecipientId can't be null");
+    }
+    if (informationRecipientName == null || informationRecipientName.isEmpty()) {
+        throw new IllegalArgumentException("informationRecipientName can't be empty");
+    }
+    this.informationRecipientId = informationRecipientId;
+    this.informationRecipientName = informationRecipientName;
+}
+public void setRapresentedOrganization(CDALDOId rappresentedOrganization) {
+    if (rappresentedOrganization == null) {
+        throw new NullPointerException("rappresentedOrganization can't be null");
+    }
+    if (!(rappresentedOrganization.getOid().equals("2.16.840.1.113883.2.9.4.1.1") || rappresentedOrganization.getOid().equals("2.16.840.1.113883.2.9.4.1.2"))) {
+        throw new IllegalArgumentException("rappresentedOrganization needs to be a FLS11 or HSP11");
+    }
+    this.rapresentedOrganization = rappresentedOrganization;
+}
 
 public List<String> check(){
     List<String> errors = new ArrayList<>();
@@ -297,8 +322,6 @@ public List<String> check(){
     if(this.custodianOrgazationName == null) errors.add("custodianOrgazationName");
     if(this.custodianOrganizationAddress == null) errors.add("custodianOrganizationAddress");
     if(this.custodianPhoneNumber == null) errors.add("custodianPhoneNumber");
-    if(this.informationRecipientId == null) errors.add("informationRecipientId");
-    if(this.informationRecipientName == null) errors.add("informationRecipientName");
     if(this.legalAuthTime == null) errors.add("legalAuthTime");
     if(this.legalAuthenticator == null) errors.add("legalAuthenticator");
     if(this.fulfillmentId == null) errors.add("fulfillmentId");
@@ -323,6 +346,9 @@ public void setFullfillmentId(String fulfillmentId) {
 }
 public Document getCDA() throws ParserConfigurationException {
     Document doc = CDALDOBuilder.createBasicDoc();
+    if(!this.check().isEmpty()){
+        throw new IllegalArgumentException("CDALDO object is not valid");
+    }
     CDALDOBuilder.addHeader(doc,this.oid,this.status,this.effectiveTimeDate,this.confidentialityCodeValue,this.setOid,this.versionNumberValue,
                             this.patient,this.guardian,this.author,this.authorTime,this.rapresentedOrganization,
                             this.compiler,this.compilerTime,this.custodianId,this.custodianOrgazationName,

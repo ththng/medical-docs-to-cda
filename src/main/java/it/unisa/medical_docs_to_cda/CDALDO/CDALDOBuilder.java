@@ -196,7 +196,7 @@ public class CDALDOBuilder {
             addLegalAuthenticator(doc, root, legalAuthTime, legalAuthenticator);
         }
 
-        if (!participants.isEmpty()) {
+        if (participants != null && !participants.isEmpty()) {
             addParticipants(doc, root, participants);
         }
 

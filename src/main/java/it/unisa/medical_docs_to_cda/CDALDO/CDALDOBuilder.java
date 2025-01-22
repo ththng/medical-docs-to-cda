@@ -891,7 +891,7 @@ public class CDALDOBuilder {
                         for (String item : (String[]) textContent) {
                             Element listItem = doc.createElement("item");
                             Element content = doc.createElement("content");
-                            content.setAttribute("ID", "DIAG-" + (count + 1)); // Dynamic ID
+                            content.setAttribute("ID", "ITEM-" + (count + 1)); // Dynamic ID
                             count++;
                             content.setTextContent(item);
 

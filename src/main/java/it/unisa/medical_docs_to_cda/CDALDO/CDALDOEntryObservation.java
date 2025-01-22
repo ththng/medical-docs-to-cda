@@ -39,64 +39,67 @@ public class CDALDOEntryObservation implements CDALDOEntry {
     private List<CDALDOAuthor> performers;
     private List<CDALDOAuthor> participants;
 
-    
     public CDALDOEntryObservation(String code, String codeSystem, String codeSystemName, String displayName,
-        String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
-        LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String valueCode, String valueCodeSystem,
-        String valueCodeSystemName, String valueDisplayName, String xsiType, String outcome, float value, String unit, boolean translationNecessary,
-        List<CDALDOEntry> entryRelationships, List<CDALDOAuthor> performers, List<CDALDOAuthor> participants) {
+            String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
+            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String valueCode,
+            String valueCodeSystem,
+            String valueCodeSystemName, String valueDisplayName, String xsiType, String outcome, float value,
+            String unit, boolean translationNecessary,
+            List<CDALDOEntry> entryRelationships, List<CDALDOAuthor> performers, List<CDALDOAuthor> participants) {
 
-    if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
-        this.code = code;
-        this.codeSystem = codeSystem;
-        this.codeSystemName = codeSystemName;
-        this.displayName = displayName;
-        this.entryType = entryType;
-    } else {
-        throw new IllegalArgumentException("Make sure that all the mandatory fields related to the entry observation code are present");
-    }
-
-    this.typeCode = typeCode;
-    this.isAnamnesi = isAnamnesi;
-    if (isAnamnesi) {
-        this.statusCodeNecessary = true;
-    }
-    this.effectiveTimeLow = effectiveTimeLow;
-    this.effectiveTimeHigh = effectiveTimeHigh;
-    this.dtEsecuzione = dtEsecuzione;
-    this.dtRichiesta = dtRichiesta;
-    this.valueCode = valueCode;
-    this.valueCodeSystem = valueCodeSystem;
-    this.valueCodeSystemName = valueCodeSystemName;
-    this.valueDisplayName = valueDisplayName;
-    this.xsiType = xsiType;
-    this.outcome = outcome;
-    this.value = value;
-    this.unit = unit;
-
-    if ("CD".equals(xsiType)) {
-        if (valueCode == null || valueCodeSystem == null || valueCodeSystemName == null || valueDisplayName == null) {
-            throw new IllegalArgumentException("For the CD xsi:type, valueCode, valueCodeSystem, valueCodeSystemName, and valueDisplayName cannot be null");
+        if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
+            this.code = code;
+            this.codeSystem = codeSystem;
+            this.codeSystemName = codeSystemName;
+            this.displayName = displayName;
+            this.entryType = entryType;
+        } else {
+            throw new IllegalArgumentException(
+                    "Make sure that all the mandatory fields related to the entry observation code are present");
         }
-        this.valuePresent = true;
-    }
 
-    if ("ST".equals(xsiType)) {
-        if (outcome == null) {
-            throw new IllegalArgumentException("For the ST xsi:type, the outcome cannot be null");
+        this.typeCode = typeCode;
+        this.isAnamnesi = isAnamnesi;
+        if (isAnamnesi) {
+            this.statusCodeNecessary = true;
         }
-        this.valuePresent = true;
-    }
+        this.effectiveTimeLow = effectiveTimeLow;
+        this.effectiveTimeHigh = effectiveTimeHigh;
+        this.dtEsecuzione = dtEsecuzione;
+        this.dtRichiesta = dtRichiesta;
+        this.valueCode = valueCode;
+        this.valueCodeSystem = valueCodeSystem;
+        this.valueCodeSystemName = valueCodeSystemName;
+        this.valueDisplayName = valueDisplayName;
+        this.xsiType = xsiType;
+        this.outcome = outcome;
+        this.value = value;
+        this.unit = unit;
 
-    this.translationNecessary = translationNecessary;
-    if (effectiveTimeLow != null) {
-        this.effectiveTimeNecessary = true;
-    }
-    this.entryRelationships = entryRelationships;
-    this.participants = participants;
-    this.performers = performers;
-}
+        if ("CD".equals(xsiType)) {
+            if (valueCode == null || valueCodeSystem == null || valueCodeSystemName == null
+                    || valueDisplayName == null) {
+                throw new IllegalArgumentException(
+                        "For the CD xsi:type, valueCode, valueCodeSystem, valueCodeSystemName, and valueDisplayName cannot be null");
+            }
+            this.valuePresent = true;
+        }
 
+        if ("ST".equals(xsiType)) {
+            if (outcome == null) {
+                throw new IllegalArgumentException("For the ST xsi:type, the outcome cannot be null");
+            }
+            this.valuePresent = true;
+        }
+
+        this.translationNecessary = translationNecessary;
+        if (effectiveTimeLow != null) {
+            this.effectiveTimeNecessary = true;
+        }
+        this.entryRelationships = entryRelationships;
+        this.participants = participants;
+        this.performers = performers;
+    }
 
     @Override
     public void createEntry(Document doc, Element parent) {
@@ -104,10 +107,10 @@ public class CDALDOEntryObservation implements CDALDOEntry {
             return; // Lancia un'eccezione o altro
         }
         Element entry = doc.createElement(entryType);
-        if(entryType == "entryRelationship")
+        if (entryType == "entryRelationship")
             entry.setAttribute("typeCode", typeCode);
-            if("REFR".equals(typeCode))
-                entry.setAttribute("inversionInd", "'false'");
+        if ("REFR".equals(typeCode))
+            entry.setAttribute("inversionInd", "'false'");
 
         parent.appendChild(entry);
         Element observation = doc.createElement("observation");
@@ -115,44 +118,45 @@ public class CDALDOEntryObservation implements CDALDOEntry {
         observation.setAttribute("moodCode", "EVN");
         entry.appendChild(observation);
         CDALDOBuilder.addCode(doc, observation, code, codeSystem, codeSystemName, displayName);
-        
-        if(statusCodeNecessary){
+
+        if (statusCodeNecessary) {
             Element statusCode = doc.createElement("statusCode");
             statusCode.setAttribute("code", "completed");
             observation.appendChild(statusCode);
         }
 
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if(isAnamnesi){
-            Element effectiveTime = doc.createElement("effectiveTime"); 
+        if (isAnamnesi) {
+            Element effectiveTime = doc.createElement("effectiveTime");
             observation.appendChild(effectiveTime);
             Element low = doc.createElement("low");
 
-            if(effectiveTimeLow != null)
-                low.setAttribute("value",this.effectiveTimeLow.format(formatterDate));
+            if (effectiveTimeLow != null)
+                low.setAttribute("value", this.effectiveTimeLow.format(formatterDate));
             else
                 low.setAttribute("@nullFlavour", "UNK");
 
             effectiveTime.appendChild(low);
             Element high = doc.createElement("high");
-            if(effectiveTimeHigh != null)
-                high.setAttribute("value",this.effectiveTimeHigh.format(formatterDate));
+            if (effectiveTimeHigh != null)
+                high.setAttribute("value", this.effectiveTimeHigh.format(formatterDate));
             else
-                high.setAttribute("value","Not available yet");
+                high.setAttribute("value", "Not available yet");
 
             effectiveTime.appendChild(high);
-        }
-        else{
-            if(effectiveTimeNecessary){
+        } else {
+            if (effectiveTimeNecessary) {
                 Element effectiveTime = doc.createElement("effectiveTime");
                 DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZZZZ")
-                    .withZone(ZoneId.systemDefault());
-                if (this.effectiveTimeHigh != null) { //low da controllare nel costruttore
+                        .withZone(ZoneId.systemDefault());
+                if (this.effectiveTimeHigh != null) { // low da controllare nel costruttore
                     observation.appendChild(effectiveTime);
                     Element low = doc.createElement("low");
-                    low.setAttribute("value", this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatterDateTime));
+                    low.setAttribute("value",
+                            this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatterDateTime));
                     Element high = doc.createElement("high");
-                    high.setAttribute("value", this.effectiveTimeHigh.atZone(ZoneId.systemDefault()).format(formatterDateTime));
+                    high.setAttribute("value",
+                            this.effectiveTimeHigh.atZone(ZoneId.systemDefault()).format(formatterDateTime));
                     effectiveTime.appendChild(low);
                     effectiveTime.appendChild(high);
                 } else {
@@ -162,7 +166,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
             }
         }
 
-        if(valuePresent)
+        if (valuePresent)
             CDALDOBuilder.addValue(doc, observation, valueCode, valueCodeSystem, valueCodeSystemName,
                     valueDisplayName, xsiType, outcome, value, unit);
 
@@ -197,7 +201,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
         }
 
         // Tag participant (optional) BUT ID AND NAME ARE MANDATORY !!!!!
-        if (participants != null && !(participants.isEmpty()) ) {
+        if (participants != null && !(participants.isEmpty())) {
             for (CDALDOAuthor particip : participants) {
                 Element participant = doc.createElement("participant");
                 observation.appendChild(participant);
@@ -226,16 +230,14 @@ public class CDALDOEntryObservation implements CDALDOEntry {
             }
         }
 
-        if(translationNecessary)
+        if (translationNecessary)
             CDALDOBuilder.addTranslation(doc, observation, code, codeSystem, codeSystemName, displayName);
 
-        if(entryRelationships!= null && (!entryRelationships.isEmpty())) {
-            for (CDALDOEntry entryRelationship : entryRelationships){ 
+        if (entryRelationships != null && (!entryRelationships.isEmpty())) {
+            for (CDALDOEntry entryRelationship : entryRelationships) {
                 entryRelationship.createEntry(doc, observation);
             }
         }
 
-        
     }
 }
-

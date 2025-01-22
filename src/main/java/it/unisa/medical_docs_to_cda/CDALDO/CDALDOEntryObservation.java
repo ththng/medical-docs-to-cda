@@ -160,7 +160,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                     effectiveTime.appendChild(low);
                     effectiveTime.appendChild(high);
                 } else {
-                    effectiveTime.setAttribute("value", this.effectiveTimeLow.format(formatterDateTime));
+                    effectiveTime.setAttribute("value", this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatterDateTime));
                     observation.appendChild(effectiveTime);
                 }
             }

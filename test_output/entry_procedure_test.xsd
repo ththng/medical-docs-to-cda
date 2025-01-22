@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section>
+    <entry>
+        <procedure classCode="PROC" moodCode="EVN">
+            <code code="code" codeSystem="codeSystem" codeSystemName="codeSystemName" displayName="displayName"/>
+            <statusCode code="completed"/>
+            <effectiveTime>
+                <low value="20250121220159GMT+01:00"/>
+                <high value="20250122220159GMT+01:00"/>
+            </effectiveTime>
+        </procedure>
+    </entry>
+</section>

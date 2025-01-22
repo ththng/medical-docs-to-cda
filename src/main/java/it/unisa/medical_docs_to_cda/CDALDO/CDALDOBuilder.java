@@ -22,8 +22,6 @@ public class CDALDOBuilder {
     public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ")
             .withZone(ZoneId.systemDefault());
 
-    public CDALDOEntry cdaldoEntry;
-
     public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
             String displayName) {
         if (doc == null) {
@@ -451,21 +449,21 @@ public class CDALDOBuilder {
                 .collect(Collectors.toList());
     }
 
-    public static Element createSection(Document doc, Element structuredBody, String sectionNumber, String typeCode,
-            String sectionClassCode, String sectionMoodCode,
+    public static Element createSection(Document doc, Element structuredBody, String sectionNumber,
             String code, String codeSystem, String codeSystemName,
-            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
+            String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks,
+            List<CDALDOEntry> entries) {
 
         // Section component
         Element component = doc.createElement("component");
-        component.setAttribute("typeCode", typeCode);
+        component.setAttribute("typeCode", "COMP");
 
         structuredBody.appendChild(component);
 
         // Section element
         Element section = doc.createElement("section");
-        section.setAttribute("classCode", sectionClassCode);
-        section.setAttribute("moodCode", sectionMoodCode);
+        section.setAttribute("classCode", "DOCSECT");
+        section.setAttribute("moodCode", "EVN");
         // Append the section to the component
         component.appendChild(section);
 
@@ -482,8 +480,11 @@ public class CDALDOBuilder {
         createText(doc, section, mainBlocks);
 
         // Section entries
-       // List<CDALDOEntry> entries
-
+        if (entries != null && !entries.isEmpty()) {
+            for (CDALDOEntry entry : entries) {
+                entry.createEntry(doc, section);
+            }
+        }
 
         // Additional creations
         if ("2".equals(sectionNumber)) {
@@ -663,25 +664,17 @@ public class CDALDOBuilder {
         parent.appendChild(valueElement);
     }
 
-   /* public static void createEntry(Document doc, Element section, String displayName) {
-
-        Element entry = doc.createElement("entry");
-        section.appendChild(entry);
-
-        Element observation = doc.createElement("observation");
-        observation.setAttribute("classCode", "OBS");
-        observation.setAttribute("moodCode", "ENV");
-        entry.appendChild(observation);
-
-        addCode(doc, observation, "8646-2", "2.16.840.1.113883.6.1", "LOINC", displayName);
-
-        addValue(doc, observation, "[CODICE_DIAGNOSI_ICD9]", "2.16.840.1.113883.6.103", "ICD9CM",
-                "[DESCRIZIONE_DIAGNOSI]", "CD");
-
-    }*/
-
     public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocksSection1,
-            List<CDALDONarrativeBlock> narrativeBlocksSection2) {
+            List<CDALDONarrativeBlock> narrativeBlocksSection2, List<CDALDONarrativeBlock> narrativeBlocksSection3,
+            List<CDALDONarrativeBlock> narrativeBlocksSection4, List<CDALDONarrativeBlock> narrativeBlocksSection5,
+            List<CDALDONarrativeBlock> narrativeBlocksSection6, List<CDALDONarrativeBlock> narrativeBlocksSection7,
+            List<CDALDONarrativeBlock> narrativeBlocksSection8, List<CDALDONarrativeBlock> narrativeBlocksSection9,
+            List<CDALDONarrativeBlock> narrativeBlocksSection10, List<CDALDONarrativeBlock> narrativeBlocksSection11,
+            List<CDALDONarrativeBlock> narrativeBlocksSection12, List<CDALDONarrativeBlock> narrativeBlocksSection13,
+            List<CDALDOEntry> entriesSection1, List<CDALDOEntry> entriesSection4, List<CDALDOEntry> entriesSection6,
+            List<CDALDOEntry> entriesSection7, List<CDALDOEntry> entriesSection8,
+            List<CDALDOEntry> entriesSection9, List<CDALDOEntry> entriesSection10,
+            List<CDALDOEntry> entriesSection11, List<CDALDOEntry> entriesSection12) {
 
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -693,26 +686,87 @@ public class CDALDOBuilder {
         Element structuredBody = doc.createElement("structuredBody");
         structuredBody.setAttribute("classCode", "DOCBODY");
         structuredBody.setAttribute("moodCode", "EVN");
-
         component.appendChild(structuredBody);
 
-        Element section1 = createSection(doc, structuredBody, "1", "COMP", "DOCSECT", "EVN",
+        Element section1 = createSection(doc, structuredBody, "1",
                 "46241-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Diagnosi di Accettazione",
-                "Motivo del ricovero", narrativeBlocksSection1);
+                "Motivo del ricovero", narrativeBlocksSection1, entriesSection1);
         structuredBody.appendChild(section1);
 
-        Element section2 = createSection(doc, structuredBody, "2", "COMP", "DOCSECT", "EVN",
+        Element section2 = createSection(doc, structuredBody, "2",
                 "47039-3", "2.16.840.1.113883.6.1",
                 "LOINC", "Ricovero Ospedaliero, anamnesi ed esame obiettivo",
-                "Inquadramento Clinico Iniziale", narrativeBlocksSection2);
+                "Inquadramento Clinico Iniziale", narrativeBlocksSection2, null);
         structuredBody.appendChild(section2);
-        // Sezione consulenza
-        /*Element section6 = createSection(doc, structuredBody, "COMP", "DOCSECT", "EVN",
-                "34104-0", "2.16.840.1.113883.6.1", "LOINC",
-                "Hospital Consult note",
-                "Consulenza", narrativeBlocks);
-        structuredBody.appendChild(section6);*/
 
+        // Section 3
+
+        // Section 4
+
+        // Section 5
+
+        // Sezione 6: Consulenza
+        Element section6 = createSection(doc, structuredBody, "6",
+                "34104-0", "2.16.840.1.113883.6.1", "LOINC",
+                "Hospital Consult note", "Consulenza",
+                narrativeBlocksSection6, entriesSection6);
+        structuredBody.appendChild(section6);
+
+        // Section 7: Esami eseguiti durante il ricovero
+        Element section7 = createSection(doc, structuredBody, "7",
+                "30954-2", "2.16.840.1.113883.6.1", "LOINC",
+                "Esami diagnostici e/o di laboratorio significativi", "Esami eseguiti durante il ricovero",
+                narrativeBlocksSection7, entriesSection7);
+        structuredBody.appendChild(section7);
+
+        // Section 8: Procedure eseguite
+        Element section8 = createSection(doc, structuredBody, "8",
+                "47519-4", "2.16.840.1.113883.6.1", "LOINC", "History of Procedures Document",
+                "Procedure eseguite durante il ricovero",
+                narrativeBlocksSection8, entriesSection8);
+        structuredBody.appendChild(section8);
+
+        // Section 9: Allergie
+        Element section9 = createSection(doc, structuredBody, "9",
+                "48765-2", "2.16.840.1.113883.6.1", "LOINC",
+                "ALLERGIE E/O REAZIONI AVVERSE", "Allergie e/o reazioni avverse",
+                narrativeBlocksSection9, entriesSection9);
+        structuredBody.appendChild(section9);
+
+        // Section 10: Terapia farmacologica effettuata durante il ricovero
+        Element section10 = createSection(doc, structuredBody, "10",
+                "10160-0", "2.16.840.1.113883.6.1", "LOINC", "Terapie Farmacologiche",
+                "Terapia farmacologica effettuata durante il ricovero",
+                narrativeBlocksSection10, entriesSection10);
+        structuredBody.appendChild(section10);
+
+        // Section 11: Condizioni del paziente e diagnosi alla dimissione
+        Element section11 = createSection(doc, structuredBody, "11",
+                "11535-2", "2.16.840.1.113883.6.1", "LOINC",
+                "Diagnosi di Dimissione", "Condizioni del paziente e diagnosi alla dimissione",
+                narrativeBlocksSection11, entriesSection11);
+        structuredBody.appendChild(section11);
+
+        // Section 12: Terapia farmacologica alla dimissione
+        Element section12 = createSection(doc, structuredBody, "12",
+                "10183-2", "2.16.840.1.113883.6.1", "LOINC",
+                "Terapia farmacologica alla dimissione", "Terapia farmacologica alla dimissione",
+                narrativeBlocksSection12, entriesSection12);
+        structuredBody.appendChild(section12);
+
+        // Section 13: Istruzioni di follow-up
+        Element section13 = createSection(doc, structuredBody, "13",
+                "18776-5", "2.16.840.1.113883.6.1", "LOINC",
+                "Piano di Cura", "Istruzioni di follow-up",
+                narrativeBlocksSection13, null);
+        structuredBody.appendChild(section13);
+
+    }
+
+    public static void addTranslation(Document doc, Element observation, String code, String codeSystem,
+            String codeSystemName, String displayName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addTranslation'");
     }
 }

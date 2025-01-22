@@ -7,7 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20241205132729+0100"/>
+    <effectiveTime value="20250121220159+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -30,13 +30,13 @@
                     <given>John</given>
                 </name>
                 <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
-                <birthTime value="20241205000000+0100"/>
+                <birthTime value="20250121000000+0100"/>
                 <birthplace>City</birthplace>
             </patient>
         </patientRole>
     </recordTarget>
     <author>
-        <time value="20241205132729"/>
+        <time value="20250121220159"/>
         <assignedAuthor>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -56,7 +56,7 @@
         </assignedAuthor>
     </author>
     <dataEnterer typeCode="ENT">
-        <time value="20241205132729"/>
+        <time value="20250121220159"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -170,6 +170,238 @@
                             </paragraph>
                         </text>
                     </pharmacologicalTherapySection>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="34104-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Hospital Consult note"/>
+                    <title>Consulenza</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Esami diagnostici e/o di laboratorio significativi"/>
+                    <title>Esami eseguiti durante il ricovero</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="47519-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Procedures Document"/>
+                    <title>Procedure eseguite durante il ricovero</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="ALLERGIE E/O REAZIONI AVVERSE"/>
+                    <title>Allergie e/o reazioni avverse</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Terapie Farmacologiche"/>
+                    <title>Terapia farmacologica effettuata durante il ricovero</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosi di Dimissione"/>
+                    <title>Condizioni del paziente e diagnosi alla dimissione</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="10183-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Terapia farmacologica alla dimissione"/>
+                    <title>Terapia farmacologica alla dimissione</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
+                </section>
+            </component>
+            <component typeCode="COMP">
+                <section classCode="DOCSECT" moodCode="EVN">
+                    <code code="18776-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Piano di Cura"/>
+                    <title>Istruzioni di follow-up</title>
+                    <text>
+                        <list>
+                            <item>
+                                <content ID="DIAG-1">Disturbo di panico</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-2">Ipertiroidismo</content>
+                            </item>
+                            <item>
+                                <content ID="DIAG-3">Depressione</content>
+                            </item>
+                        </list>
+                        <paragraph>
+                            Paziente in cattivo compenso emodinamico.
+                            <br/>
+                             Sto molto male aiuto 
+                            <br/>
+                             non riesco a cantare bene.
+                        </paragraph>
+                        <content styleCode="Bold">This is bold text.</content>
+                        <content styleCode="Italics">This is italicized text.</content>
+                        <content styleCode="Underline">This is underlined text.</content>
+                    </text>
                 </section>
             </component>
         </structuredBody>

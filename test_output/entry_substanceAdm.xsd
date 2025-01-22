@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<section>
+    <entry>
+        <substanceAdministration classCode="SBADM" moodCode="EVN">
+            <consumable>
+                <manufacturedProduct classCode="MANU">
+                    <manufacturedMaterial>
+                        <code code="medCode" codeSystem="2.16.840.1.113883.2.9.6.1.5" codeSystemName="AIC" displayName="medDesc"/>
+                    </manufacturedMaterial>
+                </manufacturedProduct>
+            </consumable>
+            <text>
+                <reference value="ref"/>
+            </text>
+            <statusCode code="active"/>
+            <effectiveTime>
+                <low value="20250121"/>
+            </effectiveTime>
+            <routeCode code="routeCode" codeSystem="2.16.840.1.113883.5.112" codeSystemName="HL7 RouteOfAdministration" displayName="routeDisplayName"/>
+            <approachSiteCode code="approachSiteCode" codeSystem="approachSiteCodeSystem" codeSystemName="approachSiteCodeSystemName" displayName="approachSiteDisplayName"/>
+            <doseQuantity>
+                <low unit="mg" value="1"/>
+                <high unit="mg" value="2"/>
+            </doseQuantity>
+            <rateQuantity>
+                <low unit="ml" value="1"/>
+                <high unit="ml" value="2"/>
+            </rateQuantity>
+            <performer>
+                <time value="20250121"/>
+                <assignedEntity>
+                    <id assigningAuthorityName="name" extension="extensionId" root="id"/>
+                    <assignedPerson>
+                        <name>
+                            <family>last</family>
+                            <given>first</given>
+                        </name>
+                    </assignedPerson>
+                </assignedEntity>
+            </performer>
+            <participant>
+                <time value="20250121"/>
+                <participantRole>
+                    <id assigningAuthorityName="sname" extension="efxtensionId" root="iddd"/>
+                    <playingEntity>
+                        <name>
+                            <family>last2</family>
+                            <given>first2</given>
+                        </name>
+                    </playingEntity>
+                </participantRole>
+            </participant>
+        </substanceAdministration>
+    </entry>
+</section>

@@ -63,7 +63,7 @@ public class CDALDOBuilderTest {
                 "John", "Doe", "M", "City", LocalDate.now());
 
         CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue,
-                patient, null, author, LocalDateTime.now(), oid, author, LocalDateTime.now());
+                patient, null, author, LocalDateTime.now(), oid, author, LocalDateTime.now(),oid,"ospedale",Addr,"34252552534",oid,"organizazione bella",LocalDateTime.now(),author,List.of(author,author),"id fulfillment","ramo dell'azienda","numero nosologico","nomeAzienda",LocalDateTime.now(),LocalDateTime.now(),List.of("ciao","ciao"),List.of("ciao2","ciao2"),List.of("ciao3","ciao3"),List.of("ciao4","ciao4"),List.of("ciao5","ciao5"));
         List<CDALDOEntry> entries = new ArrayList<>();
         // Call to addBody method
         List<CDALDONarrativeBlock> narrativeBlocks = new ArrayList<>();

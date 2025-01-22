@@ -42,4 +42,8 @@ public class CDALDOId {
     public void setAssigningAuthorityName(String assigningAuthorityName) {
         this.assigningAuthorityName = assigningAuthorityName;
     }
+
+    public void setRoot(String root) {
+        this.oid = root;
+    }
 }

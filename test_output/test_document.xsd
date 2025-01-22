@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ClinicalDocument xmlns:ns0="http://www.w3.org/2001/XMLSchema-instance" ns0:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
     <realmCode code="IT"/>
     <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
     <templateId extension="1.2" root="2.16.840.1.113883.2.9.10.1.5"/>
@@ -7,10 +7,10 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20250121220159+0100"/>
+    <effectiveTime value="20250122112359+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
-    <setId assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+    <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
     <versionNumber value="1"/>
     <recordTarget>
         <patientRole>
@@ -30,13 +30,13 @@
                     <given>John</given>
                 </name>
                 <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
-                <birthTime value="20250121000000+0100"/>
+                <birthTime value="20250122000000+0100"/>
                 <birthplace>City</birthplace>
             </patient>
         </patientRole>
     </recordTarget>
     <author>
-        <time value="20250121220159"/>
+        <time value="20250122112359"/>
         <assignedAuthor>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -50,13 +50,10 @@
                     <prefix>doc</prefix>
                 </name>
             </assignedPerson>
-            <representedOrganization>
-                <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
-            </representedOrganization>
         </assignedAuthor>
     </author>
     <dataEnterer typeCode="ENT">
-        <time value="20250121220159"/>
+        <time value="20250122112359"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -67,6 +64,109 @@
             <id assignedAuthorityName="MEF" extension="Test123" root="2.16.840.1.113883.2.9.4.3.2"/>
         </assignedEntity>
     </dataEnterer>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+                <name>ospedale</name>
+                <telecom use="HP" value="tel:34252552534"/>
+                <addr use="H">
+                    <country>Italy</country>
+                    <state>Campania</state>
+                    <county>Salerno</county>
+                    <city>Vibonati</city>
+                    <censusTract>Vibonati</censusTract>
+                    <postalCode>84079</postalCode>
+                    <street>Via Regina Margherita 1</street>
+                </addr>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <informationRecipient>
+        <intendedRecipient>
+            <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            <name>organizazione bella</name>
+        </intendedRecipient>
+    </informationRecipient>
+    <legalAuthenticator>
+        <time value="20250122112359"/>
+        <signatureCode code="S"/>
+        <assignedEntity>
+            <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
+            <telecom use="H" value="tel:+1-123-456-7890"/>
+            <telecom use="H" value="mailto:prova@prova.it"/>
+            <telecom use="H" value="mailto:prova@pec.it"/>
+            <assignedPerson>
+                <name>
+                    <family>Doe</family>
+                    <given>John</given>
+                    <prefix>doc</prefix>
+                </name>
+            </assignedPerson>
+        </assignedEntity>
+    </legalAuthenticator>
+    <participant typeCode="REF">
+        <associatedEntity classCode="PROV">
+            <id assigningAuthorityName="MEF" extension="Test123" root="2.16.840.1.113883.2.9.4.3.2"/>
+            <associatedPerson>
+                <name>
+                    <given>John</given>
+                    <family>Doe</family>
+                    <prefix>doc</prefix>
+                </name>
+            </associatedPerson>
+        </associatedEntity>
+    </participant>
+    <participant typeCode="REF">
+        <associatedEntity classCode="PROV">
+            <id assigningAuthorityName="MEF" extension="Test123" root="2.16.840.1.113883.2.9.4.3.2"/>
+            <associatedPerson>
+                <name>
+                    <given>John</given>
+                    <family>Doe</family>
+                    <prefix>doc</prefix>
+                </name>
+            </associatedPerson>
+        </associatedEntity>
+    </participant>
+    <inFulfillmentOf>
+        <order classCode="ACT" moodCode="RQO">
+            <id assigningAuthorityName="Ministero delle Finanze" extension="id fulfillment" root="2.16.840.1.113883.2.9.4.3.9"/>
+            <priorityCode code="R" codeSystem="2.16.840.1.113883.5.7" codeSystemName="HL7 ActPriority" displayName="Normale"/>
+        </order>
+    </inFulfillmentOf>
+    <componentOf>
+        <encompassingEncounter>
+            <id assigningAuthorityName="nomeAzienda" extension="numero nosologico" root="2.16.840.1.113883.2.9.2.ramo dell'azienda.4.6"/>
+            <effectiveTime>
+                <low value="20250122112359+0100"/>
+                <high value="20250122112359+0100"/>
+            </effectiveTime>
+        </encompassingEncounter>
+    </componentOf>
+    <location>
+        <healthCareFacility>
+            <id assigningAuthorityName="" extension="ciao" root="2.16.840.1.113883.2.9.4.1.6"/>
+            <location>
+                <name>ciao2</name>
+            </location>
+            <id assigningAuthorityName="Ministero della Salute" extension="ciao3" root="2.16.840.1.113883.2.9.4.1.2"/>
+            <name>ciao4</name>
+            <telecom value="tel:ciao5"/>
+        </healthCareFacility>
+    </location>
+    <location>
+        <healthCareFacility>
+            <id assigningAuthorityName="" extension="ciao" root="2.16.840.1.113883.2.9.4.1.6"/>
+            <location>
+                <name>ciao2</name>
+            </location>
+            <id assigningAuthorityName="Ministero della Salute" extension="ciao3" root="2.16.840.1.113883.2.9.4.1.2"/>
+            <name>ciao4</name>
+            <telecom value="tel:ciao5"/>
+        </healthCareFacility>
+    </location>
     <component>
         <structuredBody classCode="DOCBODY" moodCode="EVN">
             <component typeCode="COMP">

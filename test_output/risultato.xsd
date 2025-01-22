@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <realmCode code="IT"/>
+    <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+    <templateId extension="1.2" root="2.16.840.1.113883.2.9.10.1.5"/>
+    <id assigningAuthorityName="ministero della provola" extension="129380193812" root="2.16.840.1.113883.2.9.2.99.4.4"/>
+    <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
+    <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
+    <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
+    <effectiveTime value="20250122112359+0100"/>
+    <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
+    <languageCode code="it-IT"/>
+    <id assigningAuthorityName="ministero della provola" extension="129380193812" root="2.16.840.1.113883.2.9.2.99.4.4"/>
+    <versionNumber value="1"/>
+    <recordTarget>
+        <patientRole>
+            <id assigningAuthorityName="" extension="ABCDEF12G34H567I" root="2.16.840.1.113883.2.9.4.3.2"/>
+            <id assigningAuthorityName="" extension="ENI123456789" root="2.16.840.1.113883.2.9.4.3.18"/>
+            <id assigningAuthorityName="" extension="ANA987654321" root="2.16.840.1.113883.2.9.4.3.17"/>
+            <addr use="H">
+                <country>IT</country>
+                <state>CAMPANIA</state>
+                <county>SA</county>
+                <city>FISCIANO</city>
+                <censusTract>FISCIANO</censusTract>
+                <postalCode>84084</postalCode>
+                <street>via università</street>
+            </addr>
+            <telecom use="H" value="tel: +22414012948129"/>
+            <patient>
+                <name>
+                    <family>Doe</family>
+                    <given>John</given>
+                </name>
+                <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
+                <birthTime value="19900101000000+0100"/>
+                <birthplace>Rome</birthplace>
+            </patient>
+        </patientRole>
+    </recordTarget>
+    <author>
+        <time value="20250122112359"/>
+        <assignedAuthor>
+            <id assigningAuthorityName="" extension="" root="AUTH123456789"/>
+            <telecom use="H" value="123456789"/>
+            <assignedPerson>
+                <name>
+                    <family>Smith</family>
+                    <given>Jane</given>
+                    <prefix/>
+                </name>
+            </assignedPerson>
+        </assignedAuthor>
+    </author>
+    <dataEnterer typeCode="ENT">
+        <time value="20250122112359"/>
+        <assignedEntity>
+            <assignedPerson>
+                <name>
+                    <given>Jane</given>
+                    <family>Smith</family>
+                </name>
+            </assignedPerson>
+            <id assignedAuthorityName="MEF" extension="" root="2.16.840.1.113883.2.9.4.3.2"/>
+        </assignedEntity>
+    </dataEnterer>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id assigningAuthorityName="" extension="FLS1100000001" root="2.16.840.1.113883.2.9.4.1.1"/>
+                <name>Health Organization</name>
+                <telecom use="HP" value="tel:+390812345678"/>
+                <addr use="">
+                    <country/>
+                    <state/>
+                    <county/>
+                    <city>Naples</city>
+                    <censusTract/>
+                    <postalCode>80100</postalCode>
+                    <street>123 Main St</street>
+                </addr>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <legalAuthenticator>
+        <time value="20250122112359"/>
+        <signatureCode code="S"/>
+        <assignedEntity>
+            <id assigningAuthorityName="" extension="" root="AUTH123456789"/>
+            <telecom use="H" value="123456789"/>
+            <assignedPerson>
+                <name>
+                    <family>Smith</family>
+                    <given>Jane</given>
+                    <prefix/>
+                </name>
+            </assignedPerson>
+        </assignedEntity>
+    </legalAuthenticator>
+    <inFulfillmentOf>
+        <order classCode="ACT" moodCode="RQO">
+            <id assigningAuthorityName="Ministero delle Finanze" extension="rpqwioprwqirp" root="2.16.840.1.113883.2.9.4.3.9"/>
+            <priorityCode code="R" codeSystem="2.16.840.1.113883.5.7" codeSystemName="HL7 ActPriority" displayName="Normale"/>
+        </order>
+    </inFulfillmentOf>
+    <componentOf>
+        <encompassingEncounter>
+            <id assigningAuthorityName="Nome Azienda" extension="123456" root="2.16.840.1.113883.2.9.2.Ramo Aziendale.4.6"/>
+            <effectiveTime>
+                <low value="20230101000000+0100"/>
+                <high value="20231231235900+0100"/>
+            </effectiveTime>
+        </encompassingEncounter>
+    </componentOf>
+    <location>
+        <healthCareFacility>
+            <id assigningAuthorityName="" extension="Reparto1" root="2.16.840.1.113883.2.9.4.1.6"/>
+            <location>
+                <name>Reparto Name 1</name>
+            </location>
+            <id assigningAuthorityName="Ministero della Salute" extension="Code1" root="2.16.840.1.113883.2.9.4.1.2"/>
+            <name>Facility1</name>
+            <telecom value="tel:Telecom1"/>
+        </healthCareFacility>
+    </location>
+    <location>
+        <healthCareFacility>
+            <id assigningAuthorityName="" extension="Reparto2" root="2.16.840.1.113883.2.9.4.1.6"/>
+            <location>
+                <name>Reparto Name 2</name>
+            </location>
+            <id assigningAuthorityName="Ministero della Salute" extension="Code2" root="2.16.840.1.113883.2.9.4.1.2"/>
+            <name>Facility2</name>
+            <telecom value="tel:Telecom2"/>
+        </healthCareFacility>
+    </location>
+</ClinicalDocument>

@@ -352,9 +352,9 @@ public class CDALDO {
             throw new IllegalArgumentException("entries can't be empty");
         }
         Integer sectionNumb = Integer.parseInt(sectionNumber);
-        if (sectionNumb < 1 || sectionNumb > 13) {
-            throw new IllegalArgumentException("Invalid section number. Section number must be between 1 and 13.");
-        }
+        if (sectionNumb < 1 || sectionNumb > 12 || sectionNumb == 3 || sectionNumb == 5 || sectionNumb == 13) {
+            throw new IllegalArgumentException("Invalid section number. Section number must be between 1 and 12, excluding 3, 5, and 13.");
+        }        
         this.entries.put(sectionNumber, entries);
     }
 

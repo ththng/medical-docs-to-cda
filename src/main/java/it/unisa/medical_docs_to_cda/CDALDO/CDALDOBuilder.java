@@ -40,6 +40,25 @@ public class CDALDOBuilder {
         parent.appendChild(codeElement);
     }
 
+    public static void addTranslation(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+    String displayName) {
+        if (doc == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent element cannot be null");
+        }
+        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
+            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+        }
+        Element translationElement = doc.createElement("translation");
+        translationElement.setAttribute("code", code);
+        translationElement.setAttribute("codeSystem", codeSystem);
+        translationElement.setAttribute("codeSystemName", codeSystemName);
+        translationElement.setAttribute("displayName", displayName);
+        parent.appendChild(translationElement);
+    }
+
     public static void addTitle(Document doc, Element parent, String title) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -767,7 +786,6 @@ public class CDALDOBuilder {
                         : section.equals(block.getSection()))
                 .collect(Collectors.toList());
     }
-
     public static Element createSection(Document doc, Element structuredBody, String sectionNumber,
             String code, String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks,
@@ -790,9 +808,11 @@ public class CDALDOBuilder {
         addCode(doc, section, code, codeSystem, codeSystemName, displayName);
 
         // Section title
+        if (titleText != null){
         Element title = doc.createElement("title");
         title.setTextContent(titleText);
         section.appendChild(title);
+        }
 
         // Section text
         List<CDALDONarrativeBlock> mainBlocks = filterNarrativeBlocksBySection(narrativeBlocks, null);
@@ -827,6 +847,8 @@ public class CDALDOBuilder {
                     "Terapia Farmacologica all’ingresso", pharmacologicalTherapyBlocks);
         }
 
+        // Entry section
+        // ...
         return component;
     }
 
@@ -963,28 +985,42 @@ public class CDALDOBuilder {
     }
 
     public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-            String displayName, String xsiType) {
+            String displayName, String xsiType, String outcome, float value, String unit) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
         if (parent == null) {
             throw new IllegalArgumentException("Parent element cannot be null");
         }
-        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
-            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+
+        if (xsiType.equals("CD")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setAttribute("code", code);
+            valueElement.setAttribute("codeSystem", codeSystem);
+            valueElement.setAttribute("codeSystemName", codeSystemName);
+            valueElement.setAttribute("displayName", displayName);
+            parent.appendChild(valueElement);
         }
 
-        Element valueElement = doc.createElement("value");
-        valueElement.setAttribute("xsi-type", xsiType);
-        valueElement.setAttribute("code", code);
-        valueElement.setAttribute("codeSystem", codeSystem);
-        valueElement.setAttribute("codeSystemName", codeSystemName);
-        valueElement.setAttribute("displayName", displayName);
-        parent.appendChild(valueElement);
-    }
+        if (xsiType.equals("ST")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setTextContent(outcome);
+            parent.appendChild(valueElement);
+        }
 
+        if (xsiType.equals("REAL")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setAttribute("value", String.format("%.2f", value));
+            valueElement.setAttribute("unit", unit);
+            parent.appendChild(valueElement);
+        }
+    }
     public static void addBody(Document doc, Map<String, List<CDALDONarrativeBlock>> narrativeBlocks,
             Map<String, List<CDALDOEntry>> entries) {
+
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -1028,9 +1064,5 @@ public class CDALDOBuilder {
         }
     }
 
-    public static void addTranslation(Document doc, Element observation, String code, String codeSystem,
-            String codeSystemName, String displayName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTranslation'");
-    }
+
 }

@@ -53,8 +53,14 @@ public class CDALDOEntryProcedureTest {
     @Test
     public void test_create_entry_generates_valid_xml() throws TransformerException, ParserConfigurationException {
         Document doc = CDALDOBuilder.createBasicDoc();
+        Element root = doc.createElement("ClinicalDocument");
+        root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation",
+                "urn:hl7-org:v3 CDA.xsd");
+        root.setAttribute("xmlns",
+                "urn:hl7-org:v3");
+        doc.appendChild(root);
         Element section = doc.createElement("section");
-        doc.appendChild(section);
+        root.appendChild(section);
 
         List<CDALDOEntryObservation> entries = new ArrayList<>();
         String code = "12345";
@@ -66,21 +72,19 @@ public class CDALDOEntryProcedureTest {
         boolean isAnamnesi = false;
         LocalDateTime effectiveTimeLow = LocalDateTime.now().minusDays(1);
         LocalDateTime effectiveTimeHigh = LocalDateTime.now();
-        boolean value = true;
         String valueCode = "A123";
         String valueCodeSystem = "2.16.840.1.113883.6.96";
         String valueCodeSystemName = "LOINC";
         String valueDisplayName = "Positive";
         String xsiType = "CD";
         boolean translationNecessary = false;
-        boolean effectiveTimeNecessary = true;
-
+    
+        
         CDALDOEntryObservation observation = new CDALDOEntryObservation(
                 code, codeSystem, codeSystemName, displayName,
                 entryType, typeCode, isAnamnesi, effectiveTimeLow,
-                effectiveTimeHigh, value, valueCode, valueCodeSystem,
-                valueCodeSystemName, valueDisplayName, xsiType, translationNecessary,
-                effectiveTimeNecessary, null);
+                effectiveTimeHigh, null, null, valueCode, valueCodeSystem,
+                valueCodeSystemName, valueDisplayName, xsiType, null, 0.0f, null, translationNecessary, null, null, null);
 
         entries.add(observation);
 

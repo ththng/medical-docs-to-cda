@@ -130,8 +130,14 @@ public class CDALDOEntryActTest {
         );
 
         Document doc = CDALDOBuilder.createBasicDoc();
+        Element root = doc.createElement("ClinicalDocument");
+        root.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation",
+                "urn:hl7-org:v3 CDA.xsd");
+        root.setAttribute("xmlns",
+                "urn:hl7-org:v3");
+        doc.appendChild(root);
         Element section = doc.createElement("section");
-        doc.appendChild(section);
+        root.appendChild(section);
 
         // Act
         act.createEntry(doc, section);

@@ -64,9 +64,8 @@ public class CDALDOEntryAct implements CDALDOEntry {
         this.entryRelationships = entryRelationships;
         this.entryObservation = new CDALDOEntryObservation("52473-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Allergia o causa della reazione", "entryRelationship", "SUBJ",
-                false, allergyStartDate, allergyEndDate, true, allergyValueCode, "2.16.840.1.113883.5.4",
-                "ObservationIntoleranceType", allergyDisplayName, "CD", false, true, entryRelationships);
-
+                false, allergyStartDate, allergyEndDate, null, null, allergyValueCode, "2.16.840.1.113883.5.4",
+                "ObservationIntoleranceType", allergyDisplayName, "CD", null, 0.0f, null, false, entryRelationships, null, null);
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.w3c.dom.*;
 
 public interface CDALDOEntry {
 
-    public void createEntry(Document doc, Element section, String code, String codeSystem, String codeSystemName, String displayName);
+    public void createEntry(Document doc, Element section);
 
 
 }

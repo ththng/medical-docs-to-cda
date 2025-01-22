@@ -44,8 +44,8 @@ public class CDALDOBuilder {
         parent.appendChild(codeElement);
     }
 
-    public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-            String displayName) {
+    public static void addTranslation(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+    String displayName) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -55,14 +55,12 @@ public class CDALDOBuilder {
         if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
             throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
         }
-
-        Element valueElement = doc.createElement("value");
-        valueElement.setAttribute("xsi-type", "CD");
-        valueElement.setAttribute("code", code);
-        valueElement.setAttribute("codeSystem", codeSystem);
-        valueElement.setAttribute("codeSystemName", codeSystemName);
-        valueElement.setAttribute("displayName", displayName);
-        parent.appendChild(valueElement);
+        Element translationElement = doc.createElement("translation");
+        translationElement.setAttribute("code", code);
+        translationElement.setAttribute("codeSystem", codeSystem);
+        translationElement.setAttribute("codeSystemName", codeSystemName);
+        translationElement.setAttribute("displayName", displayName);
+        parent.appendChild(translationElement);
     }
 
     public static void addTitle(Document doc, Element parent, String title) {
@@ -471,22 +469,6 @@ public class CDALDOBuilder {
                         : section.equals(block.getSection()))
                 .collect(Collectors.toList());
     }
-    public static void createEntry(Document doc, Element section){
-
-        Element entry = doc.createElement("entry");
-        section.appendChild(entry);
-        
-        Element observation = doc.createElement("observation");
-        observation.setAttribute("classCode", "OBS");
-        observation.setAttribute("moodCode", "ENV");
-        entry.appendChild(observation);
-
-        addCode(doc, observation, "8646-2", "2.16.840.1.113883.6.1", "LOINC", "Diagnosi di Accettazione Ospedaliera");   
-
-        addValue(doc, observation, "[CODICE_DIAGNOSI_ICD9]", "2.16.840.1.113883.6.103", "ICD9CM", "[DESCRIZIONE_DIAGNOSI]");
-
-
-    }
     public static Element createSection(Document doc, Element structuredBody, String sectionNumber, String typeCode,
             String sectionClassCode, String sectionMoodCode,
             String code, String codeSystem, String codeSystemName,
@@ -546,7 +528,7 @@ public class CDALDOBuilder {
         }
 
         // Entry section
-        createEntry(doc, section);
+        // ...
         return component;
     }
 
@@ -683,43 +665,39 @@ public class CDALDOBuilder {
     }
 
     public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-            String displayName, String xsiType) {
+            String displayName, String xsiType, String outcome, float value, String unit) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
         if (parent == null) {
             throw new IllegalArgumentException("Parent element cannot be null");
         }
-        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
-            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+
+        if (xsiType.equals("CD")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setAttribute("code", code);
+            valueElement.setAttribute("codeSystem", codeSystem);
+            valueElement.setAttribute("codeSystemName", codeSystemName);
+            valueElement.setAttribute("displayName", displayName);
+            parent.appendChild(valueElement);
         }
 
-        Element valueElement = doc.createElement("value");
-        valueElement.setAttribute("xsi-type", xsiType);
-        valueElement.setAttribute("code", code);
-        valueElement.setAttribute("codeSystem", codeSystem);
-        valueElement.setAttribute("codeSystemName", codeSystemName);
-        valueElement.setAttribute("displayName", displayName);
-        parent.appendChild(valueElement);
+        if (xsiType.equals("ST")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setTextContent(outcome);
+            parent.appendChild(valueElement);
+        }
+
+        if (xsiType.equals("REAL")) {
+            Element valueElement = doc.createElement("value");
+            valueElement.setAttribute("xsi:type", xsiType);
+            valueElement.setAttribute("value", String.format("%.2f", value));
+            valueElement.setAttribute("unit", unit);
+            parent.appendChild(valueElement);
+        }
     }
-
-   /* public static void createEntry(Document doc, Element section, String displayName) {
-
-        Element entry = doc.createElement("entry");
-        section.appendChild(entry);
-
-        Element observation = doc.createElement("observation");
-        observation.setAttribute("classCode", "OBS");
-        observation.setAttribute("moodCode", "ENV");
-        entry.appendChild(observation);
-
-        addCode(doc, observation, "8646-2", "2.16.840.1.113883.6.1", "LOINC", displayName);
-
-        addValue(doc, observation, "[CODICE_DIAGNOSI_ICD9]", "2.16.840.1.113883.6.103", "ICD9CM",
-                "[DESCRIZIONE_DIAGNOSI]", "CD");
-
-    }*/
-
     public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocksSection1,
             List<CDALDONarrativeBlock> narrativeBlocksSection2) {
 

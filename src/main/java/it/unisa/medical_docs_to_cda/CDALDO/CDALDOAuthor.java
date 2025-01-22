@@ -42,6 +42,13 @@ public class CDALDOAuthor {
         this.lastName = Objects.requireNonNull(lastName, "lastName cannot be null");
         this.prefix = prefix;
     }
+
+    public CDALDOAuthor(CDALDOId id, String firstName, String lastName) {
+        this.id = Objects.requireNonNull(id, "id cannot be null");
+        this.firstName = Objects.requireNonNull(firstName, "firstName cannot be null");
+        this.lastName = Objects.requireNonNull(lastName, "lastName cannot be null");
+    }
+
     public boolean hasRequiredTelecoms(List<String> telecoms) {
         Objects.requireNonNull(telecoms, "telecoms cannot be null");
 

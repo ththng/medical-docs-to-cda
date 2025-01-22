@@ -49,7 +49,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     telecomsUse.add("H");
     telecomsUse.add("H");
     telecomsUse.add("H");
-   CDALDOAuthor author = new CDALDOAuthor(oid,oid,telecoms,telecomsUse,"John", "Doe","doc");
+    CDALDOAuthor author = new CDALDOAuthor(oid,oid,telecoms,telecomsUse,"John", "Doe","doc");
     CDALDOAddr Addr = new CDALDOAddr("H","Italy","Campania","Salerno","Vibonati","Vibonati","84079","Via Regina Margherita 1");
     
     List<CDALDOId> patientIds = new ArrayList<>();
@@ -58,7 +58,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
     patientAddresses.add(Addr);
     CDALDOPatient patient = new CDALDOPatient(patientIds, 1, patientAddresses, new ArrayList<>(), new ArrayList<>(), "John", "Doe", "M", "City", LocalDate.now());
 
-  CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient, null, author, LocalDateTime.now(), oid, author, LocalDateTime.now());
+    CDALDOBuilder.addHeader(doc, oid, status, effectiveTimeDate, confidentialityCodeValue, oid, versionNumberValue, patient, null, author, LocalDateTime.now(), oid, author, LocalDateTime.now());
 
         // Call to addBody method
         List<CDALDONarrativeBlock> narrativeBlocks = new ArrayList<>();
@@ -96,7 +96,7 @@ public void test_add_header_with_correct_attributes() throws ParserConfiguration
                         "Coumadin sec INR (range terapeutico 2-3)")
     );
 
-        CDALDOBuilder.addBody(doc, narrativeBlocks, blocks);
+    CDALDOBuilder.addBody(doc, narrativeBlocks, blocks);
     File outputFile = saveDocumentToFile(doc, "test_document.xsd");
 
     Element root = doc.getDocumentElement();

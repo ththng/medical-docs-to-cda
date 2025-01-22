@@ -71,7 +71,7 @@ public class CDALDOEntryAct implements CDALDOEntry {
 
     @Override
     public void createEntry(Document doc, Element section) {
-        if (entryType != "entry" || entryType != "entryRelationship") {
+        if (entryType != "entry" && entryType != "entryRelationship") {
             return;
         } else {
             Element entry = doc.createElement(entryType);

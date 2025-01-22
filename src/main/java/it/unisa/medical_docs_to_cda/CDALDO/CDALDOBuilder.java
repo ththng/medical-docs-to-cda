@@ -352,11 +352,13 @@ public class CDALDOBuilder {
         Element assignedAuthorElement = doc.createElement("assignedAuthor");
         authorElement.appendChild(assignedAuthorElement);
 
-        Element idAuthorElement = createIdElement(doc, author.getId().getOid(), author.getId().getExtensionId(), author.getId().getAssigningAuthorityName());
+        Element idAuthorElement = createIdElement(doc, author.getId().getOid(), author.getId().getExtensionId(),
+                author.getId().getAssigningAuthorityName());
         assignedAuthorElement.appendChild(idAuthorElement);
 
         if (author.hasRegionalId()) {
-            Element regionalIdAuthorElement = createIdElement(doc, author.getRegionalId().getOid(), author.getRegionalId().getExtensionId(), author.getRegionalId().getAssigningAuthorityName());
+            Element regionalIdAuthorElement = createIdElement(doc, author.getRegionalId().getOid(),
+                    author.getRegionalId().getExtensionId(), author.getRegionalId().getAssigningAuthorityName());
             assignedAuthorElement.appendChild(regionalIdAuthorElement);
         }
 
@@ -391,7 +393,8 @@ public class CDALDOBuilder {
         }
     }
 
-    private static void addCustodian(Document doc, Element root, CDALDOId custodianId, String custodianOrgazationName, CDALDOAddr custodianOrganizationAddress, String custodianPhoneNumber) {
+    private static void addCustodian(Document doc, Element root, CDALDOId custodianId, String custodianOrgazationName,
+            CDALDOAddr custodianOrganizationAddress, String custodianPhoneNumber) {
         Element custodian = doc.createElement("custodian");
         root.appendChild(custodian);
 
@@ -401,7 +404,8 @@ public class CDALDOBuilder {
         Element representedCustodianOrganization = doc.createElement("representedCustodianOrganization");
         assignedCustodian.appendChild(representedCustodianOrganization);
 
-        Element custodianElement = createIdElement(doc, custodianId.getOid(), custodianId.getExtensionId(), custodianId.getAssigningAuthorityName());
+        Element custodianElement = createIdElement(doc, custodianId.getOid(), custodianId.getExtensionId(),
+                custodianId.getAssigningAuthorityName());
         representedCustodianOrganization.appendChild(custodianElement);
 
         Element custodianName = doc.createElement("name");
@@ -418,14 +422,16 @@ public class CDALDOBuilder {
         createAddressElements(doc, representedCustodianOrganization, List.of(custodianOrganizationAddress));
     }
 
-    private static void addInformationRecipient(Document doc, Element root, CDALDOId informationRecipientId, String informationRecipientName) {
+    private static void addInformationRecipient(Document doc, Element root, CDALDOId informationRecipientId,
+            String informationRecipientName) {
         Element informationRecipient = doc.createElement("informationRecipient");
         root.appendChild(informationRecipient);
 
         Element intendedRecipient = doc.createElement("intendedRecipient");
         informationRecipient.appendChild(intendedRecipient);
 
-        Element idElement = createIdElement(doc, informationRecipientId.getOid(), informationRecipientId.getExtensionId(), informationRecipientId.getAssigningAuthorityName());
+        Element idElement = createIdElement(doc, informationRecipientId.getOid(),
+                informationRecipientId.getExtensionId(), informationRecipientId.getAssigningAuthorityName());
         intendedRecipient.appendChild(idElement);
 
         Element recipientName = doc.createElement("name");
@@ -433,7 +439,8 @@ public class CDALDOBuilder {
         intendedRecipient.appendChild(recipientName);
     }
 
-    private static void addLegalAuthenticator(Document doc, Element root, LocalDateTime legalAuthTime, CDALDOAuthor legalAuthenticator) {
+    private static void addLegalAuthenticator(Document doc, Element root, LocalDateTime legalAuthTime,
+            CDALDOAuthor legalAuthenticator) {
         Element legalAuthenticatorElement = doc.createElement("legalAuthenticator");
         root.appendChild(legalAuthenticatorElement);
 
@@ -448,11 +455,14 @@ public class CDALDOBuilder {
         Element assignedEntity = doc.createElement("assignedEntity");
         legalAuthenticatorElement.appendChild(assignedEntity);
 
-        Element idElement = createIdElement(doc, legalAuthenticator.getId().getOid(), legalAuthenticator.getId().getExtensionId(), legalAuthenticator.getId().getAssigningAuthorityName());
+        Element idElement = createIdElement(doc, legalAuthenticator.getId().getOid(),
+                legalAuthenticator.getId().getExtensionId(), legalAuthenticator.getId().getAssigningAuthorityName());
         assignedEntity.appendChild(idElement);
 
         if (legalAuthenticator.hasRegionalId()) {
-            Element regionalIdElement = createIdElement(doc, legalAuthenticator.getRegionalId().getOid(), legalAuthenticator.getRegionalId().getExtensionId(), legalAuthenticator.getRegionalId().getAssigningAuthorityName());
+            Element regionalIdElement = createIdElement(doc, legalAuthenticator.getRegionalId().getOid(),
+                    legalAuthenticator.getRegionalId().getExtensionId(),
+                    legalAuthenticator.getRegionalId().getAssigningAuthorityName());
             assignedEntity.appendChild(regionalIdElement);
         }
 
@@ -496,7 +506,8 @@ public class CDALDOBuilder {
             associatedEntity.setAttribute("classCode", "PROV");
             participantElement.appendChild(associatedEntity);
 
-            Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.2", participant.getId().getExtensionId(), "MEF");
+            Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.2",
+                    participant.getId().getExtensionId(), "MEF");
             associatedEntity.appendChild(idElement);
 
             Element associatedPerson = doc.createElement("associatedPerson");
@@ -528,7 +539,8 @@ public class CDALDOBuilder {
         order.setAttribute("moodCode", "RQO");
         inFulfillmentOf.appendChild(order);
 
-        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.9", fulfillmentId, "Ministero delle Finanze");
+        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.3.9", fulfillmentId,
+                "Ministero delle Finanze");
         order.appendChild(idElement);
 
         Element priorityCode = doc.createElement("priorityCode");
@@ -539,8 +551,10 @@ public class CDALDOBuilder {
         order.appendChild(priorityCode);
     }
 
-
-    public static void addComponentOf(Document doc, Element root, String ramoAziendale, String numeroNosologico, String nomeAzienda,LocalDateTime lowTime,LocalDateTime highTime, List<String> repartoIds, List<String> repartoNames,List<String> ministerialCodes, List<String> facilityNames, List<String> facilityTelecoms) {
+    public static void addComponentOf(Document doc, Element root, String ramoAziendale, String numeroNosologico,
+            String nomeAzienda, LocalDateTime lowTime, LocalDateTime highTime, List<String> repartoIds,
+            List<String> repartoNames, List<String> ministerialCodes, List<String> facilityNames,
+            List<String> facilityTelecoms) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -556,27 +570,29 @@ public class CDALDOBuilder {
         if (nomeAzienda == null || nomeAzienda.isEmpty()) {
             throw new IllegalArgumentException("Nome azienda cannot be null or empty");
         }
-        if(lowTime== null || highTime==null){
+        if (lowTime == null || highTime == null) {
             throw new IllegalArgumentException("time is not specified");
         }
-        if(repartoIds.isEmpty()||repartoNames.isEmpty()){
+        if (repartoIds.isEmpty() || repartoNames.isEmpty()) {
             throw new IllegalArgumentException("no repartos is specified");
-    }
-    
+        }
+
         Element componentOf = doc.createElement("componentOf");
         root.appendChild(componentOf);
-    
+
         Element encompassingEncounter = doc.createElement("encompassingEncounter");
         componentOf.appendChild(encompassingEncounter);
-    
-        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.2." + ramoAziendale + ".4.6", numeroNosologico, nomeAzienda);
+
+        Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.2." + ramoAziendale + ".4.6", numeroNosologico,
+                nomeAzienda);
         encompassingEncounter.appendChild(idElement);
         addEffectiveTime(doc, encompassingEncounter, lowTime, highTime);
-        addLocations(doc, root, repartoIds, repartoNames,ministerialCodes,facilityNames,facilityTelecoms);
+        addLocations(doc, root, repartoIds, repartoNames, ministerialCodes, facilityNames, facilityTelecoms);
 
     }
 
-    public static void addLocations(Document doc, Element root, List<String> repartoIds, List<String> repartoNames, List<String> ministerialCodes, List<String> facilityNames, List<String> facilityTelecoms) {
+    public static void addLocations(Document doc, Element root, List<String> repartoIds, List<String> repartoNames,
+            List<String> ministerialCodes, List<String> facilityNames, List<String> facilityTelecoms) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -587,42 +603,45 @@ public class CDALDOBuilder {
             throw new IllegalArgumentException("Reparto IDs and names must be non-null and of the same size");
         }
         if (ministerialCodes == null || facilityNames == null || facilityTelecoms == null ||
-            ministerialCodes.size() != repartoIds.size() || facilityNames.size() != repartoIds.size() || facilityTelecoms.size() != repartoIds.size()) {
-            throw new IllegalArgumentException("Ministerial codes, facility names, and telecoms must be non-null and match the size of reparto IDs");
+                ministerialCodes.size() != repartoIds.size() || facilityNames.size() != repartoIds.size()
+                || facilityTelecoms.size() != repartoIds.size()) {
+            throw new IllegalArgumentException(
+                    "Ministerial codes, facility names, and telecoms must be non-null and match the size of reparto IDs");
         }
-    
+
         for (int i = 0; i < repartoIds.size(); i++) {
             Element location = doc.createElement("location");
             root.appendChild(location);
-    
+
             Element healthCareFacility = doc.createElement("healthCareFacility");
             location.appendChild(healthCareFacility);
-    
+
             if (repartoIds.get(i) != null) {
                 Element idElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.1.6", repartoIds.get(i), null);
                 healthCareFacility.appendChild(idElement);
             }
-    
+
             Element locationName = doc.createElement("location");
             healthCareFacility.appendChild(locationName);
-    
+
             if (repartoNames.get(i) != null) {
                 Element nameElement = doc.createElement("name");
                 nameElement.setTextContent(repartoNames.get(i));
                 locationName.appendChild(nameElement);
             }
-    
+
             if (ministerialCodes.get(i) != null) {
-                Element ministerialIdElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.1.2", ministerialCodes.get(i), "Ministero della Salute");
+                Element ministerialIdElement = createIdElement(doc, "2.16.840.1.113883.2.9.4.1.2",
+                        ministerialCodes.get(i), "Ministero della Salute");
                 healthCareFacility.appendChild(ministerialIdElement);
             }
-    
+
             if (facilityNames.get(i) != null) {
                 Element facilityNameElement = doc.createElement("name");
                 facilityNameElement.setTextContent(facilityNames.get(i));
                 healthCareFacility.appendChild(facilityNameElement);
             }
-    
+
             if (facilityTelecoms.get(i) != null) {
                 Element telecomElement = doc.createElement("telecom");
                 telecomElement.setAttribute("value", "tel:" + facilityTelecoms.get(i));
@@ -641,14 +660,14 @@ public class CDALDOBuilder {
         if (lowTime == null || highTime == null) {
             throw new IllegalArgumentException("Low and high times cannot be null");
         }
-    
+
         Element effectiveTime = doc.createElement("effectiveTime");
         parent.appendChild(effectiveTime);
-    
+
         Element lowElement = doc.createElement("low");
         lowElement.setAttribute("value", formatEffectiveTime(lowTime));
         effectiveTime.appendChild(lowElement);
-    
+
         Element highElement = doc.createElement("high");
         highElement.setAttribute("value", formatEffectiveTime(highTime));
         effectiveTime.appendChild(highElement);
@@ -887,7 +906,7 @@ public class CDALDOBuilder {
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
-        Element anamnesiSection = doc.createElement("anamnesiSection");
+        Element anamnesiSection = doc.createElement("section");
         // Append the anamnesi section to the parent
         section.appendChild(anamnesiSection);
 
@@ -907,7 +926,7 @@ public class CDALDOBuilder {
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
-        Element objectiveExaminationSection = doc.createElement("objectiveExaminationSection");
+        Element objectiveExaminationSection = doc.createElement("section");
         // Append the objective Examination section to the parent
         section.appendChild(objectiveExaminationSection);
 
@@ -927,7 +946,7 @@ public class CDALDOBuilder {
             String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
-        Element pharmacologicalTherapySection = doc.createElement("pharmacologicalTherapySection");
+        Element pharmacologicalTherapySection = doc.createElement("section");
         // Append the pharmacological Therapy section to the parent
         section.appendChild(pharmacologicalTherapySection);
 
@@ -964,18 +983,8 @@ public class CDALDOBuilder {
         parent.appendChild(valueElement);
     }
 
-    public static void addBody(Document doc, List<CDALDONarrativeBlock> narrativeBlocksSection1,
-            List<CDALDONarrativeBlock> narrativeBlocksSection2, List<CDALDONarrativeBlock> narrativeBlocksSection3,
-            List<CDALDONarrativeBlock> narrativeBlocksSection4, List<CDALDONarrativeBlock> narrativeBlocksSection5,
-            List<CDALDONarrativeBlock> narrativeBlocksSection6, List<CDALDONarrativeBlock> narrativeBlocksSection7,
-            List<CDALDONarrativeBlock> narrativeBlocksSection8, List<CDALDONarrativeBlock> narrativeBlocksSection9,
-            List<CDALDONarrativeBlock> narrativeBlocksSection10, List<CDALDONarrativeBlock> narrativeBlocksSection11,
-            List<CDALDONarrativeBlock> narrativeBlocksSection12, List<CDALDONarrativeBlock> narrativeBlocksSection13,
-            List<CDALDOEntry> entriesSection1, List<CDALDOEntry> entriesSection4, List<CDALDOEntry> entriesSection6,
-            List<CDALDOEntry> entriesSection7, List<CDALDOEntry> entriesSection8,
-            List<CDALDOEntry> entriesSection9, List<CDALDOEntry> entriesSection10,
-            List<CDALDOEntry> entriesSection11, List<CDALDOEntry> entriesSection12) {
-
+    public static void addBody(Document doc, Map<String, List<CDALDONarrativeBlock>> narrativeBlocks,
+            Map<String, List<CDALDOEntry>> entries) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -988,80 +997,35 @@ public class CDALDOBuilder {
         structuredBody.setAttribute("moodCode", "EVN");
         component.appendChild(structuredBody);
 
-        Element section1 = createSection(doc, structuredBody, "1",
-                "46241-6", "2.16.840.1.113883.6.1",
-                "LOINC", "Diagnosi di Accettazione",
-                "Motivo del ricovero", narrativeBlocksSection1, entriesSection1);
-        structuredBody.appendChild(section1);
+        String[] sectionNumbers = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" };
+        String[] sectionCodes = { "46241-6", "47039-3", "8648-8", "55109-3", "11493-4", "34104-0", "30954-2", "47519-4",
+                "48765-2", "10160-0", "11535-2", "10183-2", "18776-5" };
+        String sectionCodeSystem = "2.16.840.1.113883.6.1";
+        String sectionCodeSystemName = "LOINC";
+        String[] sectionDisplayNames = { "Diagnosi di Accettazione",
+                "Ricovero Ospedaliero, anamnesi ed esame obiettivo", "Decorso ospedaliero", "Complicazioni",
+                "Hospital discharge studies summary", "Hospital Consult note",
+                "Esami diagnostici e/o di laboratorio significativi", "History of Procedures Document",
+                "ALLERGIE E/O REAZIONI AVVERSE", "Terapie Farmacologiche", "Diagnosi di Dimissione",
+                "Terapia farmacologica alla dimissione", "Piano di Cura" };
+        String[] sectionTitles = { "Motivo del ricovero", "Inquadramento Clinico Iniziale", "Decorso ospedaliero",
+                "Complicanze", "Riscontri ed accertamenti significativi", "Consulenza",
+                "Esami eseguiti durante il ricovero", "Procedure eseguite durante il ricovero",
+                "Allergie e/o reazioni avverse", "Terapia farmacologica effettuata durante il ricovero",
+                "Condizioni del paziente e diagnosi alla dimissione", "Terapia farmacologica alla dimissione",
+                "Istruzioni di follow-up" };
 
-        Element section2 = createSection(doc, structuredBody, "2",
-                "47039-3", "2.16.840.1.113883.6.1",
-                "LOINC", "Ricovero Ospedaliero, anamnesi ed esame obiettivo",
-                "Inquadramento Clinico Iniziale", narrativeBlocksSection2, null);
-        structuredBody.appendChild(section2);
+        for (int i = 0; i < sectionNumbers.length; i++) {
+            List<CDALDONarrativeBlock> narrativeBlockList = narrativeBlocks.get(sectionNumbers[i]);
+            List<CDALDOEntry> entryList = entries.get(sectionNumbers[i]);
 
-        // Section 3
-
-        // Section 4
-
-        // Section 5
-
-        // Sezione 6: Consulenza
-        Element section6 = createSection(doc, structuredBody, "6",
-                "34104-0", "2.16.840.1.113883.6.1", "LOINC",
-                "Hospital Consult note", "Consulenza",
-                narrativeBlocksSection6, entriesSection6);
-        structuredBody.appendChild(section6);
-
-        // Section 7: Esami eseguiti durante il ricovero
-        Element section7 = createSection(doc, structuredBody, "7",
-                "30954-2", "2.16.840.1.113883.6.1", "LOINC",
-                "Esami diagnostici e/o di laboratorio significativi", "Esami eseguiti durante il ricovero",
-                narrativeBlocksSection7, entriesSection7);
-        structuredBody.appendChild(section7);
-
-        // Section 8: Procedure eseguite
-        Element section8 = createSection(doc, structuredBody, "8",
-                "47519-4", "2.16.840.1.113883.6.1", "LOINC", "History of Procedures Document",
-                "Procedure eseguite durante il ricovero",
-                narrativeBlocksSection8, entriesSection8);
-        structuredBody.appendChild(section8);
-
-        // Section 9: Allergie
-        Element section9 = createSection(doc, structuredBody, "9",
-                "48765-2", "2.16.840.1.113883.6.1", "LOINC",
-                "ALLERGIE E/O REAZIONI AVVERSE", "Allergie e/o reazioni avverse",
-                narrativeBlocksSection9, entriesSection9);
-        structuredBody.appendChild(section9);
-
-        // Section 10: Terapia farmacologica effettuata durante il ricovero
-        Element section10 = createSection(doc, structuredBody, "10",
-                "10160-0", "2.16.840.1.113883.6.1", "LOINC", "Terapie Farmacologiche",
-                "Terapia farmacologica effettuata durante il ricovero",
-                narrativeBlocksSection10, entriesSection10);
-        structuredBody.appendChild(section10);
-
-        // Section 11: Condizioni del paziente e diagnosi alla dimissione
-        Element section11 = createSection(doc, structuredBody, "11",
-                "11535-2", "2.16.840.1.113883.6.1", "LOINC",
-                "Diagnosi di Dimissione", "Condizioni del paziente e diagnosi alla dimissione",
-                narrativeBlocksSection11, entriesSection11);
-        structuredBody.appendChild(section11);
-
-        // Section 12: Terapia farmacologica alla dimissione
-        Element section12 = createSection(doc, structuredBody, "12",
-                "10183-2", "2.16.840.1.113883.6.1", "LOINC",
-                "Terapia farmacologica alla dimissione", "Terapia farmacologica alla dimissione",
-                narrativeBlocksSection12, entriesSection12);
-        structuredBody.appendChild(section12);
-
-        // Section 13: Istruzioni di follow-up
-        Element section13 = createSection(doc, structuredBody, "13",
-                "18776-5", "2.16.840.1.113883.6.1", "LOINC",
-                "Piano di Cura", "Istruzioni di follow-up",
-                narrativeBlocksSection13, null);
-        structuredBody.appendChild(section13);
-
+            if (narrativeBlockList != null && !narrativeBlockList.isEmpty()) {
+                Element section = createSection(doc, structuredBody, sectionNumbers[i], sectionCodes[i],
+                        sectionCodeSystem, sectionCodeSystemName, sectionDisplayNames[i], sectionTitles[i],
+                        narrativeBlockList, entryList);
+                structuredBody.appendChild(section);
+            }
+        }
     }
 
     public static void addTranslation(Document doc, Element observation, String code, String codeSystem,

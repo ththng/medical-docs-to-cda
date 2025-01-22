@@ -49,17 +49,45 @@ public class CDALDOEntryProcedureTest {
         assertTrue(procedure.isEffectiveTime());
     }
 
-        // createEntry generates valid XML structure for entry type 'entry'
+    // createEntry generates valid XML structure for entry type 'entry'
     @Test
     public void test_create_entry_generates_valid_xml() throws TransformerException, ParserConfigurationException {
         Document doc = CDALDOBuilder.createBasicDoc();
         Element section = doc.createElement("section");
         doc.appendChild(section);
+
+        List<CDALDOEntryObservation> entries = new ArrayList<>();
+        String code = "12345";
+        String codeSystem = "2.16.840.1.113883.6.1";
+        String codeSystemName = "LOINC";
+        String displayName = "Example Observation";
+        String entryType = "entryRelationship";
+        String typeCode = "COMP";
+        boolean isAnamnesi = false;
+        LocalDateTime effectiveTimeLow = LocalDateTime.now().minusDays(1);
+        LocalDateTime effectiveTimeHigh = LocalDateTime.now();
+        boolean value = true;
+        String valueCode = "A123";
+        String valueCodeSystem = "2.16.840.1.113883.6.96";
+        String valueCodeSystemName = "LOINC";
+        String valueDisplayName = "Positive";
+        String xsiType = "CD";
+        boolean translationNecessary = false;
+        boolean effectiveTimeNecessary = true;
+
+        CDALDOEntryObservation observation = new CDALDOEntryObservation(
+                code, codeSystem, codeSystemName, displayName,
+                entryType, typeCode, isAnamnesi, effectiveTimeLow,
+                effectiveTimeHigh, value, valueCode, valueCodeSystem,
+                valueCodeSystemName, valueDisplayName, xsiType, translationNecessary,
+                effectiveTimeNecessary, null);
+
+        entries.add(observation);
+
         CDALDOEntryProcedure entryProcedure = new CDALDOEntryProcedure(
-            "code", "codeSystem", "codeSystemName", "displayName",
-            "entry", "typeCode", LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-            null, null
-        );
+                "code", "codeSystem", "codeSystemName", "displayName",
+                "entry", "typeCode", LocalDateTime.now(), LocalDateTime.now().plusDays(1),
+                null, entries);
         entryProcedure.createEntry(doc, section);
         saveDocumentToFile(doc, "entry_procedure_test.xsd");
         assertNotNull(doc.getElementsByTagName("section"));

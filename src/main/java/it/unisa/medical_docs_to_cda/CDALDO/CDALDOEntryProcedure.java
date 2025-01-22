@@ -131,7 +131,7 @@ public class CDALDOEntryProcedure implements CDALDOEntry {
                 for (CDALDOEntryObservation entryRelationship : this.relationshipEntries) {
                     entryRelationship.setEntryType("entryRelationship");
                     entryRelationship.setTypeCode("RSON");
-                    entryRelationship.createEntry(doc, section);
+                    entryRelationship.createEntry(doc, procedure);
                 }
             }
         }

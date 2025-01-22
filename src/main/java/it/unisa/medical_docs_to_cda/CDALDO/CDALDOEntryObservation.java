@@ -118,13 +118,13 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                 if (this.effectiveTimeHigh != null) { // low da controllare nel costruttore
                     observation.appendChild(effectiveTime);
                     Element low = doc.createElement("low");
-                    low.setAttribute("value", this.effectiveTimeLow.format(formatter));
+                    low.setAttribute("value", this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatter));
                     Element high = doc.createElement("high");
-                    high.setAttribute("value", this.effectiveTimeHigh.format(formatter));
+                    high.setAttribute("value", this.effectiveTimeHigh.atZone(ZoneId.systemDefault()).format(formatter));
                     effectiveTime.appendChild(low);
                     effectiveTime.appendChild(high);
                 } else {
-                    effectiveTime.setAttribute("value", this.effectiveTimeLow.format(formatter));
+                    effectiveTime.setAttribute("value", this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatter));
                     observation.appendChild(effectiveTime);
                 }
             }
@@ -137,7 +137,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
         if (translationNecessary)
             CDALDOBuilder.addTranslation(doc, observation, code, codeSystem, codeSystemName, displayName);
 
-        if (!entryRelationships.isEmpty()) {
+        if (this.entryRelationships != null && !entryRelationships.isEmpty()) {
             for (CDALDOEntry entryRelationship : entryRelationships) {
                 entryRelationship.createEntry(doc, observation);
             }

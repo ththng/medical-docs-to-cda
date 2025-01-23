@@ -119,9 +119,6 @@ public class CDALDO {
         if (patient.getAddresses().isEmpty()) {
             throw new IllegalArgumentException("patient addresses can't be empty");
         }
-        if (patient.getTelecomUses().isEmpty()) {
-            throw new IllegalArgumentException("patient telecom uses can't be empty");
-        }
         boolean patientCF = false;
         boolean patientEni = false;
         boolean patientAna = false;

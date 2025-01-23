@@ -152,33 +152,34 @@
                 <strong>Reason Code:</strong> <span th:text="${encounter.reasonCode}"></span><br>
                 <strong>Reason Description:</strong> <span th:text="${encounter.reasonDescription}"></span><br>
 
-                <!-- Common Section -->
-                <div th:with="fields=${ {'description', 'code', 'value', 'units'} }">
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Observations', ${encounter.id}, ${observations[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'description', 'code', 'start', 'stop'} }">
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Allergies', ${encounter.id}, ${allergies[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'description', 'code', 'start', 'stop'} }">
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Conditions', ${encounter.id}, ${conditions[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'description', 'code', 'start', 'stop', 'reasonCode', 'reasonDescription'} }">
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Medications', ${encounter.id}, ${medications[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'description', 'code', 'start', 'reasonCode', 'reasonDescription'} }">
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Procedures', ${encounter.id}, ${procedures[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'modalityDescription', 'modalityCode', 'sopCode', 'bodySiteCode'} }"> 
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Imaging Studies', ${encounter.id}, ${imagingStudies[encounter.id]}, ${fields})}"></div>
-                </div>
-                <div th:with="fields=${ {'description', 'code', 'date'} }"> 
-                    <div th:replace="~{fragments/common-section :: sectionFragment('Immunizations', ${encounter.id}, ${immunizations[encounter.id]}, ${fields})}"></div>
-                </div>
-                
-                <!-- Submit Button -->
-                <form id="dataForm">
+                <form id="form-${encounter.id}">
+                    <!-- Common Section -->
+                    <div th:with="fields=${ {'description', 'code', 'value', 'units'} }">
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Observations', ${encounter.id}, ${observations[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'description', 'code', 'start', 'stop'} }">
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Allergies', ${encounter.id}, ${allergies[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'description', 'code', 'start', 'stop'} }">
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Conditions', ${encounter.id}, ${conditions[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'description', 'code', 'start', 'stop', 'reasonCode', 'reasonDescription'} }">
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Medications', ${encounter.id}, ${medications[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'description', 'code', 'start', 'reasonCode', 'reasonDescription'} }">
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Procedures', ${encounter.id}, ${procedures[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'modalityDescription', 'modalityCode', 'sopCode', 'bodySiteCode'} }"> 
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Imaging Studies', ${encounter.id}, ${imagingStudies[encounter.id]}, ${fields})}"></div>
+                    </div>
+                    <div th:with="fields=${ {'description', 'code', 'date'} }"> 
+                        <div th:replace="~{fragments/common-section :: sectionFragment('Immunizations', ${encounter.id}, ${immunizations[encounter.id]}, ${fields})}"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <input type="hidden" th:name="patientId" th:value="${patientId}" />
                     <input type="hidden" th:name="encounterId" th:value="${encounter.id}" />
-                    <button type="submit" onclick="submitForm(event)" class="submit-btn">Submit</button>
+                    <button type="submit" class="submit-btn">Submit</button>
                 </form>
             </div>
         </li>

@@ -1,7 +1,8 @@
-function addItem(sectionId, fields) {
+function addItem(sectionId, encounterId, fields) {
     const fieldsArray = fields.match(/\w+/g);
 
-    const accordion = document.getElementById(sectionId);
+    const accordionId = `${sectionId}-${encounterId}`;
+    const accordion = document.getElementById(accordionId);
     const ul = accordion.querySelector('ul');
     const index = ul.children.length;
 

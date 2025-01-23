@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="sectionFragment(sectionName, encounterId, data, fields)">
-        <div class="accordion" th:attr="onclick='toggleAccordion(&#39; + (${sectionName.toLowerCase()} + &#39;-&#39; + ${encounter.id}) + &#39;)'"
+        <div class="accordion" th:attr="onclick='toggleAccordion(\'' + ${sectionName.toLowerCase()} + '-' + ${encounter.id} + '\')'"
         >
             <span th:text="${sectionName}"></span>
         </div>
-        <div th:attr="id='${sectionName}-${encounterId}'" class="panel" data-level="2">
+        <div th:attr="id=${sectionName.toLowerCase()} + '-' + ${encounterId}" class="panel" data-level="2">
             <ul class="list-unstyled">
                 <!-- Loop through data -->
                 <li th:if="${data != null && !data.isEmpty()}" 
@@ -18,8 +18,8 @@
                             <label class="form-label fw-bold" th:for="${field + '-' + iterStat.index}" th:text="${field + ':'}"></label>
                             <input type="text" class="form-control"
                                    th:id="${field + '-' + iterStat.index}"
-                                   th:name="${sectionName.toLowerCase()}[' + iterStat.index + '].' + field}"
-                                   th:value="${#maps.get(item, field)}" />
+                                   th:name="${sectionName.toLowerCase() + '[' + iterStat.index + '].' + field}"
+                                   th:value=" ${item[field]} " />
                         </div>
                         <div class="col-12 text-end">
                             <button type="button" class="btn btn-danger btn-sm" 
@@ -36,7 +36,7 @@
             </ul>
             <!-- Add button -->
             <div class="text-center">
-                <button type="button" class="btn btn-primary" th:attr="onclick='addItem(&#39; + ${sectionName} + &#39;-&#39; + ${encounter.id} + &#39;)'">
+                <button type="button" class="btn btn-primary" th:attr="onclick='addItem(\'' + ${sectionName.toLowerCase()} + '-' + ${encounter.id} + '\', \'' + ${fields} + '\')'">
                     Add Item
                 </button>
             </div>

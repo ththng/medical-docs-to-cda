@@ -1,4 +1,6 @@
 function addItem(sectionId, fields) {
+    const fieldsArray = fields.match(/\w+/g);
+
     const accordion = document.getElementById(sectionId);
     const ul = accordion.querySelector('ul');
     const index = ul.children.length;
@@ -9,7 +11,7 @@ function addItem(sectionId, fields) {
     const row = document.createElement('div');
     row.className = 'row g-3';
 
-    fields.forEach(field => {
+    fieldsArray.forEach(field => {
         // input fields
         const col = document.createElement('div');
         col.className = 'col-md-6';
@@ -27,24 +29,22 @@ function addItem(sectionId, fields) {
 
         col.appendChild(label);
         col.appendChild(input);
-
-        // remove button
-        const buttonCol = document.createElement('div');
-        buttonCol.className = 'col-12 text-end';
-    
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn btn-danger btn-sm';
-        button.textContent = 'Remove';
-        button.onclick = function () {
-            remove(button); // Attach the remove function
-        };
-        
-        buttonCol.appendChild(button);
-
         row.appendChild(col);
-        row.appendChild(buttonCol);
     });
+    // remove button
+    const buttonCol = document.createElement('div');
+    buttonCol.className = 'col-12 text-end';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-danger btn-sm';
+    button.textContent = 'Remove';
+    button.onclick = function () {
+        remove(button); // Attach the remove function
+    };
+    
+    buttonCol.appendChild(button);
+    row.appendChild(buttonCol);
 
     li.appendChild(row);
     ul.appendChild(li);
@@ -73,5 +73,8 @@ function toggleAccordion(id, level) {
 }
 
 function remove(button) {
-    button.parentElement.remove();
+    const listItem = button.closest('li'); // Find the closest <li> ancestor of the button
+    if (listItem) {
+        listItem.remove(); // Remove the <li> element
+    }
 }

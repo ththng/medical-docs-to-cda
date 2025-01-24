@@ -1,21 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Get the modal, buttons, and close span
+function closeModal() {
     const modal = document.getElementById("alertModal");
-    const closeAlertBtn = document.getElementById("closeAlertBtn");
-    const closeSpan = document.querySelector(".close-btn");
+    modal.classList.remove("d-block");
+    modal.classList.add("d-none");
+}
 
-    // Close the modal when the "Close" button is clicked
-    closeAlertBtn.addEventListener("click", () => {
-        modal.classList.remove("d-block");
-        modal.classList.add("d-none");
+function toggleAccordion(id, level) {
+    const panel = document.getElementById(id);
+    const isOpen = panel.style.display === "block";
+
+    // Close all panels of the same level
+    const panels = document.querySelectorAll(`.panel[data-level="${level}"]`);
+    panels.forEach(p => {
+        if (p !== panel) p.style.display = "none";
     });
 
-    // Close the modal when the "x" button is clicked
-    closeSpan.addEventListener("click", () => {
-        modal.classList.remove("d-block");
-        modal.classList.add("d-none");
-    });
-});
+    // Toggle the clicked panel
+    panel.style.display = isOpen ? "none" : "block";
+
+    // Update active state for buttons at the same level
+    const buttons = document.querySelectorAll(`.accordion[data-level="${level}"]`);
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    if (!isOpen) {
+        document.querySelector(`[onclick*='${id}']`).classList.add("active");
+    }
+}
 
 function addItem(sectionId, encounterId, fields) {
     const fieldsArray = fields.match(/\w+/g);
@@ -70,28 +79,6 @@ function addItem(sectionId, encounterId, fields) {
     ul.appendChild(li);
 }
 
-function toggleAccordion(id, level) {
-    const panel = document.getElementById(id);
-    const isOpen = panel.style.display === "block";
-
-    // Close all panels of the same level
-    const panels = document.querySelectorAll(`.panel[data-level="${level}"]`);
-    panels.forEach(p => {
-        if (p !== panel) p.style.display = "none";
-    });
-
-    // Toggle the clicked panel
-    panel.style.display = isOpen ? "none" : "block";
-
-    // Update active state for buttons at the same level
-    const buttons = document.querySelectorAll(`.accordion[data-level="${level}"]`);
-    buttons.forEach(btn => btn.classList.remove("active"));
-
-    if (!isOpen) {
-        document.querySelector(`[onclick*='${id}']`).classList.add("active");
-    }
-}
-
 function remove(button) {
     const listItem = button.closest('li'); // Find the closest <li> ancestor of the button
     if (listItem) {
@@ -100,7 +87,6 @@ function remove(button) {
 }
 
 function submitForm() {
-    console.log("Custom submit logic triggered!");
     const modal = document.getElementById("alertModal");
     modal.classList.remove("d-none");
     modal.classList.add("d-block");

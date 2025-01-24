@@ -87,10 +87,6 @@ function remove(button) {
 }
 
 function submitForm() {
-    const modal = document.getElementById("alertModal");
-    modal.classList.remove("d-none");
-    modal.classList.add("d-block");
-
     /*
     const form = document.getElementById('form');
     const formData = new FormData(form);
@@ -105,4 +101,23 @@ function submitForm() {
         }
     });
     */
+
+    const modalElement = document.getElementById("alertModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+  
+    // Simulating backend response (replace this with your fetch logic)
+    const isSuccess = false;
+  
+    if (isSuccess) {
+      modalTitle.textContent = "Success!";
+      modalBody.innerHTML = "<p>Your data was successfully submitted.</p>";
+    } else {
+      modalTitle.textContent = "Error!";
+      modalBody.innerHTML = "<ul><li>Field A is missing</li><li>Field B is invalid</li></ul>";
+    }
+  
+    // Show the modal
+    modalElement.classList.remove("d-none");
+    modalElement.classList.add("d-block");
 }

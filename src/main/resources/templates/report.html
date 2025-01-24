@@ -134,18 +134,34 @@
 
 <body>
     <!-- th:classappend="${errorMessages != null && !errorMessages.isEmpty()} ? 'd-block' : 'd-none' -->
-    <div id="alertModal" class="modal">
+    <!-- <div id="alertModal" class="modal fade">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h5 class="modal-title">Error</h5>
             <ul>
                 <!-- Iterate through error messages -->
                 <!-- <li th:each="error : ${errorMessages}" th:text="${error}"></li> -->
-                <div id="modalBody">
+                <!-- <div id="modalBody">
                     <p>This is the modal content.</p>
                 </div>
             </ul>
             <button id="closeAlertBtn" class="btn" onclick="closeModal()">Close</button>
+        </div>
+    </div> -->
+    <div id="alertModal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="modalTitle" class="modal-title">Title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+              <p>This is the modal content.</p>
+            </div>
+            <div class="modal-footer">
+              <button id="closeAlertBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Close</button>
+            </div>
+          </div>
         </div>
     </div>
     <h1>Report of Patient: <span th:text="${patientId}"></span></h1>

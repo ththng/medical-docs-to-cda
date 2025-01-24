@@ -1,3 +1,22 @@
+document.addEventListener("DOMContentLoaded", () => {
+    // Get the modal, buttons, and close span
+    const modal = document.getElementById("alertModal");
+    const closeAlertBtn = document.getElementById("closeAlertBtn");
+    const closeSpan = document.querySelector(".close-btn");
+
+    // Close the modal when the "Close" button is clicked
+    closeAlertBtn.addEventListener("click", () => {
+        modal.classList.remove("d-block");
+        modal.classList.add("d-none");
+    });
+
+    // Close the modal when the "x" button is clicked
+    closeSpan.addEventListener("click", () => {
+        modal.classList.remove("d-block");
+        modal.classList.add("d-none");
+    });
+});
+
 function addItem(sectionId, encounterId, fields) {
     const fieldsArray = fields.match(/\w+/g);
 
@@ -78,4 +97,26 @@ function remove(button) {
     if (listItem) {
         listItem.remove(); // Remove the <li> element
     }
+}
+
+function submitForm() {
+    console.log("Custom submit logic triggered!");
+    const modal = document.getElementById("alertModal");
+    modal.classList.remove("d-none");
+    modal.classList.add("d-block");
+
+    /*
+    const form = document.getElementById('form');
+    const formData = new FormData(form);
+
+    fetch('/patient-report', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (response.ok) {
+            modal.classList.remove("d-none");
+            modal.classList.add("d-block");
+        }
+    });
+    */
 }

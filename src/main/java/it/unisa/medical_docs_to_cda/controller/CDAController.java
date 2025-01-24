@@ -12,17 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.unisa.medical_docs_to_cda.CDALDO.*;
 import it.unisa.medical_docs_to_cda.codes.finder.CodeSearchManager;
 import it.unisa.medical_docs_to_cda.model.*;
-import it.unisa.medical_docs_to_cda.repositories.AllergyRepository;
-import it.unisa.medical_docs_to_cda.repositories.CareplanRepository;
-import it.unisa.medical_docs_to_cda.repositories.ConditionRepository;
-import it.unisa.medical_docs_to_cda.repositories.ImagingStudyRepository;
-import it.unisa.medical_docs_to_cda.repositories.ImmunizationRepository;
-import it.unisa.medical_docs_to_cda.repositories.MedicationRepository;
-import it.unisa.medical_docs_to_cda.repositories.ObservationRepository;
-import it.unisa.medical_docs_to_cda.repositories.OrganizationRepository;
-import it.unisa.medical_docs_to_cda.repositories.PatientRepository;
-import it.unisa.medical_docs_to_cda.repositories.ProcedureRepository;
-import it.unisa.medical_docs_to_cda.repositories.ProviderRepository;
+import it.unisa.medical_docs_to_cda.repositories.*;
 
 /**
  * This class is responsible for converting Encounter objects to CDA documents.
@@ -54,7 +44,6 @@ public class CDAController {
     private static ProviderRepository providerRepo;
     @Autowired
     private static OrganizationRepository organizationRepo;
-
 
     /**
      * Converts an Encounter object to a CDA document.

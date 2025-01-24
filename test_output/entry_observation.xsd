@@ -6,12 +6,11 @@
                 <code code="8646-2" codeSystem="123.4.5" codeSystemName="LOINC" displayName="Diagnosi di Accettazione Ospedaliera"/>
                 <statusCode code="completed"/>
                 <effectiveTime>
-                    <low value="2025-01-22"/>
-                    <high value="2025-01-23"/>
+                    <low value="2025-01-23"/>
+                    <high value="2025-01-24"/>
                 </effectiveTime>
-                <value code="prova" codeSystem="valueCodeSystem" codeSystemName="ciao" displayName="ciaooo" xsi:type="CD"/>
                 <performer>
-                    <time value="2025-01-24"/>
+                    <time value="2025-01-25"/>
                     <assignedEntity>
                         <id assigningAuthorityName="name" extension="extensionId" root="id"/>
                         <assignedPerson>
@@ -23,7 +22,7 @@
                     </assignedEntity>
                 </performer>
                 <participant>
-                    <time value="2025-01-25"/>
+                    <time value="2025-01-26"/>
                     <participantRole>
                         <id assigningAuthorityName="sname" extension="efxtensionId" root="iddd"/>
                         <playingEntity>
@@ -38,8 +37,8 @@
                     <observation classCode="OBS" moodCode="EVN">
                         <code code="24" codeSystem="32" codeSystemName="loinc" displayName="DW"/>
                         <effectiveTime>
-                            <low value="20250122000000GMT+01:00"/>
-                            <high value="20250124000000GMT+01:00"/>
+                            <low value="20250123000000GMT+01:00"/>
+                            <high value="20250125000000GMT+01:00"/>
                         </effectiveTime>
                         <value xsi:type="ST">finito</value>
                     </observation>

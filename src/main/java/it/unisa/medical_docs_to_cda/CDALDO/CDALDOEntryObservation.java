@@ -38,15 +38,16 @@ public class CDALDOEntryObservation implements CDALDOEntry {
     private List<CDALDOEntry> entryRelationships;
     private List<CDALDOAuthor> performers;
     private List<CDALDOAuthor> participants;
+    private List<CDALDOAgent> agents;
 
+    // for all the others
     public CDALDOEntryObservation(String code, String codeSystem, String codeSystemName, String displayName,
             String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
-            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String valueCode,
-            String valueCodeSystem,
-            String valueCodeSystemName, String valueDisplayName, String xsiType, String outcome, float value,
-            String unit, boolean translationNecessary,
+            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String xsiType,
+            String valueCode,
+            String valueCodeSystem, String valueCodeSystemName, String valueDisplayName,
+            boolean translationNecessary,
             List<CDALDOEntry> entryRelationships, List<CDALDOAuthor> performers, List<CDALDOAuthor> participants) {
-
         if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
             this.code = code;
             this.codeSystem = codeSystem;
@@ -58,47 +59,178 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                     "Make sure that all the mandatory fields related to the entry observation code are present");
         }
 
-        this.typeCode = typeCode;
         this.isAnamnesi = isAnamnesi;
         if (isAnamnesi) {
             this.statusCodeNecessary = true;
         }
-        this.effectiveTimeLow = effectiveTimeLow;
-        this.effectiveTimeHigh = effectiveTimeHigh;
-        this.dtEsecuzione = dtEsecuzione;
-        this.dtRichiesta = dtRichiesta;
-        this.valueCode = valueCode;
-        this.valueCodeSystem = valueCodeSystem;
-        this.valueCodeSystemName = valueCodeSystemName;
-        this.valueDisplayName = valueDisplayName;
         this.xsiType = xsiType;
-        this.outcome = outcome;
-        this.value = value;
-        this.unit = unit;
+        this.typeCode = typeCode;
 
-        if ("CD".equals(xsiType)) {
+        if (xsiType.equals("CD")) {
             if (valueCode == null || valueCodeSystem == null || valueCodeSystemName == null
                     || valueDisplayName == null) {
                 throw new IllegalArgumentException(
                         "For the CD xsi:type, valueCode, valueCodeSystem, valueCodeSystemName, and valueDisplayName cannot be null");
+            } else {
+                this.valuePresent = true;
+                this.valueCode = valueCode;
+                this.valueCodeSystem = valueCodeSystem;
+                this.valueCodeSystemName = valueCodeSystemName;
+                this.valueDisplayName = valueDisplayName;
             }
-            this.valuePresent = true;
         }
 
-        if ("ST".equals(xsiType)) {
-            if (outcome == null) {
-                throw new IllegalArgumentException("For the ST xsi:type, the outcome cannot be null");
-            }
-            this.valuePresent = true;
-        }
+        this.effectiveTimeLow = effectiveTimeLow;
+        this.effectiveTimeHigh = effectiveTimeHigh;
+        this.dtEsecuzione = dtEsecuzione;
+        this.dtRichiesta = dtRichiesta;
 
         this.translationNecessary = translationNecessary;
         if (effectiveTimeLow != null) {
             this.effectiveTimeNecessary = true;
         }
         this.entryRelationships = entryRelationships;
-        this.participants = participants;
         this.performers = performers;
+        this.participants = participants;
+    }
+
+    // for 4.6 and 4.7
+    public CDALDOEntryObservation(String code, String codeSystem, String codeSystemName, String displayName,
+            String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
+            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String xsiType,
+            String outcome, boolean translationNecessary,
+            List<CDALDOEntry> entryRelationships, List<CDALDOAuthor> performers, List<CDALDOAuthor> participants) {
+        if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
+            this.code = code;
+            this.codeSystem = codeSystem;
+            this.codeSystemName = codeSystemName;
+            this.displayName = displayName;
+            this.entryType = entryType;
+        } else {
+            throw new IllegalArgumentException(
+                    "Make sure that all the mandatory fields related to the entry observation code are present");
+        }
+
+        this.isAnamnesi = isAnamnesi;
+        if (isAnamnesi) {
+            this.statusCodeNecessary = true;
+        }
+        this.xsiType = xsiType;
+        this.typeCode = typeCode;
+
+        if ("ST".equals(xsiType) && outcome == null) {
+            throw new IllegalArgumentException(
+                    "For the ST xsi:type, the outcome cannot be null");
+        } else {
+            this.valuePresent = true;
+            this.outcome = outcome;
+        }
+
+        this.effectiveTimeLow = effectiveTimeLow;
+        this.effectiveTimeHigh = effectiveTimeHigh;
+        this.dtEsecuzione = dtEsecuzione;
+        this.dtRichiesta = dtRichiesta;
+
+        this.translationNecessary = translationNecessary;
+        if (effectiveTimeLow != null) {
+            this.effectiveTimeNecessary = true;
+        }
+        this.entryRelationships = entryRelationships;
+        this.performers = performers;
+        this.participants = participants;
+    }
+
+    // For substanceAdministration
+    public CDALDOEntryObservation(String code, String codeSystem, String codeSystemName, String displayName,
+            String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
+            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta,
+            String xsiType, float value,
+            String unit, boolean translationNecessary,
+            List<CDALDOEntry> entryRelationships) {
+
+        if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
+            this.code = code;
+            this.codeSystem = codeSystem;
+            this.codeSystemName = codeSystemName;
+            this.displayName = displayName;
+            this.entryType = entryType;
+
+        } else {
+            throw new IllegalArgumentException(
+                    "Make sure that all the mandatory fields related to the entry observation code are present");
+        }
+
+        this.isAnamnesi = isAnamnesi;
+        if (isAnamnesi) {
+            this.statusCodeNecessary = true;
+        }
+        this.typeCode = typeCode;
+        this.xsiType = xsiType;
+        this.value = value;
+        this.unit = unit;
+        this.effectiveTimeLow = effectiveTimeLow;
+        this.effectiveTimeHigh = effectiveTimeHigh;
+        this.dtEsecuzione = dtEsecuzione;
+        this.dtRichiesta = dtRichiesta;
+
+        this.translationNecessary = translationNecessary;
+        if (effectiveTimeLow != null) {
+            this.effectiveTimeNecessary = true;
+        }
+        this.entryRelationships = entryRelationships;
+    }
+
+    // for Allergies
+    public CDALDOEntryObservation(String code, String codeSystem, String codeSystemName, String displayName,
+            String entryType, String typeCode, boolean isAnamnesi, LocalDateTime effectiveTimeLow,
+            LocalDateTime effectiveTimeHigh, LocalDateTime dtEsecuzione, LocalDateTime dtRichiesta, String valueCode,
+            String valueCodeSystem, String valueCodeSystemName, String valueDisplayName,
+            String xsiType, boolean translationNecessary,
+            List<CDALDOEntry> entryRelationships, List<CDALDOAgent> agents) {
+
+        if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
+            this.code = code;
+            this.codeSystem = codeSystem;
+            this.codeSystemName = codeSystemName;
+            this.displayName = displayName;
+            this.entryType = entryType;
+
+        } else {
+            throw new IllegalArgumentException(
+                    "Make sure that all the mandatory fields related to the entry observation code are present");
+        }
+
+        this.isAnamnesi = isAnamnesi;
+        this.typeCode = typeCode;
+        if (isAnamnesi) {
+            this.statusCodeNecessary = true;
+        }
+        this.xsiType = xsiType;
+
+        if (xsiType.equals("CD")) {
+            if (valueCode == null || valueCodeSystem == null || valueCodeSystemName == null
+                    || valueDisplayName == null) {
+                throw new IllegalArgumentException(
+                        "For the CD xsi:type, valueCode, valueCodeSystem, valueCodeSystemName, and valueDisplayName cannot be null");
+            } else {
+                this.valuePresent = true;
+                this.valueCode = valueCode;
+                this.valueCodeSystem = valueCodeSystem;
+                this.valueCodeSystemName = valueCodeSystemName;
+                this.valueDisplayName = valueDisplayName;
+            }
+        }
+        this.effectiveTimeLow = effectiveTimeLow;
+        this.effectiveTimeHigh = effectiveTimeHigh;
+        this.dtEsecuzione = dtEsecuzione;
+        this.dtRichiesta = dtRichiesta;
+
+        this.translationNecessary = translationNecessary;
+        if (effectiveTimeLow != null) {
+            this.effectiveTimeNecessary = true;
+        }
+        this.entryRelationships = entryRelationships;
+        this.agents = agents;
     }
 
     @Override
@@ -160,7 +292,8 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                     effectiveTime.appendChild(low);
                     effectiveTime.appendChild(high);
                 } else {
-                    effectiveTime.setAttribute("value", this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatterDateTime));
+                    effectiveTime.setAttribute("value",
+                            this.effectiveTimeLow.atZone(ZoneId.systemDefault()).format(formatterDateTime));
                     observation.appendChild(effectiveTime);
                 }
             }
@@ -227,6 +360,31 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                 given.setTextContent(particip.getFirstName());
                 name.appendChild(family);
                 name.appendChild(given);
+            }
+        }
+
+        // Participant for Allergies
+        if (this.typeCode.equals("SUBJ")) {
+            for (CDALDOAgent agent : agents) {
+                Element participant = doc.createElement("participant");
+                participant.setAttribute("typeCode", "CSM");
+                observation.appendChild(participant);
+                Element participantRole = doc.createElement("participantRole");
+                participantRole.setAttribute("classCode", "MANU");
+                participant.appendChild(participantRole);
+                Element playingEntity = doc.createElement("playingEntity");
+                playingEntity.setAttribute("classCode", "MMAT");
+                participantRole.appendChild(playingEntity);
+                Element code = doc.createElement("code");
+                if (agent.getCode() != null) {
+                    code.setAttribute("code", agent.getCode());
+                    code.setAttribute("codeSystemName", agent.getCodeSystemName());
+                    code.setAttribute("codeSystem", agent.getCodeSystem());
+                    code.setAttribute("displayName", agent.getDisplayName());
+                } else {
+                    code.setAttribute("nullFlavor", "UNK");
+                }
+                playingEntity.appendChild(code);
             }
         }
 

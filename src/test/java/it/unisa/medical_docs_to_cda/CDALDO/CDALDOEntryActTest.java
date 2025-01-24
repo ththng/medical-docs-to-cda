@@ -46,11 +46,14 @@ public class CDALDOEntryActTest {
         String statusCode = "active";
         LocalDate effectiveTimeLow = LocalDate.now();
         LocalDate effectiveTimeHigh = null;
-        String allergyValueCode = "123";
-        String allergyDisplayName = "Peanut Allergy";
+        String allergyValueCode = "FALG";
+        String allergyDisplayName = "Food Allergy";
         LocalDateTime allergyStartDate = LocalDateTime.now();
         LocalDateTime allergyEndDate = null;
         List<CDALDOEntry> entryRelationships = new ArrayList<>();
+        List<CDALDOAgent> agents = new ArrayList<>();
+        CDALDOAgent agent = new CDALDOAgent("123", "2.16.840.1.113883.2.9.5.2.8", "LOINC", "agrumi");
+        agents.add(agent);
 
         CDALDOEntryAct act = new CDALDOEntryAct(
                 entryType,
@@ -61,14 +64,15 @@ public class CDALDOEntryActTest {
                 allergyDisplayName,
                 allergyStartDate,
                 allergyEndDate,
-                entryRelationships);
+                entryRelationships,
+                agents);
 
         assertEquals(entryType, act.getEntryType());
         assertEquals(statusCode, act.getStatusCode());
         assertEquals(effectiveTimeLow, act.getEffectiveTimeLow());
         assertNull(act.getEffectiveTimeHigh());
-        assertEquals(allergyValueCode, act.getAllergyValueCode());
-        assertEquals(allergyDisplayName, act.getAllergyDisplayName());
+        assertEquals(allergyValueCode, act.getAllergyTypeValueCode());
+        assertEquals(allergyDisplayName, act.getAllergyTypeDisplayName());
         assertEquals(allergyStartDate, act.getAllergyStartDate());
         assertNull(act.getAllergyEndDate());
         assertEquals(entryRelationships, act.getEntryRelationships());
@@ -81,12 +85,14 @@ public class CDALDOEntryActTest {
         String statusCode = "active";
         LocalDate effectiveTimeLow = LocalDate.now();
         LocalDate effectiveTimeHigh = null;
-        String allergyValueCode = "123";
-        String allergyDisplayName = "Peanut Allergy";
+        String allergyValueCode = "FALG";
+        String allergyDisplayName = "Food Allergy";
         LocalDateTime allergyStartDate = LocalDateTime.now();
         LocalDateTime allergyEndDate = null;
         List<CDALDOEntry> entryRelationships = new ArrayList<>();
-
+        List<CDALDOAgent> agents = new ArrayList<>();
+        CDALDOAgent agent = new CDALDOAgent("123", "2.16.840.1.113883.2.9.5.2.8", "LOINC", "fragole");
+        agents.add(agent);
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new CDALDOEntryAct(
@@ -98,36 +104,38 @@ public class CDALDOEntryActTest {
                         allergyDisplayName,
                         allergyStartDate,
                         allergyEndDate,
-                        entryRelationships));
+                        entryRelationships, agents));
 
         assertTrue(exception.getMessage().contains("entryType"));
     }
 
-
-        // createEntry method adds elements to the Document and saves it to a file
+    // createEntry method adds elements to the Document and saves it to a file
     @Test
     public void test_create_entry_saves_document_to_file() throws Exception {
         String entryType = "entry";
         String statusCode = "active";
         LocalDate effectiveTimeLow = LocalDate.now();
         LocalDate effectiveTimeHigh = null;
-        String allergyValueCode = "123";
-        String allergyDisplayName = "Peanut Allergy";
+        String allergyValueCode = "FALG";
+        String allergyDisplayName = "Food Allergy";
         LocalDateTime allergyStartDate = LocalDateTime.now();
         LocalDateTime allergyEndDate = null;
         List<CDALDOEntry> entryRelationships = new ArrayList<>();
+        List<CDALDOAgent> agents = new ArrayList<>();
+        CDALDOAgent agent = new CDALDOAgent("123", "2.16.840.1.113883.2.9.5.2.8", "LOINC", "aspartame");
+        agents.add(agent);
 
         CDALDOEntryAct act = new CDALDOEntryAct(
-            entryType,
-            statusCode, 
-            effectiveTimeLow,
-            effectiveTimeHigh,
-            allergyValueCode,
-            allergyDisplayName,
-            allergyStartDate,
-            allergyEndDate,
-            entryRelationships
-        );
+                entryType,
+                statusCode,
+                effectiveTimeLow,
+                effectiveTimeHigh,
+                allergyValueCode,
+                allergyDisplayName,
+                allergyStartDate,
+                allergyEndDate,
+                entryRelationships,
+                agents);
 
         Document doc = CDALDOBuilder.createBasicDoc();
         Element root = doc.createElement("ClinicalDocument");

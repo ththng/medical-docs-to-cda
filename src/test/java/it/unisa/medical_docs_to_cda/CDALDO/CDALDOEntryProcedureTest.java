@@ -84,7 +84,7 @@ public class CDALDOEntryProcedureTest {
                 code, codeSystem, codeSystemName, displayName,
                 entryType, typeCode, isAnamnesi, effectiveTimeLow,
                 effectiveTimeHigh, null, null, valueCode, valueCodeSystem,
-                valueCodeSystemName, valueDisplayName, xsiType, null, 0.0f, null, translationNecessary, null, null, null);
+                valueCodeSystemName, valueDisplayName, xsiType, translationNecessary, null, null);
 
         entries.add(observation);
 

@@ -44,14 +44,8 @@ public class CDALDOEntryObservationTest {
                 null, // effectiveTimeHigh
                 null, // dtEsecuzione
                 null, // dtRichiesta
-                null, // valueCode
-                null, // valueCodeSystem
-                null, // valueCodeSystemName
-                null, // valueDisplayName
-                null, // xsiType
-                null, // outcome
-                0.0f, // value
-                null, // unit
+                null,
+                null,
                 false, // translationNecessary
                 null, // entryRelationships
                 null, // performers
@@ -87,9 +81,6 @@ public class CDALDOEntryObservationTest {
                         null,
                         null,
                         null,
-                        null,
-                        0.0f,
-                        null,
                         false,
                         null,
                         null,
@@ -114,15 +105,14 @@ public class CDALDOEntryObservationTest {
         Element section = doc.createElement("section");
         root.appendChild(section);
         CDALDOEntryObservation observation = new CDALDOEntryObservation(
-                "8646-2", "123.4.5", "LOINC", "Diagnosi di Accettazione Ospedaliera", "entry", null, true,
+                "8646-2", "123.4.5", "LOINC", "Diagnosi di Accettazione Ospedaliera", "entry", "null", true,
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(1).atStartOfDay(),
                 LocalDate.now().plusDays(2).atStartOfDay(), LocalDate.now().plusDays(3).atStartOfDay(), "prova",
                 "valueCodeSystem",
-                "ciao", "ciaooo", "CD", null, 0.0f, null, false,
+                "ciao", "ciaooo", "CD", false,
                 Arrays.asList(new CDALDOEntryObservation("24", "32", "loinc", "DW", "entryRelationship", "REFR", false,
                         LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(2).atStartOfDay(),
-                        LocalDate.now().plusDays(1).atStartOfDay(), LocalDate.now().plusDays(4).atStartOfDay(), null,
-                        null, null, null, "ST", "finito", 0.0f, null, false, null, null, null)),
+                        LocalDate.now().plusDays(1).atStartOfDay(), LocalDate.now().plusDays(4).atStartOfDay(), "ST", "finito", false, null, null, null)),
                 Arrays.asList(new CDALDOAuthor(new CDALDOId("id", "extensionId", "name"), "first", "last")),
                 Arrays.asList(new CDALDOAuthor(new CDALDOId("iddd", "efxtensionId", "sname"), "first2", "last2")));
         observation.createEntry(doc, section);

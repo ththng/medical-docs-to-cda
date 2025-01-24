@@ -22,16 +22,17 @@ public class CDALDOEntryAct implements CDALDOEntry {
     private LocalDate effectiveTimeLow;
     private LocalDate effectiveTimeHigh;
     private CDALDOEntryObservation entryObservation;
-    private String allergyDisplayName;
-    private String allergyValueCode;
+    private String allergyTypeDisplayName;
+    private String allergyTypeValueCode;
     private LocalDateTime allergyStartDate;
     private LocalDateTime allergyEndDate;
     private List<CDALDOEntry> entryRelationships;
+    private List<CDALDOAgent> agents;
 
     public CDALDOEntryAct(String entryType, String statusCode, LocalDate effectiveTimeLow, LocalDate effectiveTimeHigh,
-            String allergyValueCode, String allergyDisplayName, LocalDateTime allergyStartDate,
+            String allergyTypeValueCode, String allergyTypeDisplayName, LocalDateTime allergyStartDate,
             LocalDateTime allergyEndDate,
-            List<CDALDOEntry> entryRelationships) {
+            List<CDALDOEntry> entryRelationships, List<CDALDOAgent> agents) {
 
         StringBuilder missingFields = new StringBuilder();
 
@@ -46,6 +47,9 @@ public class CDALDOEntryAct implements CDALDOEntry {
                 && effectiveTimeHigh == null) {
             missingFields.append("effectiveTimeHigh, ");
         }
+        if (agents == null || agents.isEmpty()) {
+            missingFields.append("agents, ");
+        }
 
         if (missingFields.length() > 0) {
             missingFields.setLength(missingFields.length() - 2);
@@ -56,16 +60,16 @@ public class CDALDOEntryAct implements CDALDOEntry {
             this.effectiveTimeHigh = effectiveTimeHigh;
         }
 
-        this.allergyValueCode = allergyValueCode;
-        this.allergyDisplayName = allergyDisplayName;
+        this.allergyTypeDisplayName = allergyTypeDisplayName;
+        this.allergyTypeValueCode = allergyTypeValueCode;
         this.allergyStartDate = allergyStartDate;
         this.allergyEndDate = allergyEndDate;
         this.effectiveTimeLow = effectiveTimeLow;
         this.entryRelationships = entryRelationships;
         this.entryObservation = new CDALDOEntryObservation("52473-6", "2.16.840.1.113883.6.1",
                 "LOINC", "Allergia o causa della reazione", "entryRelationship", "SUBJ",
-                false, allergyStartDate, allergyEndDate, null, null, allergyValueCode, "2.16.840.1.113883.5.4",
-                "ObservationIntoleranceType", allergyDisplayName, "CD", null, 0.0f, null, false, entryRelationships, null, null);
+                false, allergyStartDate, allergyEndDate, null, null, allergyTypeValueCode, "2.16.840.1.113883.5.4",
+                "ObservationIntoleranceType", allergyTypeDisplayName, "CD", false, entryRelationships, agents);
     }
 
     @Override

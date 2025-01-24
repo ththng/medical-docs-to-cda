@@ -9,7 +9,6 @@
                     <low value="2025-01-23"/>
                     <high value="2025-01-24"/>
                 </effectiveTime>
-                <value code="prova" codeSystem="valueCodeSystem" codeSystemName="ciao" displayName="ciaooo" xsi:type="CD"/>
                 <performer>
                     <time value="2025-01-25"/>
                     <assignedEntity>

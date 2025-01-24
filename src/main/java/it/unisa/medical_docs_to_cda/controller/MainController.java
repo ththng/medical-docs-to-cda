@@ -1,17 +1,45 @@
 package it.unisa.medical_docs_to_cda.controller;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import it.unisa.medical_docs_to_cda.model.*;
-import it.unisa.medical_docs_to_cda.repositories.*;
+import it.unisa.medical_docs_to_cda.model.Allergy;
+import it.unisa.medical_docs_to_cda.model.Careplan;
+import it.unisa.medical_docs_to_cda.model.Condition;
+import it.unisa.medical_docs_to_cda.model.Encounter;
+import it.unisa.medical_docs_to_cda.model.ImagingStudy;
+import it.unisa.medical_docs_to_cda.model.Immunization;
+import it.unisa.medical_docs_to_cda.model.Medication;
+import it.unisa.medical_docs_to_cda.model.Observation;
+import it.unisa.medical_docs_to_cda.model.Patient;
+import it.unisa.medical_docs_to_cda.model.Procedure;
+import it.unisa.medical_docs_to_cda.repositories.AllergyRepository;
+import it.unisa.medical_docs_to_cda.repositories.CareplanRepository;
+import it.unisa.medical_docs_to_cda.repositories.ConditionRepository;
+import it.unisa.medical_docs_to_cda.repositories.EncounterRepository;
+import it.unisa.medical_docs_to_cda.repositories.ImagingStudyRepository;
+import it.unisa.medical_docs_to_cda.repositories.ImmunizationRepository;
+import it.unisa.medical_docs_to_cda.repositories.MedicationRepository;
+import it.unisa.medical_docs_to_cda.repositories.ObservationRepository;
+import it.unisa.medical_docs_to_cda.repositories.PatientRepository;
+import it.unisa.medical_docs_to_cda.repositories.ProcedureRepository;
 
 @Controller
 @RequestMapping("/patients")
@@ -90,6 +118,7 @@ public class MainController {
     @GetMapping("/{id}/report")
     public String getPatientObservations(@PathVariable("id") String patientId, Model model) {
         List<Encounter> encounters = encounterRepo.findByPatientId(patientId);
+        encounters.sort(Comparator.comparing(Encounter::getStart).reversed());
 
         if (encounters.isEmpty()) {
             model.addAttribute("error", "No encounters found for the given ID.");
@@ -129,5 +158,21 @@ public class MainController {
         model.addAttribute("observations", observations);
 
         return "report";
+    }
+
+    // TODO: adjust to our data model
+    @PostMapping("/check")
+    public ResponseEntity<Map<String, String>> checkData(@RequestBody Map<String, String> request) {
+        String name = request.get("name");
+        String email = request.get("email");
+
+        Map<String, String> response = new HashMap<>();
+        if (name.isEmpty() || email.isEmpty()) {
+            response.put("message", "Name and email are required!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        response.put("message", "Data is valid! Welcome, " + name);
+        return ResponseEntity.ok(response);
     }
 }

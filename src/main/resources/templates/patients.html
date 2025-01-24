@@ -98,6 +98,21 @@
             color: #2c3e50;
         }
     </style>
+    <script>
+        function redirectToReport(patientId) {
+            window.location.href = `/patients/${patientId}/report`;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll("tr[data-patient-id]");
+            rows.forEach(row => {
+                row.addEventListener("click", function () {
+                    const patientId = row.getAttribute('data-patient-id');
+                    redirectToReport(patientId);
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -133,7 +148,7 @@
             </thead>
             <tbody>
                 <!-- Loop through the patients -->
-                <tr th:each="patient : ${patients}" data-id="${patient.id}" class="clickable-row" style="cursor: pointer;">
+                <tr th:each="patient : ${patients}" th:data-patient-id="${patient.id}" style="cursor: pointer;">
                     <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
                     <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
                     <td
@@ -168,17 +183,5 @@
     </div>
 
 </body>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const rows = document.querySelectorAll('.clickable-row');
-        rows.forEach(row => {
-            row.addEventListener('click', function () {
-                const patientId = this.getAttribute('data-id');
-                window.location.href = '/patients/results/' + patientId;
-            });
-        });
-    });
-</script>
-
 
 </html>

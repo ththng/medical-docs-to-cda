@@ -86,7 +86,16 @@ function remove(button) {
     }
 }
 
-function submitForm() {
+function submitForm(button) {
+    const encounterId = button.getAttribute('data-encounter-id');
+    console.log("Encounter ID:", encounterId);
+    // Get the form element
+    const form = document.getElementById(`form-${encounterId}`);
+    console.log(typeof form);
+    
+    // Use FormData API to collect all form values
+    const formData = new FormData(form);
+
     /*
     const form = document.getElementById('form');
     const formData = new FormData(form);

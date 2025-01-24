@@ -1,9 +1,7 @@
 package it.unisa.medical_docs_to_cda.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

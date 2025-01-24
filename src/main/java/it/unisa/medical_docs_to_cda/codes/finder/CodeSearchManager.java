@@ -112,7 +112,7 @@ public class CodeSearchManager {
             return null;
     }
 
-    public String searchLoincByName(String name) {
+    public static String searchLoincByName(String name) {
         String shortestCode = null;
         try {
 

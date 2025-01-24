@@ -1,19 +1,20 @@
 package it.unisa.medical_docs_to_cda.controller;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.dom.Document;
 
 import it.unisa.medical_docs_to_cda.CDALDO.*;
+import it.unisa.medical_docs_to_cda.codes.finder.CodeSearchManager;
 import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.AllergyRepository;
 import it.unisa.medical_docs_to_cda.repositories.CareplanRepository;
 import it.unisa.medical_docs_to_cda.repositories.ConditionRepository;
-import it.unisa.medical_docs_to_cda.repositories.EncounterRepository;
 import it.unisa.medical_docs_to_cda.repositories.ImagingStudyRepository;
 import it.unisa.medical_docs_to_cda.repositories.ImmunizationRepository;
 import it.unisa.medical_docs_to_cda.repositories.MedicationRepository;
@@ -23,20 +24,16 @@ import it.unisa.medical_docs_to_cda.repositories.PatientRepository;
 import it.unisa.medical_docs_to_cda.repositories.ProcedureRepository;
 import it.unisa.medical_docs_to_cda.repositories.ProviderRepository;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-
 /**
  * This class is responsible for converting Encounter objects to CDA documents.
  */
 public class CDAController {
     @Autowired
     private static PatientRepository patientRepo;
-    @Autowired
-    private static EncounterRepository encounterRepo;
+    /*
+     * @Autowired
+     * private static EncounterRepository encounterRepo;
+     */
     @Autowired
     private static AllergyRepository allergyRepo;
     @Autowired
@@ -58,6 +55,7 @@ public class CDAController {
     @Autowired
     private static OrganizationRepository organizationRepo;
 
+
     /**
      * Converts an Encounter object to a CDA document.
      * 
@@ -72,7 +70,7 @@ public class CDAController {
         Provider provider = providerRepo.findById(encounter.getProviderId()).get();
         Organization organization = organizationRepo.findById(encounter.getOrganizationId()).get();
         String encounterId = encounter.getId();
-        List<Observation> observation = observationRepo.findByEncounterId(encounterId);
+        List<Observation> observations = observationRepo.findByEncounterId(encounterId);
         List<Allergy> allergies = allergyRepo.findByEncounterId(encounterId);
         List<Condition> conditions = conditionRepo.findByEncounterId(encounterId);
         List<Careplan> careplans = careplanRepo.findByEncounterId(encounterId);
@@ -80,10 +78,12 @@ public class CDAController {
         List<Immunization> immunizations = immunizationRepo.findByEncounterId(encounterId);
         List<Medication> medications = medicationRepo.findByEncounterId(encounterId);
         List<Procedure> procedures = procedureRepo.findByEncounterId(encounterId);
+        List<Procedure> pastProcedures = procedureRepo.findByPatientId(patient.getId());
         CDALDO cdaldoBuilder = new CDALDO();
         // we are using ssn as italian CF and random genereted ANA code
+        CDALDOPatient cdaldoPatient = null;
         try {
-            CDALDOPatient cdaldoPatient = new CDALDOPatient(
+            cdaldoPatient = new CDALDOPatient(
                     List.of(new CDALDOId("2.16.840.1.113883.2.9.4.3.2", patient.getSSN(),
                             "Ministero Economia e Finanze"),
                             new CDALDOId("2.16.840.1.113883.2.9.4.3.15", generateCodiceANA(), "Campania")),
@@ -94,7 +94,7 @@ public class CDAController {
                     patient.getBirthDate());
             cdaldoBuilder.setPatient(cdaldoPatient);
         } catch (Exception e) {
-            CDALDOPatient cdaldoPatient = null;
+            cdaldoPatient = null;
         }
 
         // we are taking all the organization like they are part of the ASL NAPOLI 1
@@ -107,9 +107,9 @@ public class CDAController {
         cdaldoBuilder.setSetId(setOid);
         cdaldoBuilder.setVersion(versionNumberValue);
         cdaldoBuilder.setConfidentialityCode(confidentialityCodeValue);
-        CDALDOAuthor author =null;
+        CDALDOAuthor author = null;
         try {
-             author = new CDALDOAuthor();
+            author = new CDALDOAuthor();
             CDALDOId authorId = new CDALDOId();
 
             author.setTelecoms(List.of("tel:+391389218301289", "mailto:ciao@prova.it", "mailto:ciao@pec.it"));
@@ -125,22 +125,24 @@ public class CDAController {
         } catch (Exception e) {
             author = null;
         }
-        CDALDOId custodianId = new CDALDOId("2.16.840.1.113883.2.9.4.1.2","MGH-20250123-001","Massachusetts General Hospital");
+        CDALDOId custodianId = new CDALDOId("2.16.840.1.113883.2.9.4.1.2", "MGH-20250123-001",
+                "Massachusetts General Hospital");
 
-        CDALDOAddr custodianAddress = new CDALDOAddr("H", "US",organization.getState(), null, organization.getCity(), null, organization.getZip(),  organization.getAddress());
+        CDALDOAddr custodianAddress = new CDALDOAddr("H", "US", organization.getState(), null, organization.getCity(),
+                null, organization.getZip(), organization.getAddress());
 
         String custodianOrgName = organization.getName();
-        String custodianPhone = "tel:"+organization.getPhone();
+        String custodianPhone = "tel:" + organization.getPhone();
 
         String ramoAziendale = "MA.HOSPITAL.NOSOLOGICI";
         String numeroNosologico = "123456";
         String nomeAzienda = "Massachusetts General Hospital";
-       
+
         List<String> repartoIds = List.of("123456");
         List<String> repartoNames = List.of("Reparto di Ostetricia e Ginecologia");
         List<String> ministerialCodes = List.of("Code1");
         List<String> facilityNames = List.of("Reparto di Ostetricia e Ginecologia");
-        List<String> facilityTelecoms = List.of("tel:"+organization.getPhone());
+        List<String> facilityTelecoms = List.of("tel:" + organization.getPhone());
 
         try {
             cdaldoBuilder.setComponentOf(
@@ -155,44 +157,254 @@ public class CDAController {
                     facilityNames,
                     facilityTelecoms);
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
         try {
             cdaldoBuilder.setCustodian(custodianId, custodianOrgName, custodianAddress, custodianPhone);
         } catch (Exception e) {
-           
+
             e.printStackTrace();
         }
         try {
             cdaldoBuilder.setRapresentedOrganization(
                     new CDALDOId("2.16.840.1.113883.2.9.4.1.1", "13289038091283", "ministero della pastina"));
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
 
         try {
             cdaldoBuilder.setCompiler(author);
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
 
         try {
             cdaldoBuilder.setLegalAuthenticator(author);
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
         try {
             cdaldoBuilder.setFullfillmentId("RX-20250123-001");
         } catch (Exception e) {
-            
+
             e.printStackTrace();
         }
-        
-                return cdaldoBuilder;
+
+        // Section 1: Motivo del ricovero
+        String content1 = encounter.getReasonDescription() != null ? encounter.getReasonDescription()
+                : encounter.getDescription();
+
+        cdaldoBuilder.setNarrativeBlocks(List.of(new CDALDONarrativeBlock("paragraph", content1)), "1");
+
+        CDALDOEntryObservation observation1 = new CDALDOEntryObservation(
+                "8646-2",
+                "2.16.840.1.113883.6.1",
+                "LOINC",
+                "Diagnosi di Accettazione Ospedaliera",
+                "entry",
+                null,
+                false,
+                encounter.getStart(),
+                encounter.getStop(),
+                null,
+                null,
+                CodeSearchManager.searchICD9ByTerm(encounter.getReasonDescription()),
+                "2.16.840.1.113883.6.103",
+                "ICD9CM",
+                encounter.getReasonDescription(),
+                "CD",
+                false,
+                null,
+                null);
+
+        cdaldoBuilder.setEntries(List.of(observation1), "1");
+
+        // Section 2: Inquadramento clinico iniziale
+        List<CDALDONarrativeBlock> narrativeBlocks2 = new ArrayList<>();
+
+        conditions.forEach(
+                condition -> narrativeBlocks2.add(new CDALDONarrativeBlock("paragraph", condition.getDescription())));
+
+        // Anamnesi 2.2
+        String[] procedureList = pastProcedures.stream().map(Procedure::getDescription).toArray(String[]::new);
+        String[] allObservations = observations.stream()
+                .map(observation -> observation.getDescription() + " - " + observation.getValue() + " "
+                        + observation.getUnits())
+                .toArray(String[]::new);
+        narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "paragraph", "List of observations: "));
+        narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "list", allObservations));
+        narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "paragraph", "List of past procedures: "));
+        narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "list", procedureList));
+
+        List<CDALDOEntry> observations2 = new ArrayList<>();
+        observations.forEach(observation -> observations2.add(new CDALDOEntryObservation("75326-9",
+                "2.16.840.1.113883.6.1",
+                "LOINC", "Problem", "entry", null, true,
+                observation.getDate(), null, null, null, "CD", observation.getCode(), "2.16.840.1.113883.6.1", "LOINC",
+                observation.getDescription(), false, null, null, null)));
+
+        // Terapia farmacologica 2.4
+        String[] meds = medications.stream().map(Medication::getDescription).toArray(String[]::new);
+        narrativeBlocks2.add(new CDALDONarrativeBlock("terapiaFarmacologica", "list", meds));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks2, "2");
+        cdaldoBuilder.setEntries(observations2, "2");
+
+        // Section 3: Decorso ospedaliero
+        List<CDALDONarrativeBlock> narrativeBlocks3 = new ArrayList<>();
+        narrativeBlocks3.add(new CDALDONarrativeBlock(
+                "paragraph",
+                "The patient came to our attention due to " + content1 +
+                        ". During hospitalization, the condition was managed and stabilization was achieved through intensive pharmacological treatment."));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks3, "3");
+        // cdaldoBuilder.setEntries(null, "3");
+
+        // Section 4: Complicanze (optional, not enough data in dataset)
+
+        // Section 5: Riscontri ed accertamenti significativi
+        List<CDALDONarrativeBlock> narrativeBlocks5 = new ArrayList<>();
+        String conditionsText = conditions.stream().map(Condition::getDescription).collect(Collectors.joining(", "));
+        String proceduresText = procedures.stream().map(Procedure::getDescription).collect(Collectors.joining(", "));
+        narrativeBlocks5.add(new CDALDONarrativeBlock("paragraph",
+                "On " + encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                        + ", a diagnostic evaluation was performed, which identified "
+                        + conditionsText + " requiring intervention."
+                        + " The following procedures were subsequently recommended and carried out: "
+                        + proceduresText));
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks5, "5");
+        // cdaldoBuilder.setEntries(null, "5");
+
+        // Section 6: Consulenza
+        List<CDALDONarrativeBlock> narrativeBlocks6 = new ArrayList<>();
+        String[] immuns = immunizations.stream().map(Immunization::getDescription).toArray(String[]::new);
+        if (immuns.length > 0) {
+            narrativeBlocks6
+                    .add(new CDALDONarrativeBlock("paragraph", "The following vaccinations were administered: "));
+            narrativeBlocks6.add(new CDALDONarrativeBlock("list", immuns));
+        }
+
+        List<CDALDOEntry> observations6 = new ArrayList<>();
+        immunizations.forEach(immunization -> observations6.add(new CDALDOEntryObservation(immunization.getCode(),
+                "2.16.840.1.113883.12.292", "CVX", immunization.getDescription(), "entry", null, false,
+                immunization.getDate(),
+                null, immunization.getDate(), null, "ST", "done", false, null,
+                List.of(new CDALDOAuthor(new CDALDOId("2.16.840.1.113883.2.9.4.3.2", "", "MEF"),
+                        provider.getName().split(" ")[0], provider.getName().split(" ")[1])),
+                null)));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks6, "6");
+        cdaldoBuilder.setEntries(observations6, "6");
+
+        // Section 7: Esami eseguiti durante il ricovero
+        // imaging studies metto solo come lista
+
+        List<CDALDONarrativeBlock> narrativeBlocks7 = new ArrayList<>();
+        String[] imagingSt = imagingStudies.stream()
+                .map(imagingStudy -> imagingStudy.getSopDescription() + " of " + imagingStudy.getBodySiteDescription())
+                .toArray(String[]::new);
+        if (imagingSt.length > 0) {
+            narrativeBlocks7
+                    .add(new CDALDONarrativeBlock("paragraph", "The following exams were administered: "));
+            narrativeBlocks7.add(new CDALDONarrativeBlock("list", imagingSt));
+        }
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks7, "7");
+        // cdaldoBuilder.setEntries(null, "7");
+
+        // Section 8: Procedure
+        List<CDALDONarrativeBlock> narrativeBlocks8 = new ArrayList<>();
+        List<CDALDOEntry> observation8 = new ArrayList<>();
+
+        narrativeBlocks8.add(new CDALDONarrativeBlock("paragraph", "On date "
+                + encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                + " the following procedures were performed: "
+                + proceduresText + ". Postoperative course was regular."));
+
+        procedures.forEach(procedure -> observation8.add(new CDALDOEntryProcedure(procedure.getCode(),
+                "2.16.840.1.113883.6.96", "SNOMED CT", procedure.getDescription(),
+                "entry", null, procedure.getDate().atTime(LocalTime.now()), null, null,
+                List.of(new CDALDOEntryObservation(CodeSearchManager.searchICD9ByTerm(procedure.getReasonDescription()),
+                        "2.16.840.1.113883.6.103", "ICD-9CM (diagnosis codes)", procedure.getReasonDescription(),
+                        "entryRelationship", "RSON", false, null,
+                        null, null, null,
+                        null, 0.0f, null, false, null)))));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks8, "8");
+        cdaldoBuilder.setEntries(observation8, "8");
+
+        // Section 9: Allergie
+        List<CDALDONarrativeBlock> narrativeBlocks9 = new ArrayList<>();
+        List<CDALDOEntry> observation9 = new ArrayList<>();
+
+        String[] allergens = allergies.stream()
+                .map(Allergy::getDescription)
+                .toArray(String[]::new);
+        if (allergens.length > 0) {
+            narrativeBlocks7.add(new CDALDONarrativeBlock("list", allergens));
+        }
+
+        allergies.forEach(allergy -> observation9.add(new CDALDOEntryAct("entry", "completed",
+                allergy.getStart(),
+                allergy.getStop(), "ALG", "Allergy",
+                allergy.getStart().atTime(LocalTime.now()), allergy.getStop().atTime(LocalTime.now()), null,
+                List.of(new CDALDOAgent(allergy.getCode(), "2.16.840.1.113883.6.96", "SNOMED CT",
+                        allergy.getDescription())))));
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks9, "9");
+        cdaldoBuilder.setEntries(observation9, "9");
+
+        // Section 10: farmaci durante il ricovero
+        List<CDALDONarrativeBlock> narrativeBlocks10 = new ArrayList<>();
+        List<CDALDOEntry> observation10 = new ArrayList<>();
+
+        if (meds.length > 0) {
+            narrativeBlocks10.add(new CDALDONarrativeBlock("list", meds));
+        }
+        medications.forEach(medication -> observation10.add(new CDALDOEntrySubstanceAdm("entry", medication.getCode(),
+                medication.getDescription(), "completed", medication.getStart().toLocalDate(), null)));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks10, "10");
+        cdaldoBuilder.setEntries(observation10, "10");
+
+        // Section 11: condizione paziente alla dimissione
+        List<CDALDONarrativeBlock> narrativeBlocks11 = new ArrayList<>();
+        List<CDALDOEntry> observation11 = new ArrayList<>();
+
+        narrativeBlocks11.add(new CDALDONarrativeBlock("paragraph",
+                "The patient conditions at discharge are: "
+                        + conditionsText + " requiring intervention."
+                        + " The following diagnosis was made: "
+                        + content1));
+
+        conditions.forEach(condition -> observation11.add(new CDALDOEntryObservation("8651-2”",
+                "“2.16.840.1.113883.6.1” ", "LOINC", "Diagnosi di dimissione ospedaliera",
+                "entry", null, false,
+                condition.getStart().atTime(LocalTime.now()), condition.getStop().atTime(LocalTime.now()),
+                null, null, "CD", CodeSearchManager.searchICD9ByTerm(condition.getDescription()),
+                "2.16.840.1.113883.6.103", "ICD9CM", condition.getDescription(), false, null, null, null)));
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks11, "11");
+        cdaldoBuilder.setEntries(observation11, "11");
+
+        // Section 12 (Optional, not enough data in dataset)
+
+        // Section 13 : Istruzioni di follow up
+        List<CDALDONarrativeBlock> narrativeBlocks13 = new ArrayList<>();
+        String[] followup = careplans.stream().map(Careplan::getDescription).toArray(String[]::new);
+        if (followup.length > 0) {
+            narrativeBlocks13.add(new CDALDONarrativeBlock("paragraph",
+                    "The following instructions/therapies are recommended for the patient: "));
+            narrativeBlocks13.add(new CDALDONarrativeBlock("list", followup));
+        }
+
+        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks13, "13");
+        // cdaldoBuilder.setEntries(null, "13");
+
+        return cdaldoBuilder;
     }
 
     private static String generateCodiceANA() {

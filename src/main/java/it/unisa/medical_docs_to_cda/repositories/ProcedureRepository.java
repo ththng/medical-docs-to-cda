@@ -10,4 +10,5 @@ import it.unisa.medical_docs_to_cda.model.Procedure;
 @Repository
 public interface ProcedureRepository extends MongoRepository<Procedure, String>{
     List<Procedure> findByEncounterId(String encounterId);
+    List<Procedure> findByPatientId(String patientId);
 }

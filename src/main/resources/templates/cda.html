@@ -132,7 +132,7 @@
 
 
         <!-- Download Button -->
-        <a href="/patients/{id}/cda" class="cta-btn" download>Download CDA</a>
+        <a th:attr="href=@{/patients/{id}/cda(id=${encounterId})}" class="cta-btn" download>Download CDA</a>
     </div>
 
     <footer>

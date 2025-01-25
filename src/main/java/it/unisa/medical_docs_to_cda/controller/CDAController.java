@@ -68,51 +68,10 @@ public class CDAController {
                 List<Procedure> procedures = procedureRepo.findByEncounterId(encounterId);
                 List<Procedure> pastProcedures = procedureRepo.findByPatientId(patient.getId());
                 CDALDO cdaldoBuilder = new CDALDO();
-                // we are using ssn as italian CF and random genereted ANA code
-                CDALDOPatient cdaldoPatient;
-                cdaldoPatient = new CDALDOPatient(
-                                List.of(new CDALDOId("2.16.840.1.113883.2.9.4.3.2", patient.getSSN(),
-                                                "Ministero Economia e Finanze"),
-                                                new CDALDOId("2.16.840.1.113883.2.9.4.3.17",
-                                                                generateCodiceANA(), "Campania")),
-                                2,
-                                List.of(createCDALDOAddr(patient.getAddress(), patient.getCity(),
-                                                patient.getState(),
-                                                patient.getCounty(), patient.getZip())),
-                                null, null, patient.getFirst(), patient.getLast(), patient.getGender(),
-                                patient.getBirthPlace(),
-                                patient.getBirthDate());
-                cdaldoBuilder.setPatient(cdaldoPatient);
 
-                // we are taking all the organization like they are part of the ASL NAPOLI 1
-                CDALDOId oid = new CDALDOId("2.16.840.1.113883.2.9.4.3.1",
-                                DocumentIdGenerator.generateDocumentId("DOC"),
-                                "ASL NAPOLI 1");
-                CDALDOId setOid = oid;
-                String versionNumberValue = "1.0";
-                String confidentialityCodeValue = "V";
-                cdaldoBuilder.setOid(oid);
-                cdaldoBuilder.setStatus("complete");
-                cdaldoBuilder.setEffectiveTimeDate(LocalDateTime.now());
-                cdaldoBuilder.setSetId(setOid);
-                cdaldoBuilder.setVersion(versionNumberValue);
-                cdaldoBuilder.setConfidentialityCode(confidentialityCodeValue);
-                CDALDOAuthor author;
-
-                author = new CDALDOAuthor();
-                CDALDOId authorId = new CDALDOId();
-
-                author.setTelecoms(
-                                List.of("tel:+391389218301289", "mailto:ciao@prova.it", "mailto:ciao@pec.it"));
-                author.setTelecomUses(List.of("H", "H", "H"));
-                authorId.setOid("2.16.840.1.113883.2.9.4.3.2");
-                authorId.setRoot("AUTH123456789");
-
-                author.setId(authorId);
-                author.setFirstName("Jane");
-                author.setLastName("Smith");
-
-                cdaldoBuilder.setAuthor(author);
+                setPatient(cdaldoBuilder, patient);
+                setId(cdaldoBuilder);
+                CDALDOAuthor author = setAuthor(cdaldoBuilder);
 
                 CDALDOId custodianId = new CDALDOId("2.16.840.1.113883.2.9.4.1.2", "MGH-20250123-001",
                                 "Massachusetts General Hospital");
@@ -164,6 +123,11 @@ public class CDAController {
 
                 cdaldoBuilder.setNarrativeBlocks(List.of(new CDALDONarrativeBlock("paragraph", content1)), "1");
 
+                String reasonDescription = encounter.getReasonDescription();
+                if (reasonDescription == null) {
+                        throw new IllegalArgumentException("Reason description of encounter is null");
+                }
+
                 CDALDOEntryObservation observation1 = new CDALDOEntryObservation(
                                 "8646-2",
                                 "2.16.840.1.113883.6.1",
@@ -176,10 +140,10 @@ public class CDAController {
                                 encounter.getStop(),
                                 null,
                                 null,
-                                CodeSearchManager.searchICD9ByTerm(encounter.getReasonDescription()),
+                                CodeSearchManager.searchICD9ByTerm(reasonDescription),
                                 "2.16.840.1.113883.6.103",
                                 "ICD9CM",
-                                encounter.getReasonDescription(),
+                                reasonDescription,
                                 "CD",
                                 false,
                                 null,
@@ -189,11 +153,10 @@ public class CDAController {
 
                 // Section 2: Inquadramento clinico iniziale
                 List<CDALDONarrativeBlock> narrativeBlocks2 = new ArrayList<>();
-
-                conditions.forEach(
-                                condition -> narrativeBlocks2.add(
-                                                new CDALDONarrativeBlock("paragraph", condition.getDescription())));
-
+                if (conditions != null && !conditions.isEmpty()) {
+                        conditions.forEach(condition -> narrativeBlocks2.add(
+                                        new CDALDONarrativeBlock("paragraph", condition.getDescription())));
+                }
                 // Anamnesi 2.2
                 String[] procedureList = pastProcedures.stream().map(Procedure::getDescription).toArray(String[]::new);
                 String[] allObservations = observations.stream()
@@ -216,9 +179,10 @@ public class CDAController {
                 // Terapia farmacologica 2.4
                 String[] meds = medications.stream().map(Medication::getDescription).toArray(String[]::new);
                 narrativeBlocks2.add(new CDALDONarrativeBlock("terapiaFarmacologica", "list", meds));
-
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks2, "2");
-                cdaldoBuilder.setEntries(observations2, "2");
+                if(!narrativeBlocks2.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks2, "2");
+                if(!observations2.isEmpty())
+                        cdaldoBuilder.setEntries(observations2, "2");
 
                 // Section 3: Decorso ospedaliero
                 List<CDALDONarrativeBlock> narrativeBlocks3 = new ArrayList<>();
@@ -238,13 +202,17 @@ public class CDAController {
                                 .collect(Collectors.joining(", "));
                 String proceduresText = procedures.stream().map(Procedure::getDescription)
                                 .collect(Collectors.joining(", "));
-                narrativeBlocks5.add(new CDALDONarrativeBlock("paragraph",
-                                "On " + encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                                + ", a diagnostic evaluation was performed, which identified "
-                                                + conditionsText + " requiring intervention."
-                                                + " The following procedures were subsequently recommended and carried out: "
-                                                + proceduresText));
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks5, "5");
+                if (conditionsText != null && proceduresText != null && !conditionsText.isEmpty()
+                                && !proceduresText.isEmpty()) {
+                        String date = encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        String narrative = String.format(
+                                        "On %s, a diagnostic evaluation was performed, which identified %s requiring intervention. The following procedures were subsequently recommended and carried out: %s",
+                                        date, conditionsText, proceduresText);
+                        narrativeBlocks5.add(new CDALDONarrativeBlock("paragraph", narrative));
+                        narrativeBlocks5.add(new CDALDONarrativeBlock("list", proceduresText.split(", ")));
+                }
+                if (!narrativeBlocks5.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks5, "5");
                 // cdaldoBuilder.setEntries(null, "5");
 
                 // Section 6: Consulenza
@@ -266,13 +234,11 @@ public class CDAController {
                                                         provider.getName().split(" ")[0],
                                                         provider.getName().split(" ")[1])),
                                         null)));
-                } else {
-                        narrativeBlocks6.add(
-                                        new CDALDONarrativeBlock("paragraph", "No vaccinations were administered"));
                 }
-
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks6, "6");
-                cdaldoBuilder.setEntries(observations6, "6");
+                if (!narrativeBlocks6.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks6, "6");
+                if (!observations6.isEmpty())
+                        cdaldoBuilder.setEntries(observations6, "6");
 
                 // Section 7: Esami eseguiti durante il ricovero
                 // imaging studies metto solo come lista
@@ -287,35 +253,39 @@ public class CDAController {
                                         .add(new CDALDONarrativeBlock("paragraph",
                                                         "The following exams were administered: "));
                         narrativeBlocks7.add(new CDALDONarrativeBlock("list", imagingSt));
-                } else {
-                        narrativeBlocks7.add(new CDALDONarrativeBlock("paragraph", "No exams were administered"));
                 }
-
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks7, "7");
+                if (!narrativeBlocks7.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks7, "7");
                 // cdaldoBuilder.setEntries(null, "7");
 
                 // Section 8: Procedure
                 List<CDALDONarrativeBlock> narrativeBlocks8 = new ArrayList<>();
                 List<CDALDOEntry> observation8 = new ArrayList<>();
 
-                narrativeBlocks8.add(new CDALDONarrativeBlock("paragraph", "On date "
-                                + encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                + " the following procedures were performed: "
-                                + proceduresText + ". Postoperative course was regular."));
+                if (proceduresText != null && !proceduresText.isEmpty()) {
+                        narrativeBlocks8.add(new CDALDONarrativeBlock("paragraph", "On date "
+                                        + encounter.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                                        + " the following procedures were performed: "
+                                        + proceduresText + ". Postoperative course was regular."));
+                }
+                if (procedures != null && !procedures.isEmpty()) {
+                        procedures.forEach(procedure -> observation8.add(new CDALDOEntryProcedure(procedure.getCode(),
+                                        "2.16.840.1.113883.6.96", "SNOMED CT", procedure.getDescription(),
+                                        "entry", null, procedure.getDate().atTime(LocalTime.now()), null, null,
+                                        List.of(new CDALDOEntryObservation(
+                                                        CodeSearchManager.searchICD9ByTerm(
+                                                                        procedure.getReasonDescription()),
+                                                        "2.16.840.1.113883.6.103", "ICD-9CM (diagnosis codes)",
+                                                        procedure.getReasonDescription(),
+                                                        "entryRelationship", "RSON", false, null,
+                                                        null, null, null,
+                                                        null, 0.0f, null, false, null)))));
+                }
 
-                procedures.forEach(procedure -> observation8.add(new CDALDOEntryProcedure(procedure.getCode(),
-                                "2.16.840.1.113883.6.96", "SNOMED CT", procedure.getDescription(),
-                                "entry", null, procedure.getDate().atTime(LocalTime.now()), null, null,
-                                List.of(new CDALDOEntryObservation(
-                                                CodeSearchManager.searchICD9ByTerm(procedure.getReasonDescription()),
-                                                "2.16.840.1.113883.6.103", "ICD-9CM (diagnosis codes)",
-                                                procedure.getReasonDescription(),
-                                                "entryRelationship", "RSON", false, null,
-                                                null, null, null,
-                                                null, 0.0f, null, false, null)))));
-
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks8, "8");
-                cdaldoBuilder.setEntries(observation8, "8");
+                if (!narrativeBlocks8.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks8, "8");
+                if (!observation8.isEmpty())
+                        cdaldoBuilder.setEntries(observation8, "8");
 
                 // Section 9: Allergie
                 List<CDALDONarrativeBlock> narrativeBlocks9 = new ArrayList<>();
@@ -326,19 +296,22 @@ public class CDAController {
                                 .toArray(String[]::new);
                 if (allergens.length > 0) {
                         narrativeBlocks9.add(new CDALDONarrativeBlock("list", allergens));
-                } else {
-                        narrativeBlocks9.add(new CDALDONarrativeBlock("paragraph", "No allergies were found"));
                 }
-
-                allergies.forEach(allergy -> observation9.add(new CDALDOEntryAct("entry", "completed",
-                                allergy.getStart(),
-                                allergy.getStop(), "ALG", "Allergy",
-                                allergy.getStart().atTime(LocalTime.now()), allergy.getStop().atTime(LocalTime.now()),
-                                null,
-                                List.of(new CDALDOAgent(allergy.getCode(), "2.16.840.1.113883.6.96", "SNOMED CT",
-                                                allergy.getDescription())))));
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks9, "9");
-                cdaldoBuilder.setEntries(observation9, "9");
+                if (allergies != null && !allergies.isEmpty()) {
+                        allergies.forEach(allergy -> observation9.add(new CDALDOEntryAct("entry", "completed",
+                                        allergy.getStart(),
+                                        allergy.getStop(), "ALG", "Allergy",
+                                        allergy.getStart().atTime(LocalTime.now()),
+                                        allergy.getStop().atTime(LocalTime.now()),
+                                        null,
+                                        List.of(new CDALDOAgent(allergy.getCode(), "2.16.840.1.113883.6.96",
+                                                        "SNOMED CT",
+                                                        allergy.getDescription())))));
+                }
+                if (!narrativeBlocks9.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks9, "9");
+                if (!observation9.isEmpty())
+                        cdaldoBuilder.setEntries(observation9, "9");
 
                 // Section 10: farmaci durante il ricovero
                 List<CDALDONarrativeBlock> narrativeBlocks10 = new ArrayList<>();
@@ -346,15 +319,18 @@ public class CDAController {
 
                 if (meds.length > 0) {
                         narrativeBlocks10.add(new CDALDONarrativeBlock("list", meds));
-                } else {
-                        narrativeBlocks10.add(new CDALDONarrativeBlock("paragraph", "No medications were found"));
                 }
-                medications.forEach(medication -> observation10.add(new CDALDOEntrySubstanceAdm("entry",
-                                medication.getCode(),
-                                medication.getDescription(), "completed", medication.getStart().toLocalDate(), null)));
 
-                cdaldoBuilder.setNarrativeBlocks(narrativeBlocks10, "10");
-                cdaldoBuilder.setEntries(observation10, "10");
+                if (medications != null && !medications.isEmpty())
+                        medications.forEach(medication -> observation10.add(new CDALDOEntrySubstanceAdm("entry",
+                                        medication.getCode(),
+                                        medication.getDescription(), "completed", medication.getStart().toLocalDate(),
+                                        null)));
+
+                if (!narrativeBlocks10.isEmpty())
+                        cdaldoBuilder.setNarrativeBlocks(narrativeBlocks10, "10");
+                if (!observation10.isEmpty())
+                        cdaldoBuilder.setEntries(observation10, "10");
 
                 // Section 11: condizione paziente alla dimissione
                 List<CDALDONarrativeBlock> narrativeBlocks11 = new ArrayList<>();
@@ -398,6 +374,57 @@ public class CDAController {
                 return cdaldoBuilder;
         }
 
+        private void setPatient(CDALDO cdaldoBuilder, Patient patient) {
+                // we are using ssn as italian CF and random genereted ANA code
+
+                CDALDOPatient cdaldoPatient = new CDALDOPatient(
+                                List.of(
+                                                new CDALDOId("2.16.840.1.113883.2.9.4.3.2", patient.getSSN(),
+                                                                "Ministero Economia e Finanze"),
+                                                new CDALDOId("2.16.840.1.113883.2.9.4.3.17", generateCodiceANA(),
+                                                                "Campania")),
+                                2,
+                                List.of(createCDALDOAddr(patient.getAddress(), patient.getCity(), patient.getState(),
+                                                patient.getCounty(), patient.getZip())),
+                                null, null, patient.getFirst(), patient.getLast(), patient.getGender(),
+                                patient.getBirthPlace(), patient.getBirthDate());
+                cdaldoBuilder.setPatient(cdaldoPatient);
+        }
+
+        private void setId(CDALDO cdaldoBuilder) {
+                // we are taking all the organization like they are part of the ASL NAPOLI 1
+                CDALDOId oid = new CDALDOId("2.16.840.1.113883.2.9.4.3.1",
+                                DocumentIdGenerator.generateDocumentId("DOC"),
+                                "ASL NAPOLI 1");
+                CDALDOId setOid = oid;
+                String versionNumberValue = "1.0";
+                String confidentialityCodeValue = "V";
+                cdaldoBuilder.setOid(oid);
+                cdaldoBuilder.setStatus("complete");
+                cdaldoBuilder.setEffectiveTimeDate(LocalDateTime.now());
+                cdaldoBuilder.setSetId(setOid);
+                cdaldoBuilder.setVersion(versionNumberValue);
+                cdaldoBuilder.setConfidentialityCode(confidentialityCodeValue);
+        }
+
+        private CDALDOAuthor setAuthor(CDALDO cdaldoBuilder) {
+                CDALDOAuthor author = new CDALDOAuthor();
+                CDALDOId authorId = new CDALDOId();
+
+                author.setTelecoms(
+                                List.of("tel:+391389218301289", "mailto:ciao@prova.it", "mailto:ciao@pec.it"));
+                author.setTelecomUses(List.of("H", "H", "H"));
+                authorId.setOid("2.16.840.1.113883.2.9.4.3.2");
+                authorId.setRoot("AUTH123456789");
+
+                author.setId(authorId);
+                author.setFirstName("Jane");
+                author.setLastName("Smith");
+
+                cdaldoBuilder.setAuthor(author);
+                return author;
+        }
+
         private String generateCodiceANA() {
 
                 String prefisso = "CAM";
@@ -414,7 +441,6 @@ public class CDAController {
         }
 
         public CDALDOAddr createCDALDOAddr(String address, String city, String state, String county, String zip) {
-                // Puoi personalizzare il "use" (ad esempio, "H", "T", etc.)
                 String use = "H";
 
                 return new CDALDOAddr(use, "US", state, county, city, null, zip, address);

@@ -241,6 +241,7 @@ public class MainController {
         Document cdaXml = cdaldo.getCDA();
 
         model.addAttribute("cdaXml", documentToString(cdaXml));
+        model.addAttribute("encounterId", encounterId);
         return "cda";
     }
   
@@ -248,7 +249,11 @@ public class MainController {
     @GetMapping("/{id}/cda")
     public ResponseEntity<String> downloadCDA(@PathVariable("id") String encounterId)
             throws ParserConfigurationException, TransformerException {
-        Encounter encounter = encounterRepo.findById(encounterId).get();
+        Optional<Encounter> optionalEncounter = encounterRepo.findById(encounterId);
+        if (optionalEncounter.isEmpty()) {
+            return ResponseEntity.badRequest().body("Encounter not found");
+        }
+        Encounter encounter = optionalEncounter.get();
 
         CDALDO cdaldo = generateCDA(encounter);
         Document cdaXml = cdaldo.getCDA();

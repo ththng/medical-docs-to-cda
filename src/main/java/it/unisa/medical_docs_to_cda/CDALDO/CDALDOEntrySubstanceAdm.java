@@ -41,6 +41,20 @@ public class CDALDOEntrySubstanceAdm implements CDALDOEntry {
     private List<CDALDOAuthor> participants;
     private List<CDALDOEntryObservation> observations;
 
+    public CDALDOEntrySubstanceAdm(String entryType, String medicineCode, String medicineDescription,
+            String statusCode, LocalDate startDate, LocalDate endDate) {
+        if (entryType == null || medicineCode == null || medicineDescription == null || statusCode == null) {
+            throw new IllegalArgumentException("Missing field in CDALDOEntrySubstanceAdm");
+        } else {
+            this.entryType = entryType;
+            this.medicineCode = medicineCode;
+            this.medicineDescription = medicineDescription;
+            this.statusCode = statusCode;
+        }
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public CDALDOEntrySubstanceAdm(String entryType, String medicineCode, String medicineDescription, String ref,
             String statusCode, LocalDate startDate, LocalDate endDate, String routeCode, String routeDisplayName,
             String approachSiteCode, String approachSiteCodeSystem,
@@ -249,7 +263,7 @@ public class CDALDOEntrySubstanceAdm implements CDALDOEntry {
             }
 
             // Tag participant (optional)
-            if (participants != null && !(participants.isEmpty()) ) {
+            if (participants != null && !(participants.isEmpty())) {
                 for (CDALDOAuthor particip : participants) {
                     Element participant = doc.createElement("participant");
                     substanceAdministration.appendChild(participant);
@@ -279,7 +293,7 @@ public class CDALDOEntrySubstanceAdm implements CDALDOEntry {
             }
 
             // Tags entryRelationship
-            if (observations != null && (!observations.isEmpty()) ) {
+            if (observations != null && (!observations.isEmpty())) {
                 for (CDALDOEntryObservation observation : observations) {
                     observation.setEntryType("entryRelationship");
                     observation.setTypeCode("COMP");

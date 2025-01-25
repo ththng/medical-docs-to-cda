@@ -19,13 +19,7 @@ import org.json.JSONArray;
 
 public class CodeSearchManager {
 
-    private static final String ICD9_API_URL = "https://clinicaltables.nlm.nih.gov/api/icd9cm_dx/v3/search"; // Cambia
-                                                                                                             // con
-                                                                                                             // l'URL
-                                                                                                             // del
-                                                                                                             // server
-                                                                                                             // FHIR se
-                                                                                                             // diverso
+    private static final String ICD9_API_URL = "https://clinicaltables.nlm.nih.gov/api/icd9cm_dx/v3/search"; 
     private static final String LOINC_SERVER_URL = "https://fhir.loinc.org"; // URL del server FHIR per LOINC
     private static final String USERNAME = "********";// TODO inserire LOINC username e password
     private static final String PASSWORD = "********";

@@ -1,6 +1,7 @@
 package it.unisa.medical_docs_to_cda.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
     List<Patient> findBySSN(String SSN);
     List<Patient> findByPassport(String passport);
     List<Patient> findByDrivers(String drivers);
+    Optional<Patient> findById(String id); 
 
 
 }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download CDA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        /* Header */
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #4e4cb8;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        /* Navbar */
+        nav {
+            background: #4e4cb8;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #ffc107;
+        }
+
+        /* Titles */
+        h1, h2 {
+            text-align: center;
+            margin: 20px 0;
+            color: #6c63ff;
+        }
+
+        /* Containers */
+        .content-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 80%;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .cta-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .cta-btn:hover {
+            background-color: #4e4cb8;
+        }
+
+        .cda-content {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #4e4cb8;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>View and Download CDA</h1>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/patients/list">Patient List</a>
+    </nav>
+
+    <div class="content-container">
+        <h2>CDA Document Generated</h2>
+        <p>The CDA for this patient has been successfully generated. You can download it by clicking the button below.</p>
+
+        <div class="cda-content">
+            <pre th:text="${cdaXml}"></pre>
+        </div>
+
+
+        <!-- Download Button -->
+        <a href="/patients/{id}/cda" class="cta-btn" download>Download CDA</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women's Health Clinic. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

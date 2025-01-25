@@ -364,7 +364,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
         }
 
         // Participant for Allergies
-        if (this.typeCode.equals("SUBJ")) {
+        if (this.typeCode != null && typeCode.equals("SUBJ")) {
             for (CDALDOAgent agent : agents) {
                 Element participant = doc.createElement("participant");
                 participant.setAttribute("typeCode", "CSM");

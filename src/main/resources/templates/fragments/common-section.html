@@ -19,7 +19,7 @@
                             <input type="text" class="form-control"
                                    th:id="${field + '-' + iterStat.index}"
                                    th:name="${sectionName.toLowerCase() + '[' + iterStat.index + '].' + field}"
-                                   th:value=" ${item[field]} " />
+                                   th:value="${item[field]}" />
                         </div>
                         <div class="col-12 text-end">
                             <button type="button" class="btn btn-danger btn-sm" 

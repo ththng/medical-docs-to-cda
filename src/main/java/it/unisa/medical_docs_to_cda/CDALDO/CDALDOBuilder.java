@@ -276,7 +276,7 @@ public class CDALDOBuilder {
 
         List<String> telecomValues = patient.getTelecoms();
         List<String> telecomUses = patient.getTelecomUses();
-        if (!telecomValues.isEmpty() && !telecomUses.isEmpty()) {
+        if (telecomValues != null && telecomUses != null  && !telecomValues.isEmpty() && !telecomUses.isEmpty()) {
             for (int i = 0; i < telecomValues.size(); i++) {
                 Element telecomElement = doc.createElement("telecom");
                 telecomElement.setAttribute("use", telecomUses.get(i));

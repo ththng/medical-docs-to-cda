@@ -123,20 +123,20 @@ public class CDALDO {
         boolean patientEni = false;
         boolean patientAna = false;
         for (CDALDOId id : patient.getIds()) {
-            if (id.getOid() == "2.16.840.1.113883.2.9.4.3.2") {
+            if (id.getOid().equals("2.16.840.1.113883.2.9.4.3.2")) {
                 patientCF = true;
             }
-            if (id.getOid() == "2.16.840.1.113883.2.9.4.3.18") {
+            if (id.getOid().equals( "2.16.840.1.113883.2.9.4.3.18")) {
                 patientEni = true;
             }
-            if (id.getOid() == "2.16.840.1.113883.2.9.4.3.17") {
+            if (id.getOid().equals("2.16.840.1.113883.2.9.4.3.17")) {
                 patientAna = true;
             }
         }
-        if (!(patientCF && patientEni))
-            throw new IllegalArgumentException("atleast one id needs to be a Codice Fiscale or an ENI code");
+        if (!(patientCF || patientEni))
+            throw new IllegalArgumentException("at least one id needs to be a Codice Fiscale or an ENI code");
         if (!patientAna)
-            throw new IllegalArgumentException("an id need to be an ANA code");
+            throw new IllegalArgumentException("an id needs to be an ANA code");
         if (patient.getLastName() == null || patient.getFirstName() == null || patient.getBirthDate() == null
                 || patient.getBirthPlace() == null || patient.getGender() == null) {
             throw new IllegalArgumentException("patient data is incomplete");
@@ -329,10 +329,10 @@ public class CDALDO {
 
     public void setNarrativeBlocks(List<CDALDONarrativeBlock> narrativeBlocks, String sectionNumber) {
         if (narrativeBlocks == null) {
-            throw new NullPointerException("narrativeBlocks can't be null");
+            throw new NullPointerException("narrativeBlocks of" + sectionNumber +" can't be null");
         }
         if (narrativeBlocks.isEmpty()) {
-            throw new IllegalArgumentException("Narrative blocks can't be empty");
+            throw new IllegalArgumentException("Narrative blocks of" + sectionNumber +" can't be empty");
         }
         Integer sectionNumb = Integer.parseInt(sectionNumber);
         if (sectionNumb < 1 || sectionNumb > 13) {
@@ -343,11 +343,11 @@ public class CDALDO {
 
     public void setEntries(List<CDALDOEntry> entries, String sectionNumber) {
         if (entries == null) {
-            throw new NullPointerException("entries can't be null");
+            throw new NullPointerException("entries of "+ sectionNumber +" can't be null");
         }
-        if (entries.isEmpty()) {
-            throw new IllegalArgumentException("entries can't be empty");
-        }
+      /*   if (entries.isEmpty()) {
+            throw new IllegalArgumentException("entries of" + sectionNumber+ "can't be empty");
+        }*/
         Integer sectionNumb = Integer.parseInt(sectionNumber);
         if (sectionNumb < 1 || sectionNumb > 12 || sectionNumb == 3 || sectionNumb == 5 || sectionNumb == 13) {
             throw new IllegalArgumentException("Invalid section number. Section number must be between 1 and 12, excluding 3, 5, and 13.");

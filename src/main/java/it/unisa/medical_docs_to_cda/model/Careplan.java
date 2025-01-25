@@ -1,7 +1,6 @@
 package it.unisa.medical_docs_to_cda.model;
 
 import java.time.LocalDate;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -43,7 +42,5 @@ public class Careplan {
         this.reasonCode = reasonCode;
         this.reasonDescription = reasonDescription;
     }
-
-
 
 }

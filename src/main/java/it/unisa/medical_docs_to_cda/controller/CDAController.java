@@ -123,10 +123,7 @@ public class CDAController {
 
                 cdaldoBuilder.setNarrativeBlocks(List.of(new CDALDONarrativeBlock("paragraph", content1)), "1");
 
-                String reasonDescription = encounter.getReasonDescription();
-                if (reasonDescription == null) {
-                        throw new IllegalArgumentException("Reason description of encounter is null");
-                }
+                String reasonCode = encounter.getReasonCode() != null ? encounter.getReasonCode() : "63320";
 
                 CDALDOEntryObservation observation1 = new CDALDOEntryObservation(
                                 "8646-2",
@@ -140,10 +137,10 @@ public class CDAController {
                                 encounter.getStop(),
                                 null,
                                 null,
-                                CodeSearchManager.searchICD9ByTerm(reasonDescription),
+                                reasonCode,
                                 "2.16.840.1.113883.6.103",
                                 "ICD9CM",
-                                reasonDescription,
+                                content1,
                                 "CD",
                                 false,
                                 null,
@@ -163,25 +160,28 @@ public class CDAController {
                                 .map(observation -> observation.getDescription() + " - " + observation.getValue() + " "
                                                 + observation.getUnits())
                                 .toArray(String[]::new);
+
                 narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "paragraph", "List of observations: "));
                 narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "list", allObservations));
                 narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "paragraph", "List of past procedures: "));
                 narrativeBlocks2.add(new CDALDONarrativeBlock("anamnesi", "list", procedureList));
 
                 List<CDALDOEntry> observations2 = new ArrayList<>();
-                observations.forEach(observation -> observations2.add(new CDALDOEntryObservation("75326-9",
-                                "2.16.840.1.113883.6.1",
-                                "LOINC", "Problem", "entry", null, true,
-                                observation.getDate(), null, null, null, "CD", observation.getCode(),
-                                "2.16.840.1.113883.6.1", "LOINC",
-                                observation.getDescription(), false, null, null, null)));
-
+                if (observations != null && !observations.isEmpty()) {
+                        observations.forEach(observation -> observations2.add(new CDALDOEntryObservation("75326-9",
+                                        "2.16.840.1.113883.6.1",
+                                        "LOINC", "Problem", "entry", null, true,
+                                        observation.getDate(), null, null, null, "CD", observation.getCode(),
+                                        "2.16.840.1.113883.6.1", "LOINC",
+                                        observation.getDescription(), false, null, null, null)));
+                }
                 // Terapia farmacologica 2.4
                 String[] meds = medications.stream().map(Medication::getDescription).toArray(String[]::new);
-                narrativeBlocks2.add(new CDALDONarrativeBlock("terapiaFarmacologica", "list", meds));
-                if(!narrativeBlocks2.isEmpty())
+                if (meds.length > 0)
+                        narrativeBlocks2.add(new CDALDONarrativeBlock("terapiaFarmacologica", "list", meds));
+                if (!narrativeBlocks2.isEmpty())
                         cdaldoBuilder.setNarrativeBlocks(narrativeBlocks2, "2");
-                if(!observations2.isEmpty())
+                if (!observations2.isEmpty())
                         cdaldoBuilder.setEntries(observations2, "2");
 
                 // Section 3: Decorso ospedaliero
@@ -272,9 +272,11 @@ public class CDAController {
                         procedures.forEach(procedure -> observation8.add(new CDALDOEntryProcedure(procedure.getCode(),
                                         "2.16.840.1.113883.6.96", "SNOMED CT", procedure.getDescription(),
                                         "entry", null, procedure.getDate().atTime(LocalTime.now()), null, null,
-                                        List.of(new CDALDOEntryObservation(
-                                                        CodeSearchManager.searchICD9ByTerm(
-                                                                        procedure.getReasonDescription()),
+                                        List.of(new CDALDOEntryObservation(procedure.getCode()
+                                        /*
+                                         * CodeSearchManager.searchICD9ByTerm(
+                                         * procedure.getReasonDescription())
+                                         */,
                                                         "2.16.840.1.113883.6.103", "ICD-9CM (diagnosis codes)",
                                                         procedure.getReasonDescription(),
                                                         "entryRelationship", "RSON", false, null,
@@ -341,18 +343,42 @@ public class CDAController {
                                                 + conditionsText + " requiring intervention."
                                                 + " The following diagnosis was made: "
                                                 + content1));
+                if (conditions != null && !conditions.isEmpty()) {
+                        conditions.forEach(condition -> {
+                                LocalDateTime startDate = condition.getStart() != null
+                                                ? condition.getStart().atTime(LocalTime.now())
+                                                : null;
+                                LocalDateTime stopDate = condition.getStop() != null
+                                                ? condition.getStop().atTime(LocalTime.now())
+                                                : null;
 
-                conditions.forEach(condition -> observation11.add(new CDALDOEntryObservation("8651-2”",
-                                "“2.16.840.1.113883.6.1” ", "LOINC", "Diagnosi di dimissione ospedaliera",
-                                "entry", null, false,
-                                condition.getStart().atTime(LocalTime.now()),
-                                condition.getStop().atTime(LocalTime.now()),
-                                null, null, "CD", CodeSearchManager.searchICD9ByTerm(condition.getDescription()),
-                                "2.16.840.1.113883.6.103", "ICD9CM", condition.getDescription(), false, null, null,
-                                null)));
+                                observation11.add(new CDALDOEntryObservation(
+                                                "8651-2",
+                                                "“2.16.840.1.113883.6.1” ",
+                                                "LOINC",
+                                                "Diagnosi di dimissione ospedaliera",
+                                                "entry",
+                                                null,
+                                                false,
+                                                startDate,
+                                                stopDate,
+                                                null,
+                                                null,
+                                                "CD",
+                                                CodeSearchManager.searchICD9ByTerm(condition.getDescription()),
+                                                "2.16.840.1.113883.6.103",
+                                                "ICD9CM",
+                                                condition.getDescription(),
+                                                false,
+                                                null,
+                                                null,
+                                                null));
+                        });
+                }
 
                 cdaldoBuilder.setNarrativeBlocks(narrativeBlocks11, "11");
-                cdaldoBuilder.setEntries(observation11, "11");
+                if (!observation11.isEmpty())
+                        cdaldoBuilder.setEntries(observation11, "11");
 
                 // Section 12 (Optional, not enough data in dataset)
 

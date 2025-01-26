@@ -28,7 +28,7 @@ public class CDALDOBuilder {
         if (parent == null) {
             throw new IllegalArgumentException("Parent element cannot be null");
         }
-        if (code == null || codeSystem == null || codeSystemName == null || displayName == null) {
+        if (code == null || codeSystem == null || codeSystemName == null /*  || displayName == null*/) {
             throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
         }
 

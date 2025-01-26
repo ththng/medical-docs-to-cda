@@ -40,6 +40,7 @@ public class CodeSearchManager {
         Coding result = null;
 
         try {
+            if(term != null && !term.isEmpty()) {
             String encodedTerm = URLEncoder.encode(term, "UTF-8");
 
             // Costruisci l'URL con il termine codificato
@@ -93,7 +94,7 @@ public class CodeSearchManager {
                 result.setCode(shortestCode);
                 result.setDisplay(shortestDescription);
             }
-
+        }
         } catch (java.net.SocketTimeoutException e) {
             System.err.println("La connessione è scaduta. Verifica la disponibilità del server.");
         } catch (Exception e) {
@@ -103,7 +104,7 @@ public class CodeSearchManager {
         if (result != null) {
             return result.getCode();
         } else
-            return null;
+            return "unknown";
     }
 
     public String searchLoincByName(String name) {

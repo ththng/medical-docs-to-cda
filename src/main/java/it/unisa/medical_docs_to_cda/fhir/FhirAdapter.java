@@ -5,6 +5,8 @@ import org.hl7.fhir.r5.model.Period;
 import org.hl7.fhir.r5.model.Procedure;
 import org.hl7.fhir.r5.model.Quantity;
 import org.hl7.fhir.r5.model.Reference;
+import org.hl7.fhir.r5.model.CarePlan.CarePlanIntent;
+import org.hl7.fhir.r5.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.r5.model.Encounter.ReasonComponent;
 import org.hl7.fhir.r5.model.Address;
 import org.hl7.fhir.r5.model.AllergyIntolerance;
@@ -15,8 +17,13 @@ import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.Condition;
 import org.hl7.fhir.r5.model.Encounter;
 import org.hl7.fhir.r5.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.r5.model.Enumerations.EncounterStatus;
+import org.hl7.fhir.r5.model.Enumerations.EventStatus;
 import org.hl7.fhir.r5.model.Enumerations.ObservationStatus;
+import org.hl7.fhir.r5.model.Immunization.ImmunizationProgramEligibilityComponent;
 import org.hl7.fhir.r5.model.Immunization.ImmunizationStatusCodes;
+import org.hl7.fhir.r5.model.MedicationStatement.MedicationStatementStatusCodes;
+
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.utilities.StandardsStatus;
 import org.hl7.fhir.r5.model.MedicationStatement;
@@ -24,12 +31,26 @@ import org.hl7.fhir.r5.model.ImagingStudy;
 import org.hl7.fhir.r5.model.Immunization;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 public class FhirAdapter {
     public static Patient createFhirPatient(it.unisa.medical_docs_to_cda.model.Patient patientModel) {
         Patient fhirPatient = new Patient();
 
-        // Imposta l'ID del paziente come metadato (non come identificatore FHIR)
+        // Check mandatory fields
+        if (patientModel.getId() == null) {
+            throw new IllegalArgumentException("Patient ID is mandatory.");
+        }
+        if (patientModel.getFirst() == null && patientModel.getLast() == null) {
+            throw new IllegalArgumentException("At least one name (first or last) is mandatory.");
+        }
+        if (patientModel.getGender() == null) {
+            throw new IllegalArgumentException("Gender is mandatory.");
+        }
+        if (patientModel.getBirthDate() == null) {
+            throw new IllegalArgumentException("Birth date is mandatory.");
+        }
+        // Set the patient ID as metadata (not as FHIR identifier)
         fhirPatient.setId(patientModel.getId());
 
         // Identificatori: SSN, Drivers, Passport
@@ -86,13 +107,6 @@ public class FhirAdapter {
                 .addLine(patientModel.getAddress());
         fhirPatient.addAddress(address);
 
-        // Luogo di nascita (come estensione)
-        if (patientModel.getBirthPlace() != null) {
-            fhirPatient.addExtension()
-                    .setUrl("http://hl7.org/fhir/StructureDefinition/patient-birthPlace")
-                    .setValue(new org.hl7.fhir.r5.model.StringType(patientModel.getBirthPlace()));
-        }
-
         return fhirPatient;
     }
 
@@ -129,10 +143,7 @@ public class FhirAdapter {
             fhirAllergy.setCode(codeableConcept);
         }
 
-        // Imposta la descrizione (se presente)
-        if (allergyModel.getDescription() != null && fhirAllergy.getCode() == null) {
-            fhirAllergy.setCode(new CodeableConcept().setText(allergyModel.getDescription()));
-        }
+
 
         // Stato dell'allergia
         CodeableConcept verificationStatus = new CodeableConcept();
@@ -187,15 +198,9 @@ public class FhirAdapter {
             activity.addPerformedActivity(activityCodeReference);
             // Aggiungi l'attività al care plan
             fhirCarePlan.addActivity(activity);
+            fhirCarePlan.setStatus(org.hl7.fhir.r5.model.Enumerations.RequestStatus.COMPLETED);
+            fhirCarePlan.setIntent(CarePlanIntent.DIRECTIVE);
         }
-if (carePlanModel.getReasonCode() != null || carePlanModel.getReasonDescription() != null) {
-    CodeableConcept reasonCode = new CodeableConcept();
-    reasonCode.addCoding()
-            .setSystem("http://snomed.info/sct") // Sistema di codici personalizzato
-            .setCode(carePlanModel.getReasonCode())
-            .setDisplay(carePlanModel.getReasonDescription() != null ? carePlanModel.getReasonDescription() : "Unknown");
-    fhirCarePlan.addCategory(reasonCode);
-}
         
         
   
@@ -239,7 +244,9 @@ if (carePlanModel.getReasonCode() != null || carePlanModel.getReasonDescription(
                 .setCode(conditionModel.getCode()) // Il codice dovrebbe essere un codice SNOMED valido
                 .setDisplay(conditionModel.getDescription() != null ? conditionModel.getDescription() : "Unknown");
             fhirCondition.setCode(conditionCode);
+            fhirCondition.setClinicalStatus(conditionCode);
         }
+        
     
         return fhirCondition;
     }
@@ -255,6 +262,9 @@ if (carePlanModel.getReasonCode() != null || carePlanModel.getReasonDescription(
     if (encounterModel.getId() != null) {
         fhirEncounter.setId(encounterModel.getId());
     }
+
+    fhirEncounter.setStatus(EncounterStatus.COMPLETED);
+    fhirEncounter.addLocation(new EncounterLocationComponent(new Reference("Location/"+encounterModel.getOrganizationId())));
 
     // Impostazione del periodo (start e stop)
     if (encounterModel.getStart() != null || encounterModel.getStop() != null) {
@@ -273,24 +283,14 @@ if (carePlanModel.getReasonCode() != null || carePlanModel.getReasonDescription(
         fhirEncounter.setSubject(new Reference("Patient/" + encounterModel.getPatientId()));
     }
 
-    // Impostazione dell'organizzazione
-    if (encounterModel.getOrganizationId() != null) {
-        fhirEncounter.setServiceProvider(new Reference("Organization/" + encounterModel.getOrganizationId()));
-    }
-
-    // Impostazione del provider
-    if (encounterModel.getProviderId() != null) {
-        fhirEncounter.addParticipant()
-            .setActor(new Reference("Practitioner/" + encounterModel.getProviderId()));
-    }
-
+/*
     // Impostazione della classe dell'incontro
     if (encounterModel.getEncounterClass() != null) {
         fhirEncounter.addClass_(new CodeableConcept().addCoding(new Coding()
             .setSystem("http://terminology.hl7.org/CodeSystem/v3-ActCode") // Sistema HL7 ActCode per le classi di incontro
             .setCode(encounterModel.getEncounterClass())
             .setDisplay("Encounter Class Description"))); // Puoi sostituire con una descrizione appropriata
-    }
+    }*/
 
     // Impostazione del codice dell'incontro
     if (encounterModel.getCode() != null || encounterModel.getDescription() != null) {
@@ -300,16 +300,6 @@ if (carePlanModel.getReasonCode() != null || carePlanModel.getReasonDescription(
             .setCode(encounterModel.getCode())
             .setDisplay(encounterModel.getDescription() != null ? encounterModel.getDescription() : "Unknown"));
         fhirEncounter.setType(java.util.Collections.singletonList(code));
-    }
-
-    // Impostazione del motivo dell'incontro
-    if (encounterModel.getReasonCode() != null || encounterModel.getReasonDescription() != null) {
-        ReasonComponent reason = new ReasonComponent();
-        reason.addUse(new CodeableConcept().addCoding(new Coding()
-            .setSystem("http://snomed.info/sct") // Sistema SNOMED CT per i motivi
-            .setCode(encounterModel.getReasonCode())
-            .setDisplay(encounterModel.getReasonDescription() != null ? encounterModel.getReasonDescription() : "Unknown")));
-        fhirEncounter.addReason(reason);
     }
 
     return fhirEncounter;
@@ -352,6 +342,7 @@ public static ImagingStudy createFhirImagingStudy(it.unisa.medical_docs_to_cda.m
 
     // Impostazione del codice SOP (SOP code)
     if (imagingStudyModel.getSopCode() != null || imagingStudyModel.getSopDescription() != null) {
+        
         CodeableConcept sop = new CodeableConcept();
         sop.addCoding(new Coding()
             .setSystem("http://dicom.nema.org/resources/ontology/DCM")
@@ -393,6 +384,13 @@ public static Immunization createFhirImmunization(it.unisa.medical_docs_to_cda.m
         fhirImmunization.setVaccineCode(codeableConcept);
     }
 
+    ImmunizationProgramEligibilityComponent ele = new ImmunizationProgramEligibilityComponent();
+    ele.setProgram(new CodeableConcept().addCoding(new Coding().setCode(immunizationModel.getCode())
+    .setSystem("http://hl7.org/fhir/sid/cvx").setDisplay(immunizationModel.getDescription() != null ? immunizationModel.getDescription() : "Unknown"))).setProgramStatus(new CodeableConcept().addCoding(new Coding().setCode(immunizationModel.getCode())
+    .setSystem("http://hl7.org/fhir/sid/cvx").setDisplay(immunizationModel.getDescription() != null ? immunizationModel.getDescription() : "Unknown")));
+    
+    fhirImmunization.setProgramEligibility(List.of(ele));
+    
     // Impostazione dello stato (di default "completed")
     fhirImmunization.setStatus(ImmunizationStatusCodes.COMPLETED);
 
@@ -438,17 +436,9 @@ public static MedicationStatement createFhirMedicationStatement(it.unisa.medical
             medication.setConcept(medicationCodeableConcept);
     fhirMedicationStatement.setMedication( medication)  ;
     }
-    // Impostazione del motivo (reason)
-    if (medicationModel.getReasonCode() != null || medicationModel.getReasonDescription() != null) {
-        CodeableReference reason = new CodeableReference();
-        CodeableConcept reasonCodeableConcept = new CodeableConcept();
-        reasonCodeableConcept.addCoding(new Coding()
-            .setSystem("http://snomed.info/sct")
-            .setCode(medicationModel.getReasonCode())
-            .setDisplay(medicationModel.getReasonDescription() != null ? medicationModel.getReasonDescription() : "Unknown"));
-        reason.setConcept(reasonCodeableConcept);
-            fhirMedicationStatement.addReason();
-    }
+
+    fhirMedicationStatement.setStatus(MedicationStatementStatusCodes.RECORDED);
+
 
     return fhirMedicationStatement;
 }
@@ -530,18 +520,9 @@ public static Procedure createFhirProcedure(it.unisa.medical_docs_to_cda.model.P
             .setDisplay(procedureModel.getDescription() != null ? procedureModel.getDescription() : "Unknown"));
         fhirProcedure.setCode(codeableConcept);
     }
+    fhirProcedure.setStatus(EventStatus.COMPLETED);
 
-    // Impostazione del motivo della procedura
-if (procedureModel.getReasonCode() != null || procedureModel.getReasonDescription() != null) {
-    CodeableReference reason = new CodeableReference();
-    CodeableConcept reasonConcept = new CodeableConcept();
-    Coding reasonCoding = new Coding()
-        .setSystem("http://snomed.info/sct") // Sistema di codifica per il motivo
-        .setCode(procedureModel.getReasonCode())
-        .setDisplay(procedureModel.getReasonDescription() != null ? procedureModel.getReasonDescription() : "Unknown");
-    reasonConcept.addCoding(reasonCoding);
-    fhirProcedure.addReason(reason.setConcept(reasonConcept));
-}
+
 
     return fhirProcedure;
 }

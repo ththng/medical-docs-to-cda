@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 
 import it.unisa.medical_docs_to_cda.CDALDO.CDALDO;
+import it.unisa.medical_docs_to_cda.fhir.LoaderFhir;
 import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
 
@@ -63,6 +64,8 @@ public class MainController {
     private ImmunizationRepository immunizationRepo;
     @Autowired
     private CDAController cdaController;
+    @Autowired
+    private LoaderFhir loaderFhir;
 
     /**
      * Handles the root URL mapping for the patients section.
@@ -200,6 +203,7 @@ public class MainController {
 
             // Generate CDA and check for errors
             CDALDO cdaldo = generateCDA(optionalEncounter.get());
+
             List<String> errors = cdaldo.check();
 
             if (!errors.isEmpty()) {
@@ -239,7 +243,8 @@ public class MainController {
         Encounter encounter = encounterRepo.findById(encounterId).get();
         CDALDO cdaldo = generateCDA(encounter);
         Document cdaXml = cdaldo.getCDA();
-
+        boolean outcome = loaderFhir.loadEncounter(encounter);
+        model.addAttribute("loadedFhir",outcome);
         model.addAttribute("cdaXml", documentToString(cdaXml));
         model.addAttribute("encounterId", encounterId);
         return "cda";

@@ -7,6 +7,7 @@ import org.hl7.fhir.r5.model.AllergyIntolerance;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.hl7.fhir.r5.model.MedicationStatement;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -15,7 +16,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
-
+@Controller
 public class LoaderFhir {
 
     @Autowired
@@ -51,7 +52,7 @@ public class LoaderFhir {
         List<Procedure> procedures = procedureRepo.findByEncounterId(encounterId);
 
         FhirContext ctx = FhirContext.forR5();
-        String serverBase = "https://hapi.fhir.org/baseR5";
+        String serverBase = "https://server.fire.ly/r5";
 
         IGenericClient client = ctx.newRestfulGenericClient(serverBase);
         Patient fhirPatient = FhirAdapter.createFhirPatient(patient);
@@ -94,8 +95,8 @@ public class LoaderFhir {
         Bundle response = client.search()
                 .forResource(Patient.class)
                 .where(Patient.FAMILY.matchesExactly().value(patient.getLast()))
-                .and(Patient.GIVEN.matchesExactly().value(patient.getFirst()))
-                .and(Patient.ADDRESS.matchesExactly().value(patient.getAddress()))
+                .where(Patient.GIVEN.matchesExactly().value(patient.getFirst()))
+                .where(Patient.ADDRESS_CITY.matchesExactly().value(patient.getCity()))
                 .returnBundle(Bundle.class)
                 .execute();
         Bundle responseEncounter = client.search()
@@ -104,7 +105,7 @@ public class LoaderFhir {
                 .returnBundle(Bundle.class)
                 .execute();
         List<MethodOutcome> outcome = new ArrayList<>();
-        if (response.isEmpty()) {
+        try{if (true) {
             MethodOutcome outcomeTemp = client.create()
                     .resource(fhirPatient)
                     .prettyPrint()
@@ -113,8 +114,9 @@ public class LoaderFhir {
             outcome.add(outcomeTemp);
 
         }
-        if (responseEncounter.isEmpty()) {
-            MethodOutcome outcomeTemp = client.create()
+        if (true) {
+            MethodOutcome outcomeTemp;
+            outcomeTemp = client.create()
                     .resource(fhirEncounter)
                     .prettyPrint()
                     .encodedJson()
@@ -169,14 +171,6 @@ public class LoaderFhir {
                         .execute();
                 outcome.add(outcomeTemp);
             }
-            for (org.hl7.fhir.r5.model.ImagingStudy imagingStudyTemp : fhirImagingStudies) {
-                outcomeTemp = client.create()
-                        .resource(imagingStudyTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
             for (org.hl7.fhir.r5.model.Immunization immunizationTemp : fhirImmunizations) {
                 outcomeTemp = client.create()
                         .resource(immunizationTemp)
@@ -185,7 +179,15 @@ public class LoaderFhir {
                         .execute();
                 outcome.add(outcomeTemp);
             }
+        
+        
+        }}catch (Exception e) {
+
+            e.printStackTrace();
+            System.err.println(e.getLocalizedMessage());
+            System.err.println(e);
         }
+            
         if (!outcome.isEmpty()) {
             for (MethodOutcome methodOutcome : outcome) {
                 if (methodOutcome.getOperationOutcome() != null) {

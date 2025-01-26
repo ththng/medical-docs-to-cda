@@ -7,7 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20250123165423+0100"/>
+    <effectiveTime value="20250125191528+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <id assigningAuthorityName="ministero della provola" extension="129380193812" root="2.16.840.1.113883.2.9.2.99.4.4"/>
@@ -39,7 +39,7 @@
         </patientRole>
     </recordTarget>
     <author>
-        <time value="20250123165423"/>
+        <time value="20250125191528"/>
         <assignedAuthor>
             <id assigningAuthorityName="" extension="" root="AUTH123456789"/>
             <telecom use="H" value="123456789"/>
@@ -53,7 +53,7 @@
         </assignedAuthor>
     </author>
     <dataEnterer typeCode="ENT">
-        <time value="20250123165423"/>
+        <time value="20250125191528"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -83,7 +83,7 @@
         </assignedCustodian>
     </custodian>
     <legalAuthenticator>
-        <time value="20250123165423"/>
+        <time value="20250125191528"/>
         <signatureCode code="S"/>
         <assignedEntity>
             <id assigningAuthorityName="" extension="" root="AUTH123456789"/>

@@ -25,7 +25,6 @@ import org.hl7.fhir.r5.model.Procedure;
 import org.hl7.fhir.r5.model.StringType;
 import org.junit.jupiter.api.Test;
 
-import it.unisa.medical_docs_to_cda.fhir.FhirAdapter;
 
 public class FhirAdapterTest {
     @Test

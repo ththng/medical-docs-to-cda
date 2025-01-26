@@ -198,6 +198,14 @@
             background-color: #4e4cb8;
         }
 
+        .centered-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            
+        }
+
         /* Footer */
         footer {
             background-color: #4e4cb8;
@@ -256,10 +264,11 @@
 
     <h1 class="text-center my-4">Report of Patient: <span th:text="${patientName}"></span></h1>
 
-    <div th:if="${hasImagingStudies}" style="align-content: center;">
-        <button type="button" class="btn btn-primary"
-            th:attr="onclick='viewImagingStudies(&quot;' + ${patientId} + '&quot;)'">View Imaging Studies</button>
+    <div th:if="${hasImagingStudies}" class="centered-button">
+        <a th:href="'/patients/dicom/' + ${patientName.split(' ')[0]} + '_' + ${patientName.split(' ')[1]} + '.dcm'"
+            class="btn btn-primary">Download Imaging Studies</a>
     </div>
+
 
     <ul>
         <h2 style="text-align: center;"><strong>List of Encounters</strong></h2>

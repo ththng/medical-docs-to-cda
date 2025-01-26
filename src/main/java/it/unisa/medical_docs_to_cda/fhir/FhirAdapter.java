@@ -7,7 +7,6 @@ import org.hl7.fhir.r5.model.Quantity;
 import org.hl7.fhir.r5.model.Reference;
 import org.hl7.fhir.r5.model.CarePlan.CarePlanIntent;
 import org.hl7.fhir.r5.model.Encounter.EncounterLocationComponent;
-import org.hl7.fhir.r5.model.Encounter.ReasonComponent;
 import org.hl7.fhir.r5.model.Address;
 import org.hl7.fhir.r5.model.AllergyIntolerance;
 import org.hl7.fhir.r5.model.CarePlan;
@@ -25,7 +24,6 @@ import org.hl7.fhir.r5.model.Immunization.ImmunizationStatusCodes;
 import org.hl7.fhir.r5.model.MedicationStatement.MedicationStatementStatusCodes;
 
 import org.hl7.fhir.r5.model.Observation;
-import org.hl7.fhir.utilities.StandardsStatus;
 import org.hl7.fhir.r5.model.MedicationStatement;
 import org.hl7.fhir.r5.model.ImagingStudy;
 import org.hl7.fhir.r5.model.Immunization;

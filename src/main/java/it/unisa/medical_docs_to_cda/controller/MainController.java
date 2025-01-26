@@ -1,7 +1,9 @@
 package it.unisa.medical_docs_to_cda.controller;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +71,8 @@ public class MainController {
     private CDAController cdaController;
     @Autowired
     private LoaderFhir loaderFhir;
+
+    private final String dicomDirectory = "src/main/resources/dicom/";
 
     /**
      * Handles the root URL mapping for the patients section.
@@ -159,7 +165,7 @@ public class MainController {
             conditions.put(encounterId, conditionRepo.findByEncounterId(encounterId));
             careplans.put(encounterId, careplanRepo.findByEncounterId(encounterId));
             imagingStudies.put(encounterId, imagingStudyRepo.findByEncounterId(encounterId));
-            if(!imagingStudies.isEmpty())
+            if (!imagingStudies.isEmpty())
                 hasImagingStudies = true;
             immunizations.put(encounterId, immunizationRepo.findByEncounterId(encounterId));
             medications.put(encounterId, medicationRepo.findByEncounterId(encounterId));
@@ -191,11 +197,21 @@ public class MainController {
         return cdaController.EncounterToCDA(encounter);
     }
 
+    @GetMapping("/dicom/{fileName}")
+    public ResponseEntity<Resource> getDicomFile(@PathVariable String fileName) {
+        Path dicomPath = Paths.get(dicomDirectory, fileName);
 
-   @GetMapping("/imagingStudies")
-    public String showDicomImages() throws IOException {
-        DicomConverter.convertDicomSeriesToBinaryJpeg("src/main/java/it/unisa/medical_docs_to_cda/dicom/Dianne921_Altenwerth646_98d31653-60f5-0582-09ce-8398fda41b4c1.2.840.99999999.36531016.1103908788990.dcm", "src/main/java/it/unisa/medical_docs_to_cda/dicom-jpeg/");
-        return "dicom-view";
+        if (!dicomPath.toFile().exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new FileSystemResource(new File("error.html")));
+        }
+
+        Resource resource = new FileSystemResource(dicomPath);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/dicom"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .body(resource);
     }
 
     @PostMapping("/check")
@@ -257,7 +273,7 @@ public class MainController {
         CDALDO cdaldo = generateCDA(encounter);
         Document cdaXml = cdaldo.getCDA();
         boolean outcome = loaderFhir.loadEncounter(encounter);
-        model.addAttribute("loadedFhir",outcome);
+        model.addAttribute("loadedFhir", outcome);
         model.addAttribute("cdaXml", documentToString(cdaXml));
         model.addAttribute("encounterId", encounterId);
         return "cda";
@@ -276,12 +292,9 @@ public class MainController {
         Document cdaXml = cdaldo.getCDA();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=cda.xml")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=cda-" + encounterId + ".xml")
                 .contentType(MediaType.APPLICATION_XML)
                 .body(documentToString(cdaXml));
     }
 
-
-
-   
 }

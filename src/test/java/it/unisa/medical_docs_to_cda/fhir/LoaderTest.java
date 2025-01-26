@@ -1,33 +1,9 @@
 package it.unisa.medical_docs_to_cda.fhir;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Optional;
-
-import org.hl7.fhir.r5.model.Bundle;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import it.unisa.medical_docs_to_cda.fhir.LoaderFhir;
-import it.unisa.medical_docs_to_cda.model.Encounter;
-import it.unisa.medical_docs_to_cda.model.Patient; // Use the correct Patient class
-import it.unisa.medical_docs_to_cda.repositories.PatientRepository;
-import it.unisa.medical_docs_to_cda.repositories.AllergyRepository;
-import it.unisa.medical_docs_to_cda.repositories.CareplanRepository;
-import it.unisa.medical_docs_to_cda.repositories.MedicationRepository;
-import it.unisa.medical_docs_to_cda.repositories.ObservationRepository;
-import it.unisa.medical_docs_to_cda.repositories.ProcedureRepository;
-import it.unisa.medical_docs_to_cda.repositories.ConditionRepository;
-import it.unisa.medical_docs_to_cda.repositories.ImagingStudyRepository;
-import it.unisa.medical_docs_to_cda.repositories.ImmunizationRepository;
+import it.unisa.medical_docs_to_cda.repositories.*;
+
 
 public class LoaderTest {
 

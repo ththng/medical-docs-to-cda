@@ -29,8 +29,7 @@ public class CodeSearchManagerTest {
 
     @Test
     public void test_search_icd9_by_name() {
-        CodeSearchManager manager = CodeSearchManager.getInstance();
-        String result = manager.searchICD9ByTerm("presenile dementia");
+        String result = CodeSearchManager.searchICD9ByTerm("presenile dementia");
         // Since the method prints results, we would need to capture the output stream
         // to assert the results.
         System.out.println(result);

@@ -29,6 +29,7 @@
 
         header h1 {
             font-size: 2.5rem;
+            color: white;
         }
 
         /* Navbar */
@@ -52,7 +53,8 @@
         }
 
         /* Titles */
-        h1, h2 {
+        h1,
+        h2 {
             text-align: center;
             margin: 20px 0;
             color: #6c63ff;
@@ -124,20 +126,34 @@
 
     <div class="content-container">
         <h2>CDA Document Generated</h2>
-        <p>The CDA for this patient has been successfully generated. You can download it by clicking the button below.</p>
+        <p style="text-align: center;">The CDA for this patient has been successfully generated. You can download it by
+            clicking the button below.</p>
+        <br>
 
         <div class="cda-content">
             <pre th:text="${cdaXml}"></pre>
         </div>
 
-
         <!-- Download Button -->
         <a th:attr="href=@{/patients/{id}/cda(id=${encounterId})}" class="cta-btn" download>Download CDA</a>
+
+        <!-- Button to send to patient's EHR -->
+        <button class="cta-btn" id="sendEhrButton">Send to patient's EHR</button>
+
+        <p id="successMessage" style="color: green; font-weight: bold; display: none; text-align: center;" th:if="${loadedFhir}">The CDA was
+            successfully uploaded to the patient's EHR.</p>
     </div>
 
     <footer>
         <p>&copy; 2025 Women's Health Clinic. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.getElementById('sendEhrButton').addEventListener('click', function () {
+
+            document.getElementById('successMessage').style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>

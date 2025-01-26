@@ -198,6 +198,7 @@ public class CDAController {
 
                 // Section 5: Riscontri ed accertamenti significativi
                 List<CDALDONarrativeBlock> narrativeBlocks5 = new ArrayList<>();
+                @SuppressWarnings("null")
                 String conditionsText = conditions.stream().map(Condition::getDescription)
                                 .collect(Collectors.joining(", "));
                 String proceduresText = procedures.stream().map(Procedure::getDescription)

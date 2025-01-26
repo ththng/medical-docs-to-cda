@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View DICOM Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="title">View DICOM Image</h1>
+        
+        <!-- Image display -->
+        <img id="dicomImage" src="/src/main/java/it/unisa/medical_docs_to_cda/dicom-jpeg/dicom1.jpg" alt="DICOM Image">
+
+        <!-- Pagination for images -->
+        <div class="pagination">
+            <a href="javascript:void(0)" onclick="changeImage(-1)">Previous</a>
+            <a href="javascript:void(0)" onclick="changeImage(1)">Next</a>
+        </div>
+    </div>
+
+    <script>
+        let currentImageIndex = 1;  // Start from the first image
+        const totalImages = 5;  // Change this to the total number of DICOM images in the series
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+
+            if (currentImageIndex < 1) currentImageIndex = totalImages;
+            if (currentImageIndex > totalImages) currentImageIndex = 1;
+
+            document.getElementById("dicomImage").src = `/dicom/your-dicom-file-${currentImageIndex}.jpg`;
+        }
+    </script>
+
+</body>
+</html>

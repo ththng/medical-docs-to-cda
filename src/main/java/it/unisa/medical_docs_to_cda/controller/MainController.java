@@ -189,12 +189,12 @@ public class MainController {
     }
 
 
-  /*  @GetMapping("/imagingStudies")
+   @GetMapping("/imagingStudies")
     public String showDicomImages() throws IOException {
         DicomConverter.convertDicomSeriesToBinaryJpeg("src/main/java/it/unisa/medical_docs_to_cda/dicom/Dianne921_Altenwerth646_98d31653-60f5-0582-09ce-8398fda41b4c1.2.840.99999999.36531016.1103908788990.dcm", "src/main/java/it/unisa/medical_docs_to_cda/dicom-jpeg/");
         return "dicom-view";
     }
-*/
+
     @PostMapping("/check")
     public ResponseEntity<Map<String, String>> checkData(@RequestBody Map<String, String> request) {
         try {

@@ -67,10 +67,9 @@ public class CDALDOEntryObservation implements CDALDOEntry {
         this.typeCode = typeCode;
 
         if (xsiType.equals("CD")) {
-            if (valueCode == null || valueCodeSystem == null || valueCodeSystemName == null
-                    || valueDisplayName == null) {
+            if (valueDisplayName == null) {
                 throw new IllegalArgumentException(
-                        "For the CD xsi:type, valueCode, valueCodeSystem, valueCodeSystemName, and valueDisplayName cannot be null");
+                        "For the CD xsi:type, valueCode and valueDisplayName cannot be null");
             } else {
                 this.valuePresent = true;
                 this.valueCode = valueCode;
@@ -148,7 +147,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
             String unit, boolean translationNecessary,
             List<CDALDOEntry> entryRelationships) {
 
-        if (code != null && codeSystem != null && codeSystemName != null && displayName != null && entryType != null) {
+        if (code != null && codeSystem != null && codeSystemName != null /*&& displayName != null*/ && entryType != null) {
             this.code = code;
             this.codeSystem = codeSystem;
             this.codeSystemName = codeSystemName;

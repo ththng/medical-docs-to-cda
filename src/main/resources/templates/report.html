@@ -256,6 +256,11 @@
 
     <h1 class="text-center my-4">Report of Patient: <span th:text="${patientName}"></span></h1>
 
+    <div th:if="${hasImagingStudies}" style="align-content: center;">
+        <button type="button" class="btn btn-primary"
+            th:attr="onclick='viewImagingStudies(&quot;' + ${patientId} + '&quot;)'">View Imaging Studies</button>
+    </div>
+
     <ul>
         <h2 style="text-align: center;"><strong>List of Encounters</strong></h2>
         <!-- Loop over Encounters -->

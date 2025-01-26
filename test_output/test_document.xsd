@@ -8,6 +8,7 @@
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
     <effectiveTime value="20250125191527+0100"/>
+    <effectiveTime value="20250126000258+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -37,6 +38,7 @@
     </recordTarget>
     <author>
         <time value="20250125191527"/>
+        <time value="20250126000258"/>
         <assignedAuthor>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -54,6 +56,7 @@
     </author>
     <dataEnterer typeCode="ENT">
         <time value="20250125191527"/>
+        <time value="20250126000258"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -90,6 +93,7 @@
     </informationRecipient>
     <legalAuthenticator>
         <time value="20250125191527"/>
+        <time value="20250126000258"/>
         <signatureCode code="S"/>
         <assignedEntity>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -142,6 +146,8 @@
             <effectiveTime>
                 <low value="20250125191527+0100"/>
                 <high value="20250125191527+0100"/>
+                <low value="20250126000258+0100"/>
+                <high value="20250126000258+0100"/>
             </effectiveTime>
         </encompassingEncounter>
     </componentOf>

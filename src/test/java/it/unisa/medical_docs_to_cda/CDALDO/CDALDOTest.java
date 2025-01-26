@@ -87,7 +87,7 @@ public class CDALDOTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> cdaldo.setPatient(patient));
-        assertEquals("atleast one id needs to be a Codice Fiscale or an ENI code", exception.getMessage());
+        assertEquals("at least one id needs to be a Codice Fiscale or an ENI code", exception.getMessage());
     }
 
     // Setting author with valid CF, name and telecom information

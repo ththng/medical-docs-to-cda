@@ -1,5 +1,6 @@
 package it.unisa.medical_docs_to_cda.controller;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +83,7 @@ public class MainController {
             @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-        Sort sortObj = Sort.by(Sort.Direction.ASC, "last");
+        Sort sortObj = Sort.by(Sort.Direction.ASC, "first");
         Pageable pageable = PageRequest.of(page, size, sortObj);
 
         Page<Patient> patientsPage = patientRepo.findAll(pageable);
@@ -150,6 +151,7 @@ public class MainController {
         Map<String, List<Medication>> medications = new HashMap<>();
         Map<String, List<Procedure>> procedures = new HashMap<>();
 
+        boolean hasImagingStudies = false;
         for (Encounter encounter : encounterPage) {
             String encounterId = encounter.getId();
             observations.put(encounterId, observationRepo.findByEncounterId(encounterId));
@@ -157,6 +159,8 @@ public class MainController {
             conditions.put(encounterId, conditionRepo.findByEncounterId(encounterId));
             careplans.put(encounterId, careplanRepo.findByEncounterId(encounterId));
             imagingStudies.put(encounterId, imagingStudyRepo.findByEncounterId(encounterId));
+            if(!imagingStudies.isEmpty())
+                hasImagingStudies = true;
             immunizations.put(encounterId, immunizationRepo.findByEncounterId(encounterId));
             medications.put(encounterId, medicationRepo.findByEncounterId(encounterId));
             procedures.put(encounterId, procedureRepo.findByEncounterId(encounterId));
@@ -175,6 +179,7 @@ public class MainController {
         model.addAttribute("observations", observations);
         model.addAttribute("totalPages", encounterPage.getTotalPages());
         model.addAttribute("currentPage", page);
+        model.addAttribute("hasImagingStudies", hasImagingStudies);
 
         return "report";
     }
@@ -184,6 +189,13 @@ public class MainController {
             throw new IllegalArgumentException("Encounter cannot be null");
         }
         return cdaController.EncounterToCDA(encounter);
+    }
+
+
+   @GetMapping("/imagingStudies")
+    public String showDicomImages() throws IOException {
+        DicomConverter.convertDicomSeriesToBinaryJpeg("src/main/java/it/unisa/medical_docs_to_cda/dicom/Dianne921_Altenwerth646_98d31653-60f5-0582-09ce-8398fda41b4c1.2.840.99999999.36531016.1103908788990.dcm", "src/main/java/it/unisa/medical_docs_to_cda/dicom-jpeg/");
+        return "dicom-view";
     }
 
     @PostMapping("/check")
@@ -237,9 +249,10 @@ public class MainController {
         return stringWriter.toString();
     }
 
-    @GetMapping("/{id}/view-cda") 
-    public String viewCDA(@PathVariable("id") String encounterId, Model model) throws ParserConfigurationException, TransformerException {
-        
+    @GetMapping("/{id}/view-cda")
+    public String viewCDA(@PathVariable("id") String encounterId, Model model)
+            throws ParserConfigurationException, TransformerException {
+
         Encounter encounter = encounterRepo.findById(encounterId).get();
         CDALDO cdaldo = generateCDA(encounter);
         Document cdaXml = cdaldo.getCDA();
@@ -249,7 +262,6 @@ public class MainController {
         model.addAttribute("encounterId", encounterId);
         return "cda";
     }
-  
 
     @GetMapping("/{id}/cda")
     public ResponseEntity<String> downloadCDA(@PathVariable("id") String encounterId)
@@ -269,4 +281,7 @@ public class MainController {
                 .body(documentToString(cdaXml));
     }
 
+
+
+   
 }

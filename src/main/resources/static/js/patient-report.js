@@ -86,6 +86,10 @@ function remove(button) {
     }
 }
 
+
+function viewImagingStudies(patientId) {
+
+}
 async function submitForm(encounterId) {
     const form = document.getElementById(`form-${encounterId}`);
 

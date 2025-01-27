@@ -1,3 +1,7 @@
+function logout() {
+    window.location.href = "/"; // Redirect to a login page
+}
+
 function closeModal() {
     const modal = document.getElementById("alertModal");
     modal.classList.remove("d-block");

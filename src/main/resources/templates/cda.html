@@ -32,6 +32,26 @@
             color: white;
         }
 
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #6c63ff;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #6c63ff;
+        }
+
+        .logout-btn:hover {
+            background: #6c63ff;
+            color: white;
+        }
+
         /* Navbar */
         nav {
             background: #4e4cb8;
@@ -117,10 +137,10 @@
 <body>
     <header>
         <h1>View and Download CDA</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
 
     <nav>
-        <a href="/">Home</a>
         <a href="/patients/list">Patient List</a>
     </nav>
 
@@ -153,6 +173,10 @@
 
             document.getElementById('successMessage').style.display = 'block';
         });
+
+        function logout() {
+            window.location.href = "/"; // Redirect to a login page
+        }
     </script>
 </body>
 

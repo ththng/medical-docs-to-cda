@@ -36,6 +36,26 @@
             font-size: 2.5rem;
         }
 
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #6c63ff;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #6c63ff;
+        }
+
+        .logout-btn:hover {
+            background: #6c63ff;
+            color: white;
+        }
+
         nav {
             background: #4e4cb8;
             color: white;
@@ -185,17 +205,18 @@
                 });
             });
         });
+
+        function logout() {
+            window.location.href = "/"; // Redirect to a login page
+        }
     </script>
 </head>
 
 <body>
     <header>
         <h1>Patients List</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
-
-    <nav>
-        <a href="/">Home</a>
-    </nav>
 
     <div class="search-container">
         <form th:action="@{'/patients/results'}" method="get">

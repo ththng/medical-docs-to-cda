@@ -16,7 +16,8 @@ public class CDALDOAddr {
     /**
      * Default constructor.
      */
-    public CDALDOAddr() {}
+    public CDALDOAddr() {
+    }
 
     /**
      * Constructor with all address fields.
@@ -28,13 +29,14 @@ public class CDALDOAddr {
      * @param postalCode the postal code of the address
      * @param street     the street address
      */
-    public CDALDOAddr(String use, String country, String state,String county, String city,String censusTract, String postalCode, String street) {
+    public CDALDOAddr(String use, String country, String state, String county, String city, String censusTract,
+            String postalCode, String street) {
         this.use = use;
         this.country = country;
         this.state = state;
-        this.county=county;
+        this.county = county;
         this.city = city;
-        this.censusTract=censusTract;
+        this.censusTract = censusTract;
         this.postalCode = postalCode;
         this.street = street;
     }
@@ -128,6 +130,7 @@ public class CDALDOAddr {
     public void setCensusTract(String censusTract) {
         this.censusTract = censusTract;
     }
+
     /**
      * Gets the postal code of the address.
      * 
@@ -178,16 +181,23 @@ public class CDALDOAddr {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CDALDOAddr that = (CDALDOAddr) o;
 
-        if (use != null ? !use.equals(that.use) : that.use != null) return false;
-        if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (state != null ? !state.equals(that.state) : that.state != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        if (postalCode != null ? !postalCode.equals(that.postalCode) : that.postalCode != null) return false;
+        if (use != null ? !use.equals(that.use) : that.use != null)
+            return false;
+        if (country != null ? !country.equals(that.country) : that.country != null)
+            return false;
+        if (state != null ? !state.equals(that.state) : that.state != null)
+            return false;
+        if (city != null ? !city.equals(that.city) : that.city != null)
+            return false;
+        if (postalCode != null ? !postalCode.equals(that.postalCode) : that.postalCode != null)
+            return false;
         return street != null ? street.equals(that.street) : that.street == null;
     }
 
@@ -195,10 +205,8 @@ public class CDALDOAddr {
         return county;
     }
 
-
     public void setCounty(String county) {
-       this.county=county;
+        this.county = county;
     }
-
 
 }

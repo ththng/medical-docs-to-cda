@@ -101,11 +101,14 @@ public class LoaderFhir {
                 .execute();
         Bundle responseEncounter = client.search()
                 .forResource(org.hl7.fhir.r5.model.Encounter.class)
-                .where(org.hl7.fhir.r5.model.Encounter.IDENTIFIER.exactly().code(encounterModel.getId()))
+                .where(org.hl7.fhir.r5.model.Encounter.DATE_START.exactly().millis(fhirEncounter.getActualPeriod().getStart()))    
                 .returnBundle(Bundle.class)
                 .execute();
+
+        
         List<MethodOutcome> outcome = new ArrayList<>();
-        try{if (true) {
+
+        try{if (response.getEntry().size()==0) {
             MethodOutcome outcomeTemp = client.create()
                     .resource(fhirPatient)
                     .prettyPrint()
@@ -114,7 +117,7 @@ public class LoaderFhir {
             outcome.add(outcomeTemp);
 
         }
-        if (true) {
+        if (responseEncounter.getEntry().size()==0 || response.getEntry().size()==0) {
             MethodOutcome outcomeTemp;
             outcomeTemp = client.create()
                     .resource(fhirEncounter)

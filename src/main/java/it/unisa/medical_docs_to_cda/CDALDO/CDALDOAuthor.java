@@ -16,23 +16,19 @@ public class CDALDOAuthor {
     private String lastName;
     private String prefix;
 
-
-
-
-
-   
     /**
      * Constructs a new CDALDOAuthor instance.
      *
-     * @param id           the author's ID
-     * @param regionalId   the author's regional ID
-     * @param telecoms     the author's telecoms
-     * @param telecomUses  the author's telecom uses
-     * @param firstName    the author's first name
-     * @param lastName     the author's last name
-     * @param prefix       the author's prefix
+     * @param id          the author's ID
+     * @param regionalId  the author's regional ID
+     * @param telecoms    the author's telecoms
+     * @param telecomUses the author's telecom uses
+     * @param firstName   the author's first name
+     * @param lastName    the author's last name
+     * @param prefix      the author's prefix
      */
-    public CDALDOAuthor(CDALDOId id, CDALDOId regionalId, List<String> telecoms, List<String> telecomUses, String firstName, String lastName, String prefix) {
+    public CDALDOAuthor(CDALDOId id, CDALDOId regionalId, List<String> telecoms, List<String> telecomUses,
+            String firstName, String lastName, String prefix) {
         hasRequiredTelecoms(telecoms);
         this.id = Objects.requireNonNull(id, "id cannot be null");
         this.regionalId = regionalId;
@@ -48,8 +44,10 @@ public class CDALDOAuthor {
         this.firstName = Objects.requireNonNull(firstName, "firstName cannot be null");
         this.lastName = Objects.requireNonNull(lastName, "lastName cannot be null");
     }
+
     public CDALDOAuthor() {
     }
+
     public boolean hasRequiredTelecoms(List<String> telecoms) {
         Objects.requireNonNull(telecoms, "telecoms cannot be null");
 
@@ -78,9 +76,6 @@ public class CDALDOAuthor {
 
         return false;
     }
-
-
-    
 
     /**
      * Gets the author's ID.
@@ -210,8 +205,10 @@ public class CDALDOAuthor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         CDALDOAuthor that = (CDALDOAuthor) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(regionalId, that.regionalId) &&
@@ -239,7 +236,8 @@ public class CDALDOAuthor {
                 ", prefix='" + prefix + '\'' +
                 '}';
     }
+
     public boolean hasRegionalId() {
-    return regionalId != null;
-}
+        return regionalId != null;
+    }
 }

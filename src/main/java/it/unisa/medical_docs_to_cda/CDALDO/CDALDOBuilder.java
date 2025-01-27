@@ -14,13 +14,36 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 
+/**
+ * The CDALDOBuilder class provides utility methods for constructing and
+ * manipulating
+ * XML documents in the context of Clinical Document Architecture (CDA)
+ * documents.
+ * 
+ * This class includes methods to add various elements and sections to a CDA
+ * document,
+ * such as codes, translations, titles, and text. It also supports the creation
+ * of
+ * specific sections like anamnesis, objective examination, and pharmacological
+ * therapy.
+ * 
+ * The methods in this class are designed to ensure that the necessary elements
+ * are
+ * correctly formatted and appended to the document, facilitating the creation
+ * of
+ * well-structured CDA documents.
+ * 
+ * Note: All methods are protected, indicating they are intended for use within
+ * the
+ * package or by subclasses.
+ */
 public class CDALDOBuilder {
     public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
             .withZone(ZoneId.systemDefault());
     public final static DateTimeFormatter effectiveTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZ")
             .withZone(ZoneId.systemDefault());
 
-    public static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+    protected static void addCode(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
             String displayName) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -28,8 +51,8 @@ public class CDALDOBuilder {
         if (parent == null) {
             throw new IllegalArgumentException("Parent element cannot be null");
         }
-        if (code == null || codeSystem == null || codeSystemName == null /*  || displayName == null*/) {
-            throw new IllegalArgumentException("Code, codeSystem, codeSystemName, and displayName cannot be null");
+        if (code == null || codeSystem == null || codeSystemName == null) {
+            throw new IllegalArgumentException("Code, codeSystem and codeSystemName cannot be null");
         }
 
         Element codeElement = doc.createElement("code");
@@ -40,8 +63,9 @@ public class CDALDOBuilder {
         parent.appendChild(codeElement);
     }
 
-    public static void addTranslation(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
-    String displayName) {
+    protected static void addTranslation(Document doc, Element parent, String code, String codeSystem,
+            String codeSystemName,
+            String displayName) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -59,7 +83,7 @@ public class CDALDOBuilder {
         parent.appendChild(translationElement);
     }
 
-    public static void addTitle(Document doc, Element parent, String title) {
+    protected static void addTitle(Document doc, Element parent, String title) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -75,7 +99,7 @@ public class CDALDOBuilder {
         parent.appendChild(titleElement);
     }
 
-    public static void addText(Document doc, Element parent, String text) {
+    protected static void addText(Document doc, Element parent, String text) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -91,7 +115,7 @@ public class CDALDOBuilder {
         parent.appendChild(textElement);
     }
 
-    public static void addElement(Document doc, Element parent, String elementName, String textContent,
+    protected static void addElement(Document doc, Element parent, String elementName, String textContent,
             String[] attributes, String[] values) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -123,7 +147,7 @@ public class CDALDOBuilder {
         parent.appendChild(element);
     }
 
-    public static Document createBasicDoc() throws ParserConfigurationException {
+    protected static Document createBasicDoc() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
@@ -132,7 +156,7 @@ public class CDALDOBuilder {
 
     }
 
-    public static void addHeader(Document doc, CDALDOId oid, String status,
+    protected static void addHeader(Document doc, CDALDOId oid, String status,
             LocalDateTime effectiveTimeDate, String confidentialityCodeValue, CDALDOId setOid,
             String versionNumberValue,
             CDALDOPatient patient, CDALDOPatient guardian, CDALDOAuthor author, LocalDateTime authorTime,
@@ -276,7 +300,7 @@ public class CDALDOBuilder {
 
         List<String> telecomValues = patient.getTelecoms();
         List<String> telecomUses = patient.getTelecomUses();
-        if (telecomValues != null && telecomUses != null  && !telecomValues.isEmpty() && !telecomUses.isEmpty()) {
+        if (telecomValues != null && telecomUses != null && !telecomValues.isEmpty() && !telecomUses.isEmpty()) {
             for (int i = 0; i < telecomValues.size(); i++) {
                 Element telecomElement = doc.createElement("telecom");
                 telecomElement.setAttribute("use", telecomUses.get(i));
@@ -570,7 +594,7 @@ public class CDALDOBuilder {
         order.appendChild(priorityCode);
     }
 
-    public static void addComponentOf(Document doc, Element root, String ramoAziendale, String numeroNosologico,
+    protected static void addComponentOf(Document doc, Element root, String ramoAziendale, String numeroNosologico,
             String nomeAzienda, LocalDateTime lowTime, LocalDateTime highTime, List<String> repartoIds,
             List<String> repartoNames, List<String> ministerialCodes, List<String> facilityNames,
             List<String> facilityTelecoms) {
@@ -610,7 +634,7 @@ public class CDALDOBuilder {
 
     }
 
-    public static void addLocations(Document doc, Element root, List<String> repartoIds, List<String> repartoNames,
+    protected static void addLocations(Document doc, Element root, List<String> repartoIds, List<String> repartoNames,
             List<String> ministerialCodes, List<String> facilityNames, List<String> facilityTelecoms) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -669,7 +693,8 @@ public class CDALDOBuilder {
         }
     }
 
-    public static void addEffectiveTime(Document doc, Element parent, LocalDateTime lowTime, LocalDateTime highTime) {
+    protected static void addEffectiveTime(Document doc, Element parent, LocalDateTime lowTime,
+            LocalDateTime highTime) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
         }
@@ -773,9 +798,12 @@ public class CDALDOBuilder {
         return birthDate.atStartOfDay(ZoneId.systemDefault()).format(effectiveTimeFormatter);
     }
 
-    // Used for extracting different type of narrative elements associated to
-    // different sections or subsections of a section
-    public static List<CDALDONarrativeBlock> filterNarrativeBlocksBySection(List<CDALDONarrativeBlock> narrativeBlocks,
+    /*
+     * Used for extracting different type of narrative elements associated to
+     * different sections or subsections of a section
+     */
+    protected static List<CDALDONarrativeBlock> filterNarrativeBlocksBySection(
+            List<CDALDONarrativeBlock> narrativeBlocks,
             String section) {
         if (narrativeBlocks == null) {
             return Collections.emptyList();
@@ -786,7 +814,8 @@ public class CDALDOBuilder {
                         : section.equals(block.getSection()))
                 .collect(Collectors.toList());
     }
-    public static Element createSection(Document doc, Element structuredBody, String sectionNumber,
+
+    protected static Element createSection(Document doc, Element structuredBody, String sectionNumber,
             String code, String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks,
             List<CDALDOEntry> entries) {
@@ -801,24 +830,23 @@ public class CDALDOBuilder {
         Element section = doc.createElement("section");
         section.setAttribute("classCode", "DOCSECT");
         section.setAttribute("moodCode", "EVN");
-        // Append the section to the component
         component.appendChild(section);
 
         // Section code
         addCode(doc, section, code, codeSystem, codeSystemName, displayName);
 
         // Section title
-        if (titleText != null){
-        Element title = doc.createElement("title");
-        title.setTextContent(titleText);
-        section.appendChild(title);
+        if (titleText != null) {
+            Element title = doc.createElement("title");
+            title.setTextContent(titleText);
+            section.appendChild(title);
         }
 
         // Section text
         List<CDALDONarrativeBlock> mainBlocks = filterNarrativeBlocksBySection(narrativeBlocks, null);
         createText(doc, section, mainBlocks);
 
-        // Section entries
+        // Section entry
         if (entries != null && !entries.isEmpty()) {
             for (CDALDOEntry entry : entries) {
                 entry.createEntry(doc, section);
@@ -847,12 +875,10 @@ public class CDALDOBuilder {
                     "Terapia Farmacologica all’ingresso", pharmacologicalTherapyBlocks);
         }
 
-        // Entry section
-        // ...
         return component;
     }
 
-    public static void createText(Document doc, Element section, List<CDALDONarrativeBlock> narrativeBlocks) {
+    protected static void createText(Document doc, Element section, List<CDALDONarrativeBlock> narrativeBlocks) {
         Element text = doc.createElement("text");
         section.appendChild(text);
         int count = 0;
@@ -909,8 +935,7 @@ public class CDALDOBuilder {
                         Map<String, String> formattedData = ((Map<String, String>) textContent);
                         for (Map.Entry<String, String> entry : formattedData.entrySet()) {
                             Element content = doc.createElement("content");
-                            content.setAttribute("styleCode", entry.getKey()); // styleCode is now the type of format to
-                                                                               // use on the data
+                            content.setAttribute("styleCode", entry.getKey());
                             content.setTextContent(entry.getValue());
                             text.appendChild(content);
                         }
@@ -924,67 +949,56 @@ public class CDALDOBuilder {
         }
     }
 
-    public static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem,
+    protected static void createAnamnesiSection(Document doc, Element section, String code, String codeSystem,
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         Element anamnesiSection = doc.createElement("section");
-        // Append the anamnesi section to the parent
         section.appendChild(anamnesiSection);
 
-        // Anamnesi section code
         addCode(doc, anamnesiSection, code, codeSystem, codeSystemName, displayName);
 
-        // Anamnesi section title
         Element title = doc.createElement("title");
         title.setTextContent(titleText);
         anamnesiSection.appendChild(title);
 
-        // Anamnesi section text
         createText(doc, anamnesiSection, narrativeBlocks);
     }
 
-    public static void createObjectiveExaminationSection(Document doc, Element section, String code, String codeSystem,
+    protected static void createObjectiveExaminationSection(Document doc, Element section, String code,
+            String codeSystem,
             String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         Element objectiveExaminationSection = doc.createElement("section");
-        // Append the objective Examination section to the parent
         section.appendChild(objectiveExaminationSection);
 
-        // objective Examination section code
         addCode(doc, objectiveExaminationSection, code, codeSystem, codeSystemName, displayName);
 
-        // objective Examination section title
         Element title = doc.createElement("title");
         title.setTextContent(titleText);
         objectiveExaminationSection.appendChild(title);
 
-        // objective Examination section text
         createText(doc, objectiveExaminationSection, narrativeBlocks);
     }
 
-    public static void createPharmacologicalTherapySection(Document doc, Element section, String code,
+    protected static void createPharmacologicalTherapySection(Document doc, Element section, String code,
             String codeSystem, String codeSystemName,
             String displayName, String titleText, List<CDALDONarrativeBlock> narrativeBlocks) {
 
         Element pharmacologicalTherapySection = doc.createElement("section");
-        // Append the pharmacological Therapy section to the parent
         section.appendChild(pharmacologicalTherapySection);
 
-        // pharmacological Therapy section code
         addCode(doc, pharmacologicalTherapySection, code, codeSystem, codeSystemName, displayName);
 
-        // pharmacological Therapy section title
         Element title = doc.createElement("title");
         title.setTextContent(titleText);
         pharmacologicalTherapySection.appendChild(title);
 
-        // pharmacological Therapy section text
         createText(doc, pharmacologicalTherapySection, narrativeBlocks);
     }
 
-    public static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
+    protected static void addValue(Document doc, Element parent, String code, String codeSystem, String codeSystemName,
             String displayName, String xsiType, String outcome, float value, String unit) {
         if (doc == null) {
             throw new IllegalArgumentException("Document cannot be null");
@@ -1018,7 +1032,8 @@ public class CDALDOBuilder {
             parent.appendChild(valueElement);
         }
     }
-    public static void addBody(Document doc, Map<String, List<CDALDONarrativeBlock>> narrativeBlocks,
+
+    protected static void addBody(Document doc, Map<String, List<CDALDONarrativeBlock>> narrativeBlocks,
             Map<String, List<CDALDOEntry>> entries) {
 
         if (doc == null) {
@@ -1063,6 +1078,5 @@ public class CDALDOBuilder {
             }
         }
     }
-
 
 }

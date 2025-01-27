@@ -6,15 +6,15 @@
                 <code code="code" codeSystem="codeSystem" codeSystemName="codeSystemName" displayName="displayName"/>
                 <statusCode code="completed"/>
                 <effectiveTime>
-                    <low value="20250126000258GMT+01:00"/>
-                    <high value="20250127000258GMT+01:00"/>
+                    <low value="20250127204222GMT+01:00"/>
+                    <high value="20250128204222GMT+01:00"/>
                 </effectiveTime>
                 <entryRelationship typeCode="RSON">
                     <observation classCode="OBS" moodCode="EVN">
                         <code code="12345" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Example Observation"/>
                         <effectiveTime>
-                            <low value="20250125000258GMT+01:00"/>
-                            <high value="20250126000258GMT+01:00"/>
+                            <low value="20250126204222GMT+01:00"/>
+                            <high value="20250127204222GMT+01:00"/>
                         </effectiveTime>
                         <value code="A123" codeSystem="2.16.840.1.113883.6.96" codeSystemName="LOINC" displayName="Positive" xsi:type="CD"/>
                     </observation>

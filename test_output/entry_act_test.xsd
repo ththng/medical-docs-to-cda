@@ -9,7 +9,7 @@
                 <entryRelationship typeCode="SUBJ">
                     <observation classCode="OBS" moodCode="EVN">
                         <code code="52473-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergia o causa della reazione"/>
-                        <effectiveTime value="20250125191528GMT+01:00"/>
+                        <effectiveTime value="20250127204222GMT+01:00"/>
                         <value code="FALG" codeSystem="2.16.840.1.113883.5.4" codeSystemName="ObservationIntoleranceType" displayName="Food Allergy" xsi:type="CD"/>
                         <participant typeCode="CSM">
                             <participantRole classCode="MANU">

@@ -5,11 +5,9 @@ public class CDALDOId {
     private String extensionId;
     private String assigningAuthorityName;
 
-    // Default constructor
     public CDALDOId() {
     }
 
-    // Parameterized constructor
     public CDALDOId(String oid, String extensionId, String assigningAuthorityName) {
         this.oid = oid;
         this.extensionId = extensionId;
@@ -25,7 +23,6 @@ public class CDALDOId {
         this.oid = oid;
     }
 
-    // Getter and Setter for extensionId
     public String getExtensionId() {
         return extensionId;
     }
@@ -34,7 +31,6 @@ public class CDALDOId {
         this.extensionId = extensionId;
     }
 
-    // Getter and Setter for assigningAuthorityName
     public String getAssigningAuthorityName() {
         return assigningAuthorityName;
     }

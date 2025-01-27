@@ -17,7 +17,14 @@ import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
 
 /**
- * This class is responsible for converting Encounter objects to CDA documents.
+ * Controller class responsible for converting Encounter objects into CDA
+ * documents.
+ * Utilizes various repositories to retrieve necessary data for the conversion
+ * process.
+ * Autowires multiple repositories to access patient, allergy, careplan,
+ * medication,
+ * observation, procedure, condition, imaging study, immunization, provider, and
+ * organization data.
  */
 @Controller
 public class CDAController {
@@ -381,7 +388,7 @@ public class CDAController {
                 if (!observation11.isEmpty())
                         cdaldoBuilder.setEntries(observation11, "11");
 
-                // Section 12 (Optional, not enough data in dataset)
+                // Section 12 (Optional section, omitted due to not enough data in dataset)
 
                 // Section 13 : Istruzioni di follow up
                 List<CDALDONarrativeBlock> narrativeBlocks13 = new ArrayList<>();
@@ -396,10 +403,18 @@ public class CDAController {
                         cdaldoBuilder.setNarrativeBlocks(narrativeBlocks13, "13");
                 }
 
-                // cdaldoBuilder.setEntries(null, "13");
+                // cdaldoBuilder.setEntries(null, "13"); --> No entries for this section
 
                 return cdaldoBuilder;
         }
+
+        /**
+         * 
+         * The `setPatient` method initializes a CDALDOPatient object with the patient's
+         * details, including SSN, a randomly generated ANA code, and address
+         * information.
+         * 
+         */
 
         private void setPatient(CDALDO cdaldoBuilder, Patient patient) {
                 // we are using ssn as italian CF and random genereted ANA code
@@ -417,6 +432,12 @@ public class CDAController {
                                 patient.getBirthPlace(), patient.getBirthDate());
                 cdaldoBuilder.setPatient(cdaldoPatient);
         }
+        /*
+         * The `setId` method assigns a unique document ID, status, effective time, set
+         * ID,
+         * version number, and confidentiality code to the CDALDO object, assuming all
+         * organizations are part of ASL NAPOLI 1.
+         */
 
         private void setId(CDALDO cdaldoBuilder) {
                 // we are taking all the organization like they are part of the ASL NAPOLI 1
@@ -434,6 +455,16 @@ public class CDAController {
                 cdaldoBuilder.setConfidentialityCode(confidentialityCodeValue);
         }
 
+        /**
+         * <p>
+         * The `setAuthor` method creates and assigns an author to the CDALDO object,
+         * including telecom information and author identification.
+         * 
+         * @param cdaldoBuilder The CDALDO object to be configured.
+         * @param patient       The patient whose information is to be set in the CDALDO
+         *                      object.
+         * @return The configured CDALDOAuthor object.
+         */
         private CDALDOAuthor setAuthor(CDALDO cdaldoBuilder) {
                 CDALDOAuthor author = new CDALDOAuthor();
                 CDALDOId authorId = new CDALDOId();
@@ -452,6 +483,12 @@ public class CDAController {
                 return author;
         }
 
+        /**
+         * Generates a unique codice ANA by concatenating a fixed prefix "CAM"
+         * with a randomly generated 12-digit numeric string.
+         *
+         * @return A string representing the generated codice ANA.
+         */
         private String generateCodiceANA() {
 
                 String prefisso = "CAM";
@@ -466,6 +503,17 @@ public class CDAController {
 
                 return prefisso + codiceNumerico.toString();
         }
+
+        /**
+         * Creates a new instance of CDALDOAddr with the specified address details.
+         *
+         * @param address the street address
+         * @param city    the city name
+         * @param state   the state name
+         * @param county  the county name
+         * @param zip     the ZIP code
+         * @return a CDALDOAddr object initialized with the provided address details
+         */
 
         public CDALDOAddr createCDALDOAddr(String address, String city, String state, String county, String zip) {
                 String use = "H";

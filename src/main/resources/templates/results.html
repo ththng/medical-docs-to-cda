@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <style>
-        /* Reset dello stile */
         * {
             margin: 0;
             padding: 0;
@@ -65,7 +65,8 @@
             margin: 20px 0;
         }
 
-        th, td {
+        th,
+        td {
             text-align: left;
             padding: 12px;
             border-bottom: 1px solid #ddd;
@@ -136,62 +137,63 @@
         });
     </script>
 </head>
+
 <body>
 
-<header>
-    <h1>Search Results</h1>
-</header>
+    <header>
+        <h1>Search Results</h1>
+    </header>
 
-<nav>
-    <a href="/patients/list">Patients List</a>
-    <a href="/">Home</a>
-</nav>
+    <nav>
+        <a href="/patients/list">Patients List</a>
+        <a href="/">Home</a>
+    </nav>
 
-<div class="table-container" th:if="${patients != null && !patients.isEmpty()}">
-    <table>
-        <thead>
-            <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Date of Birth</th>
-                <th>Date of Death</th>
-                <th>SSN</th>
-                <th>Passport</th>
-                <th>Driver's License</th>
-                <th>Place of Birth</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="patient : ${patients}" 
-                th:attr="data-patient-id=${patient.id}" style="cursor: pointer;">
-                <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
-                <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
-                <td
-                    th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">
-                    Date of Birth</td>
-                <td
-                    th:text="${#temporals.format(patient.deathDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.deathDate, 'dd/MM/yyyy') : 'N/A'}">
-                    Date of Death</td>
-                <td th:text="${patient.SSN != null ? patient.SSN : 'N/A'}">SSN</td>
-                <td th:text="${patient.drivers != null ? patient.drivers : 'N/A'}">Driver's License</td>
-                <td th:text="${patient.passport != null ? patient.passport : 'N/A'}">Passport</td>
-                <td th:text="${patient.birthPlace != null ? patient.birthPlace : 'N/A'}">Place of Birth</td>
-        </tbody>
-    </table>
-</div>
+    <div class="table-container" th:if="${patients != null && !patients.isEmpty()}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Date of Birth</th>
+                    <th>Date of Death</th>
+                    <th>SSN</th>
+                    <th>Passport</th>
+                    <th>Driver's License</th>
+                    <th>Place of Birth</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="patient : ${patients}" th:attr="data-patient-id=${patient.id}" style="cursor: pointer;">
+                    <td th:text="${patient.last != null ? patient.last : 'N/A'}">Last Name</td>
+                    <td th:text="${patient.first != null ? patient.first : 'N/A'}">First Name</td>
+                    <td
+                        th:text="${#temporals.format(patient.birthDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.birthDate, 'dd/MM/yyyy') : 'N/A'}">
+                        Date of Birth</td>
+                    <td
+                        th:text="${#temporals.format(patient.deathDate, 'dd/MM/yyyy') != null ? #temporals.format(patient.deathDate, 'dd/MM/yyyy') : 'N/A'}">
+                        Date of Death</td>
+                    <td th:text="${patient.SSN != null ? patient.SSN : 'N/A'}">SSN</td>
+                    <td th:text="${patient.drivers != null ? patient.drivers : 'N/A'}">Driver's License</td>
+                    <td th:text="${patient.passport != null ? patient.passport : 'N/A'}">Passport</td>
+                    <td th:text="${patient.birthPlace != null ? patient.birthPlace : 'N/A'}">Place of Birth</td>
+            </tbody>
+        </table>
+    </div>
 
-<div class="no-results" th:if="${patients == null || patients.isEmpty()}">
-    <p>No patients found matching your search criteria.</p>
-</div>
+    <div class="no-results" th:if="${patients == null || patients.isEmpty()}">
+        <p>No patients found matching your search criteria.</p>
+    </div>
 
-<div style="text-align: center;">
-    <a href="/patients/list" class="btn">Back to Patient List</a>
-</div>
+    <div style="text-align: center;">
+        <a href="/patients/list" class="btn">Back to Patient List</a>
+    </div>
 
-<footer style="text-align: center">
-    <p>&copy; 2025 Women's Health Clinic. All rights reserved.</p>
-</footer>
+    <footer style="text-align: center">
+        <p>&copy; 2025 Women's Health Clinic. All rights reserved.</p>
+    </footer>
 
 </body>
+
 </html>

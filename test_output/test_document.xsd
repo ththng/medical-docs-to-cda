@@ -7,8 +7,7 @@
     <code code="34105-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Lettera di dimissione ospedaliera"/>
     <title>LETTERA DI DIMISSIONE OSPEDALIERA</title>
     <sdtc:statusCode code="completed" xmlns:sdtc="urn:hl7-org:sdtc"/>
-    <effectiveTime value="20250125191527+0100"/>
-    <effectiveTime value="20250126000258+0100"/>
+    <effectiveTime value="20250127204222+0100"/>
     <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
     <languageCode code="it-IT"/>
     <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -31,14 +30,13 @@
                     <given>John</given>
                 </name>
                 <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="MASCHIO"/>
-                <birthTime value="20250125000000+0100"/>
+                <birthTime value="20250127000000+0100"/>
                 <birthplace>City</birthplace>
             </patient>
         </patientRole>
     </recordTarget>
     <author>
-        <time value="20250125191527"/>
-        <time value="20250126000258"/>
+        <time value="20250127204222"/>
         <assignedAuthor>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -55,8 +53,7 @@
         </assignedAuthor>
     </author>
     <dataEnterer typeCode="ENT">
-        <time value="20250125191527"/>
-        <time value="20250126000258"/>
+        <time value="20250127204222"/>
         <assignedEntity>
             <assignedPerson>
                 <name>
@@ -92,8 +89,7 @@
         </intendedRecipient>
     </informationRecipient>
     <legalAuthenticator>
-        <time value="20250125191527"/>
-        <time value="20250126000258"/>
+        <time value="20250127204222"/>
         <signatureCode code="S"/>
         <assignedEntity>
             <id assigningAuthorityName="Test Authority" extension="Test123" root="2.16.840.1.113883.2.9.2.99999.4.4"/>
@@ -144,10 +140,8 @@
         <encompassingEncounter>
             <id assigningAuthorityName="nomeAzienda" extension="numero nosologico" root="2.16.840.1.113883.2.9.2.ramo dell'azienda.4.6"/>
             <effectiveTime>
-                <low value="20250125191527+0100"/>
-                <high value="20250125191527+0100"/>
-                <low value="20250126000258+0100"/>
-                <high value="20250126000258+0100"/>
+                <low value="20250127204222+0100"/>
+                <high value="20250127204222+0100"/>
             </effectiveTime>
         </encompassingEncounter>
     </componentOf>

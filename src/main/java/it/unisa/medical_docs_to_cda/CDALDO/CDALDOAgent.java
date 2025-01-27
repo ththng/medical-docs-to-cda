@@ -5,6 +5,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
+/**
+ * Represents a CDALDOAgent for an entry with tag "act", with properties for
+ * code, code system, code system
+ * name, and display name.
+ * <p>
+ * This class uses Lombok annotations to automatically generate getter and
+ * setter methods for its fields.
+ * 
+ */
 public class CDALDOAgent {
     private String code;
     private String codeSystem;
@@ -17,6 +26,5 @@ public class CDALDOAgent {
         this.codeSystemName = codeSystemName;
         this.displayName = displayName;
     }
-    
 
 }

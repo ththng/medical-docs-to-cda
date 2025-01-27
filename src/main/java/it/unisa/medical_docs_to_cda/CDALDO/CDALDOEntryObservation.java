@@ -235,7 +235,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
     @Override
     public void createEntry(Document doc, Element parent) {
         if (!"entry".equals(entryType) && !"entryRelationship".equals(entryType)) {
-            return; // Lancia un'eccezione o altro
+            return; 
         }
         Element entry = doc.createElement(entryType);
         if (entryType == "entryRelationship")
@@ -280,7 +280,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
                 Element effectiveTime = doc.createElement("effectiveTime");
                 DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("yyyyMMddHHmmssZZZZ")
                         .withZone(ZoneId.systemDefault());
-                if (this.effectiveTimeHigh != null) { // low da controllare nel costruttore
+                if (this.effectiveTimeHigh != null) { 
                     observation.appendChild(effectiveTime);
                     Element low = doc.createElement("low");
                     low.setAttribute("value",
@@ -332,7 +332,7 @@ public class CDALDOEntryObservation implements CDALDOEntry {
             }
         }
 
-        // Tag participant (optional) BUT ID AND NAME ARE MANDATORY !!!!!
+        // Tag participant (optional) 
         if (participants != null && !(participants.isEmpty())) {
             for (CDALDOAuthor particip : participants) {
                 Element participant = doc.createElement("participant");

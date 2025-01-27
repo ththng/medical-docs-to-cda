@@ -126,7 +126,7 @@ public class CDALDO {
             if (id.getOid().equals("2.16.840.1.113883.2.9.4.3.2")) {
                 patientCF = true;
             }
-            if (id.getOid().equals( "2.16.840.1.113883.2.9.4.3.18")) {
+            if (id.getOid().equals("2.16.840.1.113883.2.9.4.3.18")) {
                 patientEni = true;
             }
             if (id.getOid().equals("2.16.840.1.113883.2.9.4.3.17")) {
@@ -329,10 +329,10 @@ public class CDALDO {
 
     public void setNarrativeBlocks(List<CDALDONarrativeBlock> narrativeBlocks, String sectionNumber) {
         if (narrativeBlocks == null) {
-            throw new NullPointerException("narrativeBlocks of" + sectionNumber +" can't be null");
+            throw new NullPointerException("narrativeBlocks of" + sectionNumber + " can't be null");
         }
         if (narrativeBlocks.isEmpty()) {
-            throw new IllegalArgumentException("Narrative blocks of" + sectionNumber +" can't be empty");
+            throw new IllegalArgumentException("Narrative blocks of" + sectionNumber + " can't be empty");
         }
         Integer sectionNumb = Integer.parseInt(sectionNumber);
         if (sectionNumb < 1 || sectionNumb > 13) {
@@ -343,18 +343,25 @@ public class CDALDO {
 
     public void setEntries(List<CDALDOEntry> entries, String sectionNumber) {
         if (entries == null) {
-            throw new NullPointerException("entries of "+ sectionNumber +" can't be null");
+            throw new NullPointerException("entries of " + sectionNumber + " can't be null");
         }
-      /*   if (entries.isEmpty()) {
-            throw new IllegalArgumentException("entries of" + sectionNumber+ "can't be empty");
-        }*/
+
         Integer sectionNumb = Integer.parseInt(sectionNumber);
         if (sectionNumb < 1 || sectionNumb > 12 || sectionNumb == 3 || sectionNumb == 5 || sectionNumb == 13) {
-            throw new IllegalArgumentException("Invalid section number. Section number must be between 1 and 12, excluding 3, 5, and 13.");
-        }        
+            throw new IllegalArgumentException(
+                    "Invalid section number. Section number must be between 1 and 12, excluding 3, 5, and 13.");
+        }
         this.entries.put(sectionNumber, entries);
     }
 
+    /**
+     * Checks the current state of the CDALDO object for any null or empty fields
+     * that are required for a valid CDA document. Returns a list of field names
+     * that are missing or invalid.
+     *
+     * @return a list of strings representing the names of fields that are null or
+     *         empty.
+     */
     public List<String> check() {
         List<String> errors = new ArrayList<>();
         if (this.oid == null)
@@ -435,6 +442,14 @@ public class CDALDO {
         this.fulfillmentId = fulfillmentId;
     }
 
+    /**
+     * Generates a CDA (Clinical Document Architecture) document for the current
+     * CDALDO object.
+     * 
+     * @return a Document object representing the CDA.
+     * @throws ParserConfigurationException if a DocumentBuilder cannot be created.
+     * @throws IllegalArgumentException     if the CDALDO object is not valid.
+     */
     public Document getCDA() throws ParserConfigurationException {
         Document doc = CDALDOBuilder.createBasicDoc();
         if (!this.check().isEmpty()) {

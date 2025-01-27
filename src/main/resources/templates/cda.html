@@ -18,7 +18,6 @@
             color: #343a40;
         }
 
-        /* Header */
         header {
             background-color: #6c63ff;
             color: white;
@@ -52,7 +51,6 @@
             color: white;
         }
 
-        /* Navbar */
         nav {
             background: #4e4cb8;
             color: white;
@@ -72,7 +70,6 @@
             color: #ffc107;
         }
 
-        /* Titles */
         h1,
         h2 {
             text-align: center;
@@ -80,7 +77,6 @@
             color: #6c63ff;
         }
 
-        /* Containers */
         .content-container {
             margin: 20px auto;
             padding: 20px;
@@ -119,7 +115,6 @@
             word-wrap: break-word;
         }
 
-        /* Footer */
         footer {
             background-color: #4e4cb8;
             color: white;
@@ -158,10 +153,12 @@
         <a th:attr="href=@{/patients/{id}/cda(id=${encounterId})}" class="cta-btn" download>Download CDA</a>
 
         <!-- Button to send to patient's EHR -->
-        <button class="cta-btn" id="sendEhrButton">Send to patient's EHR</button>
+        <button class="cta-btn" id="sendEhrButton" th:data-encounter-id="${encounterId}">Send to patient's EHR</button>
 
-        <p id="successMessage" style="color: green; font-weight: bold; display: none; text-align: center;" th:if="${loadedFhir}">The CDA was
+        <p id="successMessage" style="color: green; font-weight: bold; display: none; text-align: center;">The CDA was
             successfully uploaded to the patient's EHR.</p>
+        <p id="errorMessage" style="color: red; font-weight: bold; display: none; text-align: center;">The CDA was
+            already sent to the patient's EHR.</p>
     </div>
 
     <footer>
@@ -169,14 +166,51 @@
     </footer>
 
     <script>
+        //Function to communicate with back-end to send CDA to patient's EHR
         document.getElementById('sendEhrButton').addEventListener('click', function () {
+            const button = this;
+            const encounterId = button.getAttribute('data-encounter-id');
+            const body = document.body;
 
-            document.getElementById('successMessage').style.display = 'block';
+            body.style.cursor = 'wait';
+            button.disabled = true;
+
+            fetch(`/patients/${encounterId}/ehr`, {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to upload CDA');
+                    }
+                })
+                .then(data => {
+                    if (data.loadedFhir) {
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('errorMessage').style.display = 'none';
+                    } else {
+                        document.getElementById('successMessage').style.display = 'none';
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById('successMessage').style.display = 'none';
+                    document.getElementById('errorMessage').style.display = 'block';
+                })
+                .finally(() => {
+                    body.style.cursor = 'default'; //Change cursor while waiting
+                    button.disabled = false;
+                });
         });
 
+        //Function to redirect to home page when clicking logout
         function logout() {
-            window.location.href = "/"; // Redirect to a login page
+            window.location.href = "/";
         }
+
+
     </script>
 </body>
 

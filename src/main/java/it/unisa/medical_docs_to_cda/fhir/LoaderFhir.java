@@ -7,7 +7,7 @@ import org.hl7.fhir.r5.model.AllergyIntolerance;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.hl7.fhir.r5.model.MedicationStatement;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -16,7 +16,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
-@Controller
+@Component
 public class LoaderFhir {
 
     @Autowired

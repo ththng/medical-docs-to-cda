@@ -12,6 +12,6 @@ import it.unisa.medical_docs_to_cda.model.Encounter;
 @Repository
 public interface EncounterRepository extends MongoRepository<Encounter, String> {
     List<Encounter> findByPatientId(String patientId);
-    Page<Encounter> findByPatientId( String patientId, Pageable pageable);
+    Page<Encounter> findByPatientId(String patientId, Pageable pageable);
    
 }

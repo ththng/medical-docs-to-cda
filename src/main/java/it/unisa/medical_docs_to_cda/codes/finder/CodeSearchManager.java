@@ -17,10 +17,13 @@ import java.net.URLEncoder;
 
 import org.json.JSONArray;
 
+/**
+ * Utility class for finding codes in LOINC and ICD9 notations.
+ */
 public class CodeSearchManager {
 
-    private static final String ICD9_API_URL = "https://clinicaltables.nlm.nih.gov/api/icd9cm_dx/v3/search"; 
-    private static final String LOINC_SERVER_URL = "https://fhir.loinc.org"; // URL del server FHIR per LOINC
+    private static final String ICD9_API_URL = "https://clinicaltables.nlm.nih.gov/api/icd9cm_dx/v3/search";
+    private static final String LOINC_SERVER_URL = "https://fhir.loinc.org";
     private static final String USERNAME = "********";// TODO inserire LOINC username e password
     private static final String PASSWORD = "********";
 
@@ -40,61 +43,53 @@ public class CodeSearchManager {
         Coding result = null;
 
         try {
-            if(term != null && !term.isEmpty()) {
-            String encodedTerm = URLEncoder.encode(term, "UTF-8");
+            if (term != null && !term.isEmpty()) {
+                String encodedTerm = URLEncoder.encode(term, "UTF-8");
 
-            // Costruisci l'URL con il termine codificato
-            String apiUrl = ICD9_API_URL + "?terms=" + encodedTerm;
-            URL url = new URL(apiUrl);
+                String apiUrl = ICD9_API_URL + "?terms=" + encodedTerm;
+                URL url = new URL(apiUrl);
 
-            // Configura la connessione HTTP
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            // Verifica lo stato della risposta
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                System.err.println("Errore nella richiesta HTTP. Codice di risposta: " + responseCode);
-                return null;
-            }
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
 
-            // Leggi la risposta dall'API
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder responseBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                responseBuilder.append(line);
-            }
-            reader.close();
+                int responseCode = connection.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    System.err.println("Errore nella richiesta HTTP. Codice di risposta: " + responseCode);
+                    return null;
+                }
 
-            // Parsea la risposta JSON
-            JSONArray responseArray = new JSONArray(responseBuilder.toString());
-            JSONArray codes = responseArray.getJSONArray(3); // I codici sono nel quarto elemento
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+                reader.close();
 
-            // Variabile per memorizzare il risultato più corto
-            String shortestDescription = null;
-            String shortestCode = null;
+                JSONArray responseArray = new JSONArray(responseBuilder.toString());
+                JSONArray codes = responseArray.getJSONArray(3);
 
-            for (int i = 0; i < codes.length(); i++) {
-                JSONArray codeEntry = codes.getJSONArray(i);
-                String code = codeEntry.getString(0);
-                String description = codeEntry.getString(1);
+                String shortestDescription = null;
+                String shortestCode = null;
 
-                // Se è il primo codice o se la descrizione corrente è più corta di quella
-                // precedente, aggiorna
-                if (shortestDescription == null || description.length() < shortestDescription.length()) {
-                    shortestDescription = description;
-                    shortestCode = code;
+                for (int i = 0; i < codes.length(); i++) {
+                    JSONArray codeEntry = codes.getJSONArray(i);
+                    String code = codeEntry.getString(0);
+                    String description = codeEntry.getString(1);
+
+                    if (shortestDescription == null || description.length() < shortestDescription.length()) {
+                        shortestDescription = description;
+                        shortestCode = code;
+                    }
+                }
+
+                if (shortestCode != null) {
+                    result = new Coding();
+                    result.setSystem("http://hl7.org/fhir/sid/icd-9-cm");
+                    result.setCode(shortestCode);
+                    result.setDisplay(shortestDescription);
                 }
             }
-
-            // Restituisci il risultato più corto
-            if (shortestCode != null) {
-                result = new Coding();
-                result.setSystem("http://hl7.org/fhir/sid/icd-9-cm");
-                result.setCode(shortestCode);
-                result.setDisplay(shortestDescription);
-            }
-        }
         } catch (java.net.SocketTimeoutException e) {
             System.err.println("La connessione è scaduta. Verifica la disponibilità del server.");
         } catch (Exception e) {
@@ -111,29 +106,22 @@ public class CodeSearchManager {
         String shortestCode = null;
         try {
 
-            // Crea il contesto FHIR
             FhirContext fhirContext = FhirContext.forR5();
 
-            // Configura il client FHIR per LOINC
             IGenericClient loincClient = fhirContext.newRestfulGenericClient(LOINC_SERVER_URL);
 
-            // Aggiungi autenticazione al client
             BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(USERNAME, PASSWORD);
             loincClient.registerInterceptor(authInterceptor);
 
-            // Esegui la ricerca sul server FHIR
             Bundle results = loincClient.search()
                     .forResource(ValueSet.class)
-                    .where(ValueSet.NAME.matches().value(name)) // Usa il filtro per 'name'
+                    .where(ValueSet.NAME.matches().value(name))
                     .returnBundle(Bundle.class)
                     .execute();
 
             results.getLink().forEach(link -> System.out.println("Link: " + link.getUrl()));
             System.out.println("Risultati trovati: " + results.getTotal());
 
-            // Variabile per memorizzare il primo risultato valido (misura di Body weight)
-
-            // Estrai i codici dai risultati
             for (var entry : results.getEntry()) {
                 if (entry.getResource() instanceof ValueSet) {
                     ValueSet valueSet = (ValueSet) entry.getResource();
@@ -146,14 +134,11 @@ public class CodeSearchManager {
                                 shortestCode = concept.getCode();
                                 System.err.println(concept.getDisplay());
                             }
-                            // Filtra solo i concetti che corrispondono al "Body weight" come misura
 
                         }
                     }
                 }
             }
-
-            // Se non è stato trovato il Body weight come misura
 
         } catch (Exception e) {
             e.printStackTrace();

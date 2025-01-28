@@ -16,6 +16,12 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
+
+/**
+ * Component class that handles the conversion of medical documents to FHIR
+ * resources.
+ * 
+ */
 @Component
 public class LoaderFhir {
 
@@ -37,7 +43,15 @@ public class LoaderFhir {
     private ImagingStudyRepository imagingStudyRepo;
     @Autowired
     private ImmunizationRepository immunizationRepo;
-  
+
+    /**
+     * 
+     * Loads the encounter from the database and converts it to a FHIR resource.
+     * 
+     * @param encounterModel to convert
+     * @return True if the load is successful, false if the encounter is already
+     *         present on the server.
+     */
     public boolean loadEncounter(it.unisa.medical_docs_to_cda.model.Encounter encounterModel) {
 
         it.unisa.medical_docs_to_cda.model.Patient patient = patientRepo.findById(encounterModel.getPatientId()).get();
@@ -101,96 +115,97 @@ public class LoaderFhir {
                 .execute();
         Bundle responseEncounter = client.search()
                 .forResource(org.hl7.fhir.r5.model.Encounter.class)
-                .where(org.hl7.fhir.r5.model.Encounter.DATE_START.exactly().millis(fhirEncounter.getActualPeriod().getStart()))    
+                .where(org.hl7.fhir.r5.model.Encounter.DATE_START.exactly()
+                        .millis(fhirEncounter.getActualPeriod().getStart()))
                 .returnBundle(Bundle.class)
                 .execute();
 
-        
         List<MethodOutcome> outcome = new ArrayList<>();
 
-        try{if (response.getEntry().size()==0) {
-            MethodOutcome outcomeTemp = client.create()
-                    .resource(fhirPatient)
-                    .prettyPrint()
-                    .encodedJson()
-                    .execute();
-            outcome.add(outcomeTemp);
+        try {
+            if (response.getEntry().size() == 0) {
+                MethodOutcome outcomeTemp = client.create()
+                        .resource(fhirPatient)
+                        .prettyPrint()
+                        .encodedJson()
+                        .execute();
+                outcome.add(outcomeTemp);
 
-        }
-        if (responseEncounter.getEntry().size()==0 || response.getEntry().size()==0) {
-            MethodOutcome outcomeTemp;
-            outcomeTemp = client.create()
-                    .resource(fhirEncounter)
-                    .prettyPrint()
-                    .encodedJson()
-                    .execute();
-            outcome.add(outcomeTemp);
+            }
+            if (responseEncounter.getEntry().size() == 0 || response.getEntry().size() == 0) {
+                MethodOutcome outcomeTemp;
+                outcomeTemp = client.create()
+                        .resource(fhirEncounter)
+                        .prettyPrint()
+                        .encodedJson()
+                        .execute();
+                outcome.add(outcomeTemp);
 
-            for (AllergyIntolerance allergyTemp : fhirAllergies) {
-                outcomeTemp = client.create()
-                        .resource(allergyTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
+                for (AllergyIntolerance allergyTemp : fhirAllergies) {
+                    outcomeTemp = client.create()
+                            .resource(allergyTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (org.hl7.fhir.r5.model.Condition conditionTemp : fhirConditions) {
+                    outcomeTemp = client.create()
+                            .resource(conditionTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (MedicationStatement medicationTemp : fhirMedications) {
+                    outcomeTemp = client.create()
+                            .resource(medicationTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (org.hl7.fhir.r5.model.Procedure procedure : fhirProcedures) {
+                    outcomeTemp = client.create()
+                            .resource(procedure)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (org.hl7.fhir.r5.model.Observation observationTemp : fhirObservations) {
+                    outcomeTemp = client.create()
+                            .resource(observationTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (org.hl7.fhir.r5.model.CarePlan careplanTemp : fhirCareplans) {
+                    outcomeTemp = client.create()
+                            .resource(careplanTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+                for (org.hl7.fhir.r5.model.Immunization immunizationTemp : fhirImmunizations) {
+                    outcomeTemp = client.create()
+                            .resource(immunizationTemp)
+                            .prettyPrint()
+                            .encodedJson()
+                            .execute();
+                    outcome.add(outcomeTemp);
+                }
+
             }
-            for (org.hl7.fhir.r5.model.Condition conditionTemp : fhirConditions) {
-                outcomeTemp = client.create()
-                        .resource(conditionTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-            for (MedicationStatement medicationTemp : fhirMedications) {
-                outcomeTemp = client.create()
-                        .resource(medicationTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-            for (org.hl7.fhir.r5.model.Procedure procedure : fhirProcedures) {
-                outcomeTemp = client.create()
-                        .resource(procedure)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-            for (org.hl7.fhir.r5.model.Observation observationTemp : fhirObservations) {
-                outcomeTemp = client.create()
-                        .resource(observationTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-            for (org.hl7.fhir.r5.model.CarePlan careplanTemp : fhirCareplans) {
-                outcomeTemp = client.create()
-                        .resource(careplanTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-            for (org.hl7.fhir.r5.model.Immunization immunizationTemp : fhirImmunizations) {
-                outcomeTemp = client.create()
-                        .resource(immunizationTemp)
-                        .prettyPrint()
-                        .encodedJson()
-                        .execute();
-                outcome.add(outcomeTemp);
-            }
-        
-        
-        }}catch (Exception e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
             System.err.println(e.getLocalizedMessage());
             System.err.println(e);
         }
-            
+
         if (!outcome.isEmpty()) {
             for (MethodOutcome methodOutcome : outcome) {
                 if (methodOutcome.getOperationOutcome() != null) {
@@ -202,7 +217,6 @@ public class LoaderFhir {
             return true;
         }
         return false;
-       
 
     }
 }

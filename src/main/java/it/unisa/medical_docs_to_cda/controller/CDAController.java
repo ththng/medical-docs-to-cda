@@ -9,7 +9,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import it.unisa.medical_docs_to_cda.CDALDO.*;
 import it.unisa.medical_docs_to_cda.codes.finder.CodeSearchManager;
@@ -17,7 +17,7 @@ import it.unisa.medical_docs_to_cda.model.*;
 import it.unisa.medical_docs_to_cda.repositories.*;
 
 /**
- * Controller class responsible for converting Encounter objects into CDA
+ * Component class responsible for converting Encounter objects into CDA
  * documents.
  * Utilizes various repositories to retrieve necessary data for the conversion
  * process.
@@ -26,7 +26,7 @@ import it.unisa.medical_docs_to_cda.repositories.*;
  * observation, procedure, condition, imaging study, immunization, provider, and
  * organization data.
  */
-@Controller
+@Component
 public class CDAController {
         @Autowired
         private PatientRepository patientRepo;
@@ -199,7 +199,7 @@ public class CDAController {
                                                 ". During hospitalization, the condition was managed and stabilization was achieved through intensive pharmacological treatment."));
 
                 cdaldoBuilder.setNarrativeBlocks(narrativeBlocks3, "3");
-                // cdaldoBuilder.setEntries(null, "3");
+                // cdaldoBuilder.setEntries(null, "3"); --> this section doesn't have entries.
 
                 // Section 4: Complicanze (optional, not enough data in dataset)
 
@@ -221,7 +221,7 @@ public class CDAController {
                 }
                 if (!narrativeBlocks5.isEmpty())
                         cdaldoBuilder.setNarrativeBlocks(narrativeBlocks5, "5");
-                // cdaldoBuilder.setEntries(null, "5");
+                // cdaldoBuilder.setEntries(entries5, "5");
 
                 // Section 6: Consulenza
                 List<CDALDONarrativeBlock> narrativeBlocks6 = new ArrayList<>();
@@ -249,7 +249,6 @@ public class CDAController {
                         cdaldoBuilder.setEntries(observations6, "6");
 
                 // Section 7: Esami eseguiti durante il ricovero
-                // imaging studies metto solo come lista
 
                 List<CDALDONarrativeBlock> narrativeBlocks7 = new ArrayList<>();
                 String[] imagingSt = imagingStudies.stream()
@@ -264,7 +263,7 @@ public class CDAController {
                 }
                 if (!narrativeBlocks7.isEmpty())
                         cdaldoBuilder.setNarrativeBlocks(narrativeBlocks7, "7");
-                // cdaldoBuilder.setEntries(null, "7");
+                // cdaldoBuilder.setEntries(entries7, "7");
 
                 // Section 8: Procedure
                 List<CDALDONarrativeBlock> narrativeBlocks8 = new ArrayList<>();
@@ -280,11 +279,7 @@ public class CDAController {
                         procedures.forEach(procedure -> observation8.add(new CDALDOEntryProcedure(procedure.getCode(),
                                         "2.16.840.1.113883.6.96", "SNOMED CT", procedure.getDescription(),
                                         "entry", null, procedure.getDate().atTime(LocalTime.now()), null, null,
-                                        List.of(new CDALDOEntryObservation(procedure.getCode()
-                                        /*
-                                         * CodeSearchManager.searchICD9ByTerm(
-                                         * procedure.getReasonDescription())
-                                         */,
+                                        List.of(new CDALDOEntryObservation(procedure.getCode(),
                                                         "2.16.840.1.113883.6.103", "ICD-9CM (diagnosis codes)",
                                                         procedure.getReasonDescription(),
                                                         "entryRelationship", "RSON", false, null,
@@ -432,13 +427,13 @@ public class CDAController {
                                 patient.getBirthPlace(), patient.getBirthDate());
                 cdaldoBuilder.setPatient(cdaldoPatient);
         }
+
         /*
          * The `setId` method assigns a unique document ID, status, effective time, set
          * ID,
          * version number, and confidentiality code to the CDALDO object, assuming all
          * organizations are part of ASL NAPOLI 1.
          */
-
         private void setId(CDALDO cdaldoBuilder) {
                 // we are taking all the organization like they are part of the ASL NAPOLI 1
                 CDALDOId oid = new CDALDOId("2.16.840.1.113883.2.9.4.3.1",
